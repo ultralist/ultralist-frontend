@@ -85,12 +85,16 @@ const styles = theme => ({
   },
   notesArea: {
     backgroundColor: "#efefef",
-    marginLeft: 40
+    marginLeft: 40,
+    marginBottom: 20
   },
   notesAreaItem: {
     borderTop: "1px solid #ddd",
     listStyleType: "none",
-    display: "flex"
+    display: "flex",
+    "&:first-child": {
+      borderTop: "none"
+    }
   },
   noteText: {
     display: "inline",
@@ -132,7 +136,7 @@ class App extends React.Component<props> {
             <div className={this.props.classes.sortToggle}>
               <ToggleButtonGroup exclusive value="project">
                 <ToggleButton value="none" size="small">
-                  No grouping34
+                  No grouping
                 </ToggleButton>
                 <ToggleButton value="project" size="small">
                   By project
