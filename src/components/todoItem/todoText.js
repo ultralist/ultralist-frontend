@@ -15,7 +15,7 @@ const isContext = word => {
   return word.startsWith("@")
 }
 
-export const TodoText = (props: Props) => {
+const TodoText = (props: Props) => {
   const words = props.val.split(" ")
 
   const parsedWords = words.map(word => {
@@ -44,7 +44,7 @@ export const TodoText = (props: Props) => {
     }
   })
 
-  return <div>{parsedWords}</div>
+  return <React.Fragment>{parsedWords}</React.Fragment>
 }
 
 export default TodoText
