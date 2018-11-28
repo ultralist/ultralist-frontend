@@ -1,6 +1,6 @@
 // @flow
 import React, { useState } from "react"
-import TodoItemModel from "../../models/todoItem"
+import TodoItemModel from "../../../models/todoItem"
 
 import { withStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
@@ -65,6 +65,7 @@ const TodoItem = (props: Props) => {
 
   return (
     <ListItem key={todoItem.id}>
+      <p>asdf</p>
       <Checkbox
         tabIndex={-1}
         checked={todoItem.completed}

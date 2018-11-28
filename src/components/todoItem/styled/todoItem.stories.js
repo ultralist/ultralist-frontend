@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import { format } from "date-fns"
 
 import TodoItemModel from "../../../models/todoItem"
-import TodoItem from "../../../containers/todoItem/todoItem"
+import TodoItem from "./todoItem"
 import utils from "../../../utils"
 
 let todoModel = new TodoItemModel({

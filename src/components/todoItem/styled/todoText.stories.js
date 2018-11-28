@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react"
 import { action } from "@storybook/addon-actions"
 import Typography from "@material-ui/core/Typography"
 
-import TodoText from "../../../containers/todoItem/todoText"
+import TodoText from "./todoText"
 
 storiesOf("containers/todoItem/todoText", module)
   .add("Standard", () => (

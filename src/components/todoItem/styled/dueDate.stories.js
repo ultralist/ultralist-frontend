@@ -4,7 +4,7 @@ import { format, addDays } from "date-fns"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import Typography from "@material-ui/core/Typography"
 
-import DueDate from "../../../containers/todoItem/dueDate"
+import DueDate from "./dueDate"
 
 storiesOf("containers/todoItem/dueDate", module)
   .add("Standard", () => (
