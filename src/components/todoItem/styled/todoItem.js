@@ -65,7 +65,6 @@ const TodoItem = (props: Props) => {
 
   return (
     <ListItem key={todoItem.id}>
-      <p>asdf</p>
       <Checkbox
         tabIndex={-1}
         checked={todoItem.completed}
