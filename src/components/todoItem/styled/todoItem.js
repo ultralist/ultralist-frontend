@@ -14,6 +14,7 @@ import Collapse from "@material-ui/core/Collapse"
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 
 import yellow from "@material-ui/core/colors/yellow"
 
@@ -132,7 +133,7 @@ const TodoItem = (props: Props) => {
               <MoreHorizIcon />
             </IconButton>
             <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
-              <ExpandMoreIcon />
+              {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </IconButton>
           </div>
         </ListItemSecondaryAction>
