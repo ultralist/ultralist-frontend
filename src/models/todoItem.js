@@ -43,4 +43,8 @@ export default class TodoItem {
   togglePriority() {
     this.isPriority = !this.isPriority
   }
+
+  deleteNote(note: string) {
+    this.notes = this.notes.filter(n => n !== note)
+  }
 }
