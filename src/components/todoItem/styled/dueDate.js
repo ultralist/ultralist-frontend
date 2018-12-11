@@ -18,6 +18,9 @@ const styles = theme => ({
   },
   future: {
     color: blue[300]
+  },
+  grey: {
+    color: "#aaa"
   }
 })
 

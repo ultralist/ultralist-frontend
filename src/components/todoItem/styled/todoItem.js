@@ -1,6 +1,5 @@
 // @flow
 import React, { useState } from "react"
-import { format } from "date-fns"
 
 import { withStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
@@ -12,9 +11,11 @@ import ListItemText from "@material-ui/core/ListItemText"
 import Star from "@material-ui/icons/Star"
 import Collapse from "@material-ui/core/Collapse"
 
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz"
+import EditIcon from "@material-ui/icons/Edit"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
+import ArchiveIcon from "@material-ui/icons/Archive"
+import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
 import yellow from "@material-ui/core/colors/yellow"
 
@@ -22,7 +23,7 @@ import TodoItemModel from "../../../models/todoItem"
 
 import DueDate from "./dueDate"
 import TodoText from "./todoText"
-import DueTodayButton from "./dueTodayButton"
+import SetDueButton from "./setDueButton"
 import TodoItemNote from "./todoItemNote"
 
 type Props = {
@@ -61,7 +62,7 @@ const styles = theme => ({
     backgroundColor: "#efefef",
     marginLeft: 40,
     marginBottom: 20
-  },
+  }
 })
 
 const TodoItem = (props: Props) => {
@@ -70,36 +71,70 @@ const TodoItem = (props: Props) => {
 
   const toggleComplete = () => {
     todoItem.toggleComplete()
-    setTodoItem(todoItem)
-    props.onChange(todoItem)
+    onChangeTodo(todoItem)
   }
 
   const togglePriority = () => {
     todoItem.togglePriority()
-    setTodoItem(todoItem)
-    props.onChange(todoItem)
-  }
-
-  const setDueToday = () => {
-    todoItem.due = format(new Date(), "YYYY-MM-DD")
-    setTodoItem(todoItem)
-    props.onChange(todoItem)
+    onChangeTodo(todoItem)
   }
 
   const deleteNote = note => {
     todoItem.deleteNote(note)
-    setTodoItem(todoItem)
-    props.onChange(todoItem)
+    onChangeTodo(todoItem)
+  }
+
+  const toggleArchived = () => {
+    todoItem.toggleArchived()
+    onChangeTodo(todoItem)
   }
 
   const toggleShowNotes = () => {
     setShowNotes(!showNotes)
   }
 
+  const onChangeTodo = todoItem => {
+    setTodoItem(todoItem)
+    props.onChange(todoItem)
+  }
+
   const notes = () => {
     return todoItem.notes.map(n => (
       <TodoItemNote note={n} onDeleteNote={deleteNote} />
     ))
+  }
+
+  const ArchiveButton = props => (
+    <IconButton onClick={props.onClick}>
+      <ArchiveIcon />
+    </IconButton>
+  )
+
+  const UnarchiveButton = props => (
+    <IconButton onClick={props.onClick}>
+      <UnarchiveIcon />
+    </IconButton>
+  )
+
+  const firstButton = () => {
+    if (todoItem.completed) {
+      if (todoItem.archived) {
+        return <UnarchiveButton onClick={toggleArchived} />
+      } else {
+        return <ArchiveButton onClick={toggleArchived} />
+      }
+    } else {
+      if (todoItem.archived) {
+        return <UnarchiveButton onClick={toggleArchived} />
+      } else {
+        return (
+          <SetDueButton
+            todoItem={todoItem}
+            onChange={onChangeTodo}
+          />
+        )
+      }
+    }
   }
 
   return (
@@ -121,17 +156,30 @@ const TodoItem = (props: Props) => {
 
         <ListItemText
           primary={
-            <TodoText val={todoItem.subject} onClick={props.onSubjectClick} />
+            <TodoText
+              bold={todoItem.isPriority}
+              strike={todoItem.completed}
+              grey={todoItem.archived}
+              val={todoItem.subject}
+              onClick={props.onSubjectClick}
+            />
           }
-          secondary={<DueDate date={todoItem.due} />}
+          secondary={
+            <DueDate
+              grey={todoItem.archived || todoItem.completed}
+              date={todoItem.due}
+            />
+          }
         />
 
         <ListItemSecondaryAction>
           <div className={props.classes.shortWidthHide}>
-            <DueTodayButton due={todoItem.due} onClick={setDueToday} />
-            <IconButton aria-label="More actions">
-              <MoreHorizIcon />
+            {firstButton()}
+
+            <IconButton aria-label="Edit">
+              <EditIcon />
             </IconButton>
+
             <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
               {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </IconButton>

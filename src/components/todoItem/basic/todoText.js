@@ -3,8 +3,17 @@ import React from "react"
 
 type Props = {
   val: string,
+  strike: boolean,
+  grey: boolean,
+  bold: boolean,
   onClick: (str: string) => void,
-  classes: { project: string, context: string }
+  classes: {
+    project: string,
+    context: string,
+    strike: string,
+    grey: string,
+    bold: string
+  }
 }
 
 const isProject = word => {
@@ -24,7 +33,7 @@ const TodoText = (props: Props) => {
     if (isContext(word)) {
       return (
         <a
-          className={props.classes.context}
+          className={props.grey ? null : props.classes.context}
           onClick={() => props.onClick(word.trim())}
         >
           {word}
@@ -33,7 +42,7 @@ const TodoText = (props: Props) => {
     } else if (isProject(word)) {
       return (
         <a
-          className={props.classes.project}
+          className={props.grey ? null : props.classes.project}
           onClick={() => props.onClick(word.trim())}
         >
           {word}
@@ -44,7 +53,12 @@ const TodoText = (props: Props) => {
     }
   })
 
-  return <React.Fragment>{parsedWords}</React.Fragment>
+  const classNames = []
+  if (props.strike) classNames.push(props.classes.strike)
+  if (props.grey) classNames.push(props.classes.grey)
+  if (props.bold) classNames.push(props.classes.bold)
+
+  return <span className={classNames.join(" ")}>{parsedWords}</span>
 }
 
 export default TodoText

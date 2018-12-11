@@ -1,5 +1,6 @@
 // @flow
 import TodoItemNote from "./todoItemNote"
+import { format, addDays, setDay, isPast } from "date-fns"
 
 type ConstructorArgs = {
   id: number,
@@ -42,6 +43,24 @@ export default class TodoItem {
 
   togglePriority() {
     this.isPriority = !this.isPriority
+  }
+
+  toggleArchived() {
+    this.archived = !this.archived
+  }
+
+  setDueToday() {
+    this.due = format(new Date(), "YYYY-MM-DD")
+  }
+
+  setDueTomorrow() {
+    this.due = format(addDays(new Date(), 1), "YYYY-MM-DD")
+  }
+
+  setDueMonday() {
+    let monday = setDay(new Date(), 1)
+    if (isPast(monday)) monday = addDays(monday, 7)
+    this.due = format(monday, "YYYY-MM-DD")
   }
 
   deleteNote(note: string) {

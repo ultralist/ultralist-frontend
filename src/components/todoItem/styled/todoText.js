@@ -15,6 +15,15 @@ const styles = theme => ({
   context: {
     color: blue[500],
     cursor: "pointer"
+  },
+  strike: {
+    textDecoration: "line-through"
+  },
+  grey: {
+    color: "#aaa"
+  },
+  bold: {
+    fontWeight: "bold"
   }
 })
 
