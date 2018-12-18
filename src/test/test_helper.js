@@ -61,7 +61,7 @@ export const todos = [
     id: 6,
     uuid: utils.generateUuid(),
     subject: "Work on +budget presentation for leadership team, sell to @Nick first",
-    projects: [],
+    projects: ["budget"],
     contexts: ["Nick"],
     due: format(addDays(new Date(), -2), "YYYY-MM-DD"),
     notes: [],
