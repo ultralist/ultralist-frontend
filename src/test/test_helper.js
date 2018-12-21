@@ -1,7 +1,8 @@
 import { format, addDays } from "date-fns"
 import utils from "../utils"
+import TodoItemModel from "../models/todoItem"
 
-export const todos = [
+const todoData = [
   {
     id: 1,
     uuid: utils.generateUuid(),
@@ -69,3 +70,5 @@ export const todos = [
     archived: false
   }
 ]
+
+export const todos = todoData.map(t => new TodoItemModel(t))

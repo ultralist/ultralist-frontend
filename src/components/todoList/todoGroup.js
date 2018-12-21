@@ -11,14 +11,19 @@ import TodoItem from "../todoItem/styled/todoItem"
 
 type Props = {
   group: TodoListGroup,
-  onChange: (todoItem: TodoItemModel) => void
+  onChange: (todoItem: TodoItemModel) => void,
+  onSubjectClick: (str: string) => void
 }
 
 const TodoGroup = (props: Props) => {
   return (
     <List subheader={<ListSubheader component="div">{props.group.name}</ListSubheader>}>
       {props.group.todos.map(todo => (
-        <TodoItem onChange={props.onChange} todoItem={todo} />
+        <TodoItem
+          onChange={props.onChange}
+          onSubjectClick={props.onSubjectClick}
+          todoItem={todo}
+        />
       ))}
     </List>
   )

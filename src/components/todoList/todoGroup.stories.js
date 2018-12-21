@@ -15,7 +15,6 @@ import TodoListGroup from "../../models/todoListGroup"
 
 const group1 = new TodoListGroup({ name: "Bob", todos })
 
-const todoObjects = todos.map(t => new TodoItemModel(t))
 const groups = grouper.grouped(todoObjects, BY_CONTEXT)
 
 storiesOf("components/todoGroup", module).add("Standard", () => (
