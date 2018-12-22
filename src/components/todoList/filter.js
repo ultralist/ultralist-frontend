@@ -8,15 +8,21 @@ const filter = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoIte
     if (!subject) return false
     return todo.subject.toLowerCase().includes(subject.toLowerCase())
   }
-  const contexts = filter.contexts || []
-  const projects = filter.projects || []
 
   return todos.filter(todo => {
-    if (contexts.length > 0)
-      if (!contexts.some(c => todo.contexts.includes(c))) return false
+    if (filter.contexts !== null)
+      if (filter.contexts.length === 0) {
+        if (todo.contexts.length > 0) return false
+      } else {
+        if (!filter.contexts.some(c => todo.contexts.includes(c))) return false
+      }
 
-    if (projects.length > 0)
-      if (!projects.some(c => todo.projects.includes(c))) return false
+    if (filter.projects !== null)
+      if (filter.projects.length === 0) {
+        if (todo.projects.length > 0) return false
+      } else {
+        if (!filter.projects.some(c => todo.projects.includes(c))) return false
+      }
 
     if (filter.subjectContains)
       if (!filterSubject(filter.subjectContains, todo)) return false

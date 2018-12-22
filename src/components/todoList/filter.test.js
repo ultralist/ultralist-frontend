@@ -24,6 +24,15 @@ it("filters by project", () => {
   expect(filtered[0].projects).toEqual(["bigProject"])
 })
 
+it("filters by todos with no project", () => {
+  const filterModel = new FilterModel({ projects: [] })
+
+  const filtered = filter(todos, filterModel)
+
+  expect(filtered.length).toEqual(1)
+  expect(filtered[0].id).toEqual(5)
+})
+
 it("filters by context", () => {
   const filterModel = new FilterModel({ contexts: ["Nick"] })
 
@@ -31,6 +40,15 @@ it("filters by context", () => {
 
   expect(filtered.length).toEqual(2)
   expect(filtered[0].contexts).toEqual(["Nick"])
+})
+
+it("filters by todos with no context", () => {
+  const filterModel = new FilterModel({ contexts: [] })
+
+  const filtered = filter(todos, filterModel)
+
+  expect(filtered.length).toEqual(1)
+  expect(filtered[0].id).toEqual(2)
 })
 
 it("filters by subject", () => {
