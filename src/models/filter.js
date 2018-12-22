@@ -18,11 +18,11 @@ export default class Filter {
   completed: boolean | null
 
   constructor(args: ConstructorArgs) {
-    this.contexts = args.contexts
-    this.projects = args.projects
-    this.subjectContains = args.subjectContains
-    this.archived = args.archived
-    this.isPriority = args.isPriority
-    this.completed = args.completed
+    this.contexts = args.contexts || []
+    this.projects = args.projects || []
+    this.subjectContains = args.subjectContains || null
+    this.archived = args.archived || null
+    this.isPriority = args.isPriority || null
+    this.completed = args.completed || null
   }
 }
