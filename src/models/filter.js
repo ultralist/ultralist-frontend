@@ -22,7 +22,23 @@ export default class Filter {
     this.projects = args.projects || null
     this.subjectContains = args.subjectContains || null
     this.archived = args.archived || null
-    this.isPriority = args.isPriority || null
-    this.completed = args.completed || null
+
+    if (args.isPriority === undefined) {
+      this.isPriority = null
+    } else {
+      this.isPriority = args.isPriority
+    }
+
+    if (args.completed === undefined) {
+      this.completed = null
+    } else {
+      this.completed = args.completed
+    }
+
+    if (args.archived === undefined) {
+      this.archived = null
+    } else {
+      this.archived = args.archived
+    }
   }
 }
