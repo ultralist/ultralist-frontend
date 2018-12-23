@@ -5,7 +5,7 @@
 import React from 'react'
 import { configure } from '@storybook/react';
 
-const req = require.context('../src/', true, /.js$/)
+const req = require.context('../src/', true, /.stories.js$/)
 
 function loadStories() {
   req.keys().forEach(req)
