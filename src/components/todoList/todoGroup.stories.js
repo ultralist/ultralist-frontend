@@ -8,19 +8,21 @@ import { todos } from "../../test/test_helper"
 
 import utils from "../../utils"
 import TodoGroup from "./todoGroup"
-import grouper from "./grouper"
+import group from "./grouper"
 
 import TodoItemModel from "../../models/todoItem"
 import TodoListGroup from "../../models/todoListGroup"
 
-const group1 = new TodoListGroup({ name: "Bob", todos })
-
-const groups = grouper.grouped(todoObjects, BY_CONTEXT)
+const groups = group(todos, BY_CONTEXT)
 
 storiesOf("components/todoGroup", module).add("Standard", () => (
   <React.Fragment>
     {groups.map(g => (
-      <TodoGroup onChange={t => action(t)} group={g} />
+      <TodoGroup
+        group={g}
+        onSubjectClick={t => action(t)}
+        onChange={t => action(t)}
+      />
     ))}
   </React.Fragment>
 ))

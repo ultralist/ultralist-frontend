@@ -66,7 +66,7 @@ const styles = theme => ({
 })
 
 const TodoItem = (props: Props) => {
-  const [todoItem, setTodoItem] = useState(props.todoItem)
+  const todoItem = props.todoItem
   const [showNotes, setShowNotes] = useState(false)
 
   const toggleComplete = () => {
@@ -94,7 +94,6 @@ const TodoItem = (props: Props) => {
   }
 
   const onChangeTodo = todoItem => {
-    setTodoItem(todoItem)
     props.onChange(todoItem)
   }
 
