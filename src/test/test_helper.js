@@ -9,6 +9,7 @@ const todoData = [
     subject: "Call with @Bob and @Frank about +bigProject",
     projects: ["bigProject"],
     contexts: ["Bob", "Frank"],
+    isPriority: true,
     due: format(addDays(new Date(), 1), "YYYY-MM-DD"),
     notes: ["here is note 1", "here is note 2"],
     completed: false,
@@ -20,6 +21,7 @@ const todoData = [
     subject: "Strategy for +mobile @pomodoro",
     projects: ["mobile"],
     contexts: [],
+    isPriority: false,
     due: format(new Date(), "YYYY-MM-DD"),
     notes: ["here is note 1", "here is note 2"],
     completed: false,
@@ -31,6 +33,7 @@ const todoData = [
     subject: "Send phone udid to @Marty to test +mobile projects",
     projects: ["mobile"],
     contexts: ["marty"],
+    isPriority: false,
     due: format(new Date(), "YYYY-MM-DD"),
     notes: [],
     completed: false,
@@ -42,6 +45,7 @@ const todoData = [
     subject: "Did @john call me back about the +testProject?",
     projects: ["testProject"],
     contexts: ["john"],
+    isPriority: false,
     due: format(new Date(), "YYYY-MM-DD"),
     notes: [],
     completed: true,
@@ -56,6 +60,7 @@ const todoData = [
     due: format(addDays(new Date(), -2), "YYYY-MM-DD"),
     notes: [],
     completed: true,
+    isPriority: true,
     archived: true
   },
   {
@@ -67,6 +72,7 @@ const todoData = [
     due: format(addDays(new Date(), -2), "YYYY-MM-DD"),
     notes: [],
     completed: false,
+    isPriority: false,
     archived: false
   }
 ]
