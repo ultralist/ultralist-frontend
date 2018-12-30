@@ -7,6 +7,10 @@ import Switch from '@material-ui/core/Switch'
 import TextField from '@material-ui/core/TextField'
 import { withStyles } from '@material-ui/core/styles'
 
+import KeyboardIcon from "@material-ui/icons/Keyboard"
+import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
+import RightArrowIcon from "@material-ui/icons/ArrowRight"
+
 import TodoItemModel from "../../../models/todoItem"
 
 type Props = {
@@ -32,6 +36,9 @@ const TodoForm = (props: Props) => {
       <FormControlLabel control={<Switch checked={props.todoItem.archived} />} label="Archived" />
         <DatePicker
           autoOk
+          keyboardIcon={<KeyboardIcon/>}
+          leftArrowIcon={<LeftArrowIcon/>}
+          rightArrowIcon={<RightArrowIcon/>}
           label="Due"
           clearable
           value={props.todoItem.dueDate()}
