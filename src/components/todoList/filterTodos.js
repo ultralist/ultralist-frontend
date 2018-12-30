@@ -3,7 +3,7 @@
 import TodoItemModel from "../../models/todoItem"
 import FilterModel from "../../models/filter"
 
-const filter = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoItemModel> => {
+const filterTodos = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoItemModel> => {
   const filterSubject = (subject: string | null, todo): boolean => {
     if (!subject) return false
     return todo.subject.toLowerCase().includes(subject.toLowerCase())
@@ -40,4 +40,4 @@ const filter = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoIte
   })
 }
 
-export default filter
+export default filterTodos
