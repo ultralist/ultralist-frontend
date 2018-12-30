@@ -10,7 +10,7 @@ const todoData = [
     projects: ["bigProject"],
     contexts: ["Bob", "Frank"],
     isPriority: true,
-    due: format(addDays(new Date(), 1), "YYYY-MM-DD"),
+    due: format(addDays(new Date(), 1), "yyyy-MM-dd"),
     notes: ["here is note 1", "here is note 2"],
     completed: false,
     archived: false
@@ -22,7 +22,7 @@ const todoData = [
     projects: ["mobile"],
     contexts: [],
     isPriority: false,
-    due: format(new Date(), "YYYY-MM-DD"),
+    due: format(new Date(), "yyyy-MM-dd"),
     notes: ["here is note 1", "here is note 2"],
     completed: false,
     archived: false
@@ -34,7 +34,7 @@ const todoData = [
     projects: ["mobile"],
     contexts: ["marty"],
     isPriority: false,
-    due: format(new Date(), "YYYY-MM-DD"),
+    due: format(new Date(), "yyyy-MM-dd"),
     notes: [],
     completed: false,
     archived: false
@@ -46,7 +46,7 @@ const todoData = [
     projects: ["testProject"],
     contexts: ["john"],
     isPriority: false,
-    due: format(new Date(), "YYYY-MM-DD"),
+    due: format(new Date(), "yyyy-MM-dd"),
     notes: [],
     completed: true,
     archived: false
@@ -57,7 +57,7 @@ const todoData = [
     subject: "Follow up with @nick about 6-month salary increase",
     projects: [],
     contexts: ["Nick"],
-    due: format(addDays(new Date(), -2), "YYYY-MM-DD"),
+    due: format(addDays(new Date(), -2), "yyyy-MM-dd"),
     notes: [],
     completed: true,
     isPriority: true,
@@ -69,7 +69,7 @@ const todoData = [
     subject: "Work on +budget presentation for leadership team, sell to @Nick first",
     projects: ["budget"],
     contexts: ["Nick"],
-    due: format(addDays(new Date(), -2), "YYYY-MM-DD"),
+    due: format(addDays(new Date(), -2), "yyyy-MM-dd"),
     notes: [],
     completed: false,
     isPriority: false,

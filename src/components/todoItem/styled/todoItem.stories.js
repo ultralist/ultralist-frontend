@@ -17,7 +17,7 @@ const todoModel = new TodoItemModel({
   isPriority: false,
   completedDate: null,
   subject: "+tasks chat with @bob",
-  due: format(new Date(), "YYYY-MM-DD"),
+  due: format(new Date(), "yyyy-MM-dd"),
   notes: ["here is note 1", "here is note 2"]
 })
 
@@ -29,11 +29,11 @@ const todoModelYesterday = new TodoItemModel({
   isPriority: false,
   completedDate: null,
   subject: "+tasks chat with @bob",
-  due: format(addDays(new Date(), -1), "YYYY-MM-DD"),
+  due: format(addDays(new Date(), -1), "yyyy-MM-dd"),
   notes: ["here is note 1", "here is note 2"]
 })
 
-storiesOf("containers/todoItem/todoItem", module)
+storiesOf("components/todoItem/todoItem", module)
   .add("Standard", () => (
     <Typography variant="body1">
       <TodoItem

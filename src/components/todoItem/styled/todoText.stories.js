@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography"
 
 import TodoText from "./todoText"
 
-storiesOf("containers/todoItem/todoText", module)
+storiesOf("components/todoItem/todoText", module)
   .add("Standard", () => (
     <Typography variant="body1">
       <TodoText onClick={action("clicked")} val="+tasks chat with @bob" />

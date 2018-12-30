@@ -6,25 +6,25 @@ import Typography from "@material-ui/core/Typography"
 
 import DueDate from "./dueDate"
 
-storiesOf("containers/todoItem/dueDate", module)
+storiesOf("components/todoItem/dueDate", module)
   .add("Standard", () => (
     <div>
       <Typography variant="body1">
         <CssBaseline />
         <p>Past:</p>
-        <DueDate date={format(addDays(new Date(), -5), "YYYY-MM-DD")} />
+        <DueDate date={format(addDays(new Date(), -5), "yyyy-MM-dd")} />
         <hr />
         <p>Yesterday:</p>
-        <DueDate date={format(addDays(new Date(), -1), "YYYY-MM-DD")} />
+        <DueDate date={format(addDays(new Date(), -1), "yyyy-MM-dd")} />
         <hr />
         <p>Today:</p>
-        <DueDate date={format(new Date(), "YYYY-MM-DD")} />
+        <DueDate date={format(new Date(), "yyyy-MM-dd")} />
         <hr />
         <p>Tomorrow:</p>
-        <DueDate date={format(addDays(new Date(), 1), "YYYY-MM-DD")} />
+        <DueDate date={format(addDays(new Date(), 1), "yyyy-MM-dd")} />
         <hr />
         <p>Future:</p>
-        <DueDate date={format(addDays(new Date(), 2), "YYYY-MM-DD")} />
+        <DueDate date={format(addDays(new Date(), 2), "yyyy-MM-dd")} />
       </Typography>
     </div>
   ))

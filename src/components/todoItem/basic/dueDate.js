@@ -1,6 +1,6 @@
 // @flow
 import React from "react"
-import { format, isPast, isToday, isTomorrow, isYesterday } from "date-fns"
+import { format, isSameDay, addDays, toDate, isBefore } from "date-fns"
 
 type Props = {
   date: string | null,
@@ -14,25 +14,38 @@ type Props = {
   }
 }
 
+const isYesterday = (date: Date): boolean => {
+  return isSameDay(date, addDays(new Date(), -1))
+}
+
+const isToday = (date: Date): boolean => {
+  return isSameDay(date, new Date())
+}
+
+const isTomorrow = (date: Date): boolean => {
+  return isSameDay(date, addDays(new Date(), 1))
+}
+
 const DueDate = (props: Props) => {
   if (props.date === null) return null
 
   const formattedDate = format(props.date, "MMM Do")
+  const realDate = toDate(props.date)
   const grey = props.classes.grey
 
-  if (isYesterday(props.date)) {
+  if (isYesterday(realDate)) {
     return <span className={props.grey ? grey : props.classes.past}>Yesterday</span>
   }
 
-  if (isToday(props.date)) {
+  if (isToday(realDate)) {
     return <span className={props.grey ? grey : props.classes.today}>Today</span>
   }
 
-  if (isPast(props.date)) {
+  if (isBefore(realDate, new Date())) {
     return <span className={props.grey ? grey : props.classes.past}>{formattedDate}</span>
   }
 
-  if (isTomorrow(props.date)) {
+  if (isTomorrow(realDate)) {
     return <span className={props.grey ? grey : props.classes.tomorrow}>Tomorrow</span>
   }
 
