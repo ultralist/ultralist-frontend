@@ -38,7 +38,6 @@ const searchRef = React.createRef()
 
 const TodoList = (props: Props) => {
   const [filterModel, setFilterModel] = useState(new FilterModel({}))
-  const [filterText, setFilterText] = useState("")
   const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
 
