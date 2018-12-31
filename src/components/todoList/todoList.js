@@ -37,7 +37,7 @@ const styles = theme => ({
 const searchRef = React.createRef()
 
 const TodoList = (props: Props) => {
-  const [filterModel, setFilterModel] = useState(new FilterModel({}))
+  const [filterModel, setFilterModel] = useState(new FilterModel({ archived: false }))
   const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
 
@@ -61,8 +61,10 @@ const TodoList = (props: Props) => {
   const changeArchived = () => {
     if (textFilter.isArchived(searchRef)) {
       changeFilterText(textFilter.removeTextFilter(searchRef, "is", "archived"))
+      changeFilterText(textFilter.addTextFilter(searchRef, "not", "archived"))
     } else {
       changeFilterText(textFilter.addTextFilter(searchRef, "is", "archived"))
+      changeFilterText(textFilter.removeTextFilter(searchRef, "not", "archived"))
     }
   }
 
@@ -102,6 +104,7 @@ const TodoList = (props: Props) => {
               className={props.classes.searchBox}
               margin="dense"
               autoComplete="off"
+              defaultValue="not:archived"
               inputRef={searchRef}
             />
           </form>

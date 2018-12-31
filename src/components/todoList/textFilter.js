@@ -14,6 +14,9 @@ import FilterModel from "../../models/filter"
 // is:priority
 // is:completed
 // is:archived
+// not:priority
+// not:completed
+// not:archived
 const textFilter = {
   filter: (input: string): [FilterModel, string] => {
     const filter = {}
