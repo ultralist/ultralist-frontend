@@ -47,6 +47,14 @@ export default class TodoItem {
     return (this.due ? toDate(this.due || "") : null)
   }
 
+  setDue(date: Date | null) {
+    if (date === null) {
+      this.due = null
+    } else {
+      this.due = format(date, "yyyy-MM-dd")
+    }
+  }
+
   toggleComplete() {
     this.completed = !this.completed
   }
