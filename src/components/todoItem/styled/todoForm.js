@@ -7,6 +7,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Switch from "@material-ui/core/Switch"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
+import DialogTitle from "@material-ui/core/DialogTitle"
+import DialogContent from "@material-ui/core/DialogContent"
+import DialogActions from "@material-ui/core/DialogActions"
 
 import KeyboardIcon from "@material-ui/icons/Keyboard"
 import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
@@ -16,6 +19,7 @@ import TodoItemModel from "../../../models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,
+  title: string,
   onChange: (todoItem: TodoItemModel) => void
 }
 
@@ -59,39 +63,42 @@ const TodoForm = (props: Props) => {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Margin>
-        <TextField
-          error={!isValid()}
-          className={classes.text}
-          value={todoItem.subject}
-          label="Description"
-          onChange={setTodoText}
-        />
-      </Margin>
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        <Margin>
+          <TextField
+            error={!isValid()}
+            className={classes.text}
+            value={todoItem.subject}
+            label="Description"
+            onChange={setTodoText}
+          />
+        </Margin>
 
-      <Margin>
-        <DatePicker
-          autoOk
-          keyboardIcon={<KeyboardIcon />}
-          leftArrowIcon={<LeftArrowIcon />}
-          rightArrowIcon={<RightArrowIcon />}
-          label="Due"
-          clearable
-          value={todoItem.dueDate()}
-          onChange={setTodoDate}
-        />
-      </Margin>
+        <Margin>
+          <DatePicker
+            autoOk
+            keyboardIcon={<KeyboardIcon />}
+            leftArrowIcon={<LeftArrowIcon />}
+            rightArrowIcon={<RightArrowIcon />}
+            label="Due"
+            clearable
+            value={todoItem.dueDate()}
+            onChange={setTodoDate}
+          />
+        </Margin>
 
-      <Margin>
-        <FormControlLabel control={<Switch checked={todoItem.isPriority} />} label="Priority" />
-        <FormControlLabel control={<Switch checked={todoItem.archived} />} label="Archived" />
-      </Margin>
+        <Margin>
+          <FormControlLabel control={<Switch checked={todoItem.isPriority} />} label="Priority" />
+          <FormControlLabel control={<Switch checked={todoItem.archived} />} label="Archived" />
+        </Margin>
+      </DialogContent>
 
-      <Margin>
-        <Button disabled={!isValid()} variant="contained" color="primary" onClick={onChange}>
+      <DialogActions>
+        <Button disabled={!isValid()} color="primary" onClick={onChange}>
           Submit
         </Button>
-      </Margin>
+      </DialogActions>
     </MuiPickersUtilsProvider>
   )
 }
