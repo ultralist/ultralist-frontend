@@ -1,13 +1,13 @@
 // @flow
 import React, { useState } from "react"
 
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Grid from '@material-ui/core/Grid'
-import Switch from '@material-ui/core/Switch'
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Grid from "@material-ui/core/Grid"
+import Switch from "@material-ui/core/Switch"
 import TextField from "@material-ui/core/TextField"
 import ToggleButton from "@material-ui/lab/ToggleButton"
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
-import { withStyles } from "@material-ui/core/styles"
+import { makeStyles } from "@material-ui/styles"
 
 import { BY_CONTEXT, BY_PROJECT, BY_ALL } from "../../constants"
 import utils from "../../utils"
@@ -23,10 +23,9 @@ import TodoGroup from "./todoGroup"
 
 type Props = {
   todoList: TodoListModel,
-  classes: Object
 }
 
-const styles = theme => ({
+const useStyles = makeStyles({
   searchBox: {
     marginLeft: 20,
     marginRight: 20,
@@ -37,6 +36,7 @@ const styles = theme => ({
 const searchRef = React.createRef()
 
 const TodoList = (props: Props) => {
+  const classes = useStyles()
   const [filterModel, setFilterModel] = useState(new FilterModel({ archived: false }))
   const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
@@ -101,7 +101,7 @@ const TodoList = (props: Props) => {
               id="outlined-search"
               label="Search"
               type="search"
-              className={props.classes.searchBox}
+              className={classes.searchBox}
               margin="dense"
               autoComplete="off"
               defaultValue="not:archived"
@@ -140,4 +140,4 @@ const TodoList = (props: Props) => {
   )
 }
 
-export default withStyles(styles)(TodoList)
+export default TodoList
