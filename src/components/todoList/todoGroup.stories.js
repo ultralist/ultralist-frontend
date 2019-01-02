@@ -8,7 +8,7 @@ import { todos } from "../../test/test_helper"
 
 import utils from "../../utils"
 import TodoGroup from "./todoGroup"
-import group from "./grouper"
+import group from "./logic/grouper"
 
 import TodoItemModel from "../../models/todoItem"
 import TodoListGroup from "../../models/todoListGroup"

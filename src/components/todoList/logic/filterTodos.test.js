@@ -1,11 +1,11 @@
 // @flow
 import filterTodos from "./filterTodos"
 
-import TodoItemModel from "../../models/todoItem"
-import TodoListGroup from "../../models/todoListGroup"
-import FilterModel from "../../models/filter"
+import TodoItemModel from "../../../models/todoItem"
+import TodoListGroup from "../../../models/todoListGroup"
+import FilterModel from "../../../models/filter"
 
-import { todos } from "../../test/test_helper"
+import { todos } from "../../../test/test_helper"
 
 it("a blank filter will return all todos", () => {
   const filterModel = new FilterModel({})

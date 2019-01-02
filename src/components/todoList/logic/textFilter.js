@@ -1,9 +1,9 @@
 // @flow
 import React from "react"
-import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
+import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
 
-import TodoItemModel from "../../models/todoItem"
-import FilterModel from "../../models/filter"
+import TodoItemModel from "../../../models/todoItem"
+import FilterModel from "../../../models/filter"
 
 // group:context
 // @context

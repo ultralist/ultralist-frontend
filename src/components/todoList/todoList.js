@@ -16,9 +16,9 @@ import FilterModel from "../../models/filter"
 import TodoItemModel from "../../models/todoItem"
 import TodoListModel from "../../models/todoList"
 
-import textFilter from "./textFilter"
-import filterTodos from "./filterTodos"
-import group from "./grouper"
+import textFilter from "./logic/textFilter"
+import filterTodos from "./logic/filterTodos"
+import group from "./logic/grouper"
 import TodoGroup from "./todoGroup"
 
 type Props = {

@@ -1,7 +1,7 @@
 // @flow
-import { ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
-import TodoItemModel from "../../models/todoItem"
-import TodoListGroup from "../../models/todoListGroup"
+import { ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
+import TodoItemModel from "../../../models/todoItem"
+import TodoListGroup from "../../../models/todoListGroup"
 
 const group = (todos: Array<TodoItemModel>, grouping: string): Array<TodoListGroup> => {
   switch (grouping) {

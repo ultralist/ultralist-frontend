@@ -1,7 +1,7 @@
 // @flow
 
-import TodoItemModel from "../../models/todoItem"
-import FilterModel from "../../models/filter"
+import TodoItemModel from "../../../models/todoItem"
+import FilterModel from "../../../models/filter"
 
 const filterTodos = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoItemModel> => {
   const filterSubject = (subject: string | null, todo): boolean => {

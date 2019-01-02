@@ -1,11 +1,11 @@
 // @flow
 import group from "./grouper"
 
-import TodoItemModel from "../../models/todoItem"
-import TodoListGroup from "../../models/todoListGroup"
+import TodoItemModel from "../../../models/todoItem"
+import TodoListGroup from "../../../models/todoListGroup"
 
-import { ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
-import { todos } from "../../test/test_helper"
+import { ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
+import { todos } from "../../../test/test_helper"
 
 it("groups by context", () => {
   const grouped = group(todos, BY_CONTEXT)

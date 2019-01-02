@@ -1,6 +1,6 @@
 // @flow
 import textFilter from "./textFilter"
-import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
+import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
 
 it("filters text", () => {
   const [filter, group] = textFilter("@asdf no:context")
