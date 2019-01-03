@@ -1,19 +1,20 @@
 // @flow
 import TodoItemNote from "./todoItemNote"
-import { format, addDays, setDay, isPast, toDate } from "date-fns"
+import utils from "../utils"
+import { format, addDays, setDay, toDate } from "date-fns"
 
 type ConstructorArgs = {
-  id: number,
-  uuid: string,
-  completed: boolean,
-  archived: boolean,
-  contexts: Array<string>,
-  projects: Array<string>,
-  isPriority: boolean,
-  completedDate: string | null,
-  subject: string,
-  due: string | null,
-  notes: Array<string>
+  id?: number,
+  uuid?: string,
+  completed?: boolean,
+  archived?: boolean,
+  contexts?: Array<string>,
+  projects?: Array<string>,
+  isPriority?: boolean,
+  completedDate?: string | null,
+  subject?: string,
+  due?: string | null,
+  notes?: Array<string>
 }
 
 export default class TodoItem {
@@ -30,21 +31,21 @@ export default class TodoItem {
   notes: Array<string>
 
   constructor(args: ConstructorArgs) {
-    this.id = args.id
-    this.uuid = args.uuid
-    this.completed = args.completed
-    this.archived = args.archived
-    this.isPriority = args.isPriority
-    this.completedDate = args.completedDate
-    this.subject = args.subject
-    this.contexts = args.contexts
-    this.projects = args.projects
-    this.due = args.due
-    this.notes = args.notes
+    if (args.id) this.id = args.id
+    this.uuid = args.uuid || utils.generateUuid()
+    this.completed = args.completed || false
+    this.archived = args.archived || false
+    this.isPriority = args.isPriority || false
+    this.completedDate = args.completedDate || null
+    this.subject = args.subject || ""
+    this.contexts = args.contexts || []
+    this.projects = args.projects || []
+    this.due = args.due || null
+    this.notes = args.notes || []
   }
 
   dueDate(): Date | null {
-    return (this.due ? toDate(this.due || "") : null)
+    return this.due ? toDate(this.due || "") : null
   }
 
   setDue(date: Date | null) {
@@ -55,7 +56,7 @@ export default class TodoItem {
     }
   }
 
-  toggleComplete() {
+  toggleCompleted() {
     this.completed = !this.completed
   }
 
@@ -77,8 +78,19 @@ export default class TodoItem {
 
   setDueMonday() {
     let monday = setDay(new Date(), 1)
-    if (isPast(monday)) monday = addDays(monday, 7)
+    if (monday < new Date()) monday = addDays(monday, 7)
     this.due = format(monday, "yyyy-MM-dd")
+  }
+
+  setSubject(subject: string) {
+    this.subject = subject
+    this.projects = []
+    this.contexts = []
+
+    subject.split(" ").forEach(word => {
+      if (word.startsWith("+")) this.projects.push(word.substring(1))
+      if (word.startsWith("@")) this.contexts.push(word.substring(1))
+    })
   }
 
   deleteNote(note: string) {
