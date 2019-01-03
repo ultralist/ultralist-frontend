@@ -70,7 +70,7 @@ const TodoItem = (props: Props) => {
   const [showNotes, setShowNotes] = useState(false)
 
   const toggleComplete = () => {
-    todoItem.toggleComplete()
+    todoItem.toggleCompleted()
     onChangeTodo(todoItem)
   }
 
@@ -126,12 +126,7 @@ const TodoItem = (props: Props) => {
       if (todoItem.archived) {
         return <UnarchiveButton onClick={toggleArchived} />
       } else {
-        return (
-          <SetDueButton
-            todoItem={todoItem}
-            onChange={onChangeTodo}
-          />
-        )
+        return <SetDueButton todoItem={todoItem} onChange={onChangeTodo} />
       }
     }
   }
@@ -150,7 +145,11 @@ const TodoItem = (props: Props) => {
           className={props.classes.shortWidthHide}
           aria-label="Prioritize"
         >
-          {todoItem.isPriority ? <Star className={props.classes.starIcon}/> : <StarBorder />}
+          {todoItem.isPriority ? (
+            <Star className={props.classes.starIcon} />
+          ) : (
+            <StarBorder />
+          )}
         </IconButton>
 
         <ListItemText

@@ -13,8 +13,8 @@ import TodoItemModel from "../../../models/todoItem"
 import { todos } from "../../../test/test_helper"
 
 const onChange = (todoItem: TodoItemModel) => {
-  console.log("onChange",todoItem)
-  console.log("existing",todos[0])
+  console.log("onChange", todoItem)
+  console.log("existing", todos[0])
 }
 
 const ModalHolder = () => {
@@ -29,8 +29,17 @@ const ModalHolder = () => {
       <Fab onClick={toggleModalOpen} color="primary">
         <AddIcon />
       </Fab>
-      <Dialog fullWidth maxWidth="md" open={modalOpen} onClose={toggleModalOpen}>
-        <TodoForm title="Edit todo" todoItem={todos[0]} onChange={toggleModalOpen} />
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={modalOpen}
+        onClose={toggleModalOpen}
+      >
+        <TodoForm
+          title="Edit todo"
+          todoItem={todos[0]}
+          onChange={toggleModalOpen}
+        />
       </Dialog>
     </React.Fragment>
   )
@@ -38,8 +47,6 @@ const ModalHolder = () => {
 
 storiesOf("components/todoItem/todoForm", module)
   .add("Existing todo", () => (
-    <TodoForm todoItem={todos[0]} onChange={onChange} />
+    <TodoForm title="Add todo" todoItem={todos[0]} onChange={onChange} />
   ))
-  .add("Modal", () => (
-    <ModalHolder />
-  ))
+  .add("Modal", () => <ModalHolder />)

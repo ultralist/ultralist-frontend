@@ -43,13 +43,28 @@ const TodoForm = (props: Props) => {
   const classes = useStyles()
   const [todoItem, setTodoItem] = useState(props.todoItem)
 
-  const setTodoText = (ev: Event) => {
-    todoItem.subject = ev.target.value
+  const setTodoText = (ev: SyntheticEvent<HTMLButtonElement>) => {
+    todoItem.setSubject(ev.currentTarget.value)
     setTodoItem(todoItem)
   }
 
   const setTodoDate = (date: Date) => {
     todoItem.setDue(date)
+    setTodoItem(todoItem)
+  }
+
+  const toggleIsPriority = () => {
+    todoItem.togglePriority()
+    setTodoItem(todoItem)
+  }
+
+  const toggleArchived = () => {
+    todoItem.toggleArchived()
+    setTodoItem(todoItem)
+  }
+
+  const toggleCompleted = () => {
+    todoItem.toggleCompleted()
     setTodoItem(todoItem)
   }
 
@@ -89,8 +104,27 @@ const TodoForm = (props: Props) => {
         </Margin>
 
         <Margin>
-          <FormControlLabel control={<Switch checked={todoItem.isPriority} />} label="Priority" />
-          <FormControlLabel control={<Switch checked={todoItem.archived} />} label="Archived" />
+          <FormControlLabel
+            control={
+              <Switch onChange={toggleCompleted} checked={todoItem.completed} />
+            }
+            label="Completed"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={toggleIsPriority}
+                checked={todoItem.isPriority}
+              />
+            }
+            label="Priority"
+          />
+          <FormControlLabel
+            control={
+              <Switch onChange={toggleArchived} checked={todoItem.archived} />
+            }
+            label="Archived"
+          />
         </Margin>
       </DialogContent>
 

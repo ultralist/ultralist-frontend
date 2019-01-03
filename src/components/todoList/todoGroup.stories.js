@@ -15,7 +15,7 @@ import TodoListGroup from "../../models/todoListGroup"
 
 const groups = group(todos, BY_CONTEXT)
 
-storiesOf("components/todoGroup", module).add("Standard", () => (
+storiesOf("components/todoList/todoGroup", module).add("Standard", () => (
   <React.Fragment>
     {groups.map(g => (
       <TodoGroup
