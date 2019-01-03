@@ -19,10 +19,12 @@ import TodoListModel from "../../models/todoList"
 import textFilter from "./logic/textFilter"
 import filterTodos from "./logic/filterTodos"
 import group from "./logic/grouper"
+
+import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
 
 type Props = {
-  todoList: TodoListModel,
+  todoList: TodoListModel
 }
 
 const useStyles = makeStyles({
@@ -37,12 +39,18 @@ const searchRef = React.createRef()
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const [filterModel, setFilterModel] = useState(new FilterModel({ archived: false }))
+  const [filterModel, setFilterModel] = useState(
+    new FilterModel({ archived: false })
+  )
   const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
 
   const onChange = (todoItem: TodoItemModel) => {
     console.log("todoItem change", todoItem)
+  }
+
+  const onAddTodoItem = (todoItem: TodoItemModel) => {
+    console.log("add todo item")
   }
 
   const changeFilterTextEvent = (ev: Event) => {
@@ -64,13 +72,17 @@ const TodoList = (props: Props) => {
       changeFilterText(textFilter.addTextFilter(searchRef, "not", "archived"))
     } else {
       changeFilterText(textFilter.addTextFilter(searchRef, "is", "archived"))
-      changeFilterText(textFilter.removeTextFilter(searchRef, "not", "archived"))
+      changeFilterText(
+        textFilter.removeTextFilter(searchRef, "not", "archived")
+      )
     }
   }
 
   const changeCompleted = () => {
     if (textFilter.isCompleted(searchRef)) {
-      changeFilterText(textFilter.removeTextFilter(searchRef, "is", "completed"))
+      changeFilterText(
+        textFilter.removeTextFilter(searchRef, "is", "completed")
+      )
     } else {
       changeFilterText(textFilter.addTextFilter(searchRef, "is", "completed"))
     }
@@ -110,7 +122,11 @@ const TodoList = (props: Props) => {
           </form>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <ToggleButtonGroup exclusive value={textFilter.currentGrouping(searchRef)} onChange={changeGrouping}>
+          <ToggleButtonGroup
+            exclusive
+            value={textFilter.currentGrouping(searchRef)}
+            onChange={changeGrouping}
+          >
             <ToggleButton value={BY_ALL} size="small">
               No grouping
             </ToggleButton>
@@ -123,9 +139,33 @@ const TodoList = (props: Props) => {
           </ToggleButtonGroup>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <FormControlLabel control={<Switch checked={textFilter.isPriority(searchRef)} onChange={changePriority} />} label="Priority" />
-          <FormControlLabel control={<Switch checked={textFilter.isArchived(searchRef)} onChange={changeArchived} />} label="Archived" />
-          <FormControlLabel control={<Switch checked={textFilter.isCompleted(searchRef)} onChange={changeCompleted} />} label="Completed" />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={textFilter.isPriority(searchRef)}
+                onChange={changePriority}
+              />
+            }
+            label="Priority"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={textFilter.isArchived(searchRef)}
+                onChange={changeArchived}
+              />
+            }
+            label="Archived"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={textFilter.isCompleted(searchRef)}
+                onChange={changeCompleted}
+              />
+            }
+            label="Completed"
+          />
         </Grid>
       </Grid>
 
@@ -136,6 +176,8 @@ const TodoList = (props: Props) => {
           group={g}
         />
       ))}
+
+      <AddTodo onAddTodoItem={onAddTodoItem} />
     </React.Fragment>
   )
 }
