@@ -3,7 +3,7 @@ import textFilter from "./textFilter"
 import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
 
 it("filters text", () => {
-  const [filter, group] = textFilter("@asdf no:context")
+  const [filter, group] = textFilter.filter("@asdf no:context")
 
   expect(filter.subjectContains).toEqual("@asdf")
   expect(filter.isPriority).toEqual(null)
@@ -13,7 +13,7 @@ it("filters text", () => {
 })
 
 it("filters by context and priority", () => {
-  const [filter, group] = textFilter("@asdf is:priority group:context")
+  const [filter, group] = textFilter.filter("@asdf is:priority group:context")
 
   expect(filter.subjectContains).toEqual("@asdf")
   expect(filter.isPriority).toEqual(true)
@@ -23,7 +23,7 @@ it("filters by context and priority", () => {
 })
 
 it("filters by context and priority", () => {
-  const [filter, group] = textFilter("@asdf not:priority group:context")
+  const [filter, group] = textFilter.filter("@asdf not:priority group:context")
 
   expect(filter.subjectContains).toEqual("@asdf")
   expect(filter.isPriority).toEqual(false)
@@ -33,7 +33,7 @@ it("filters by context and priority", () => {
 })
 
 it("filters by context and priority", () => {
-  const [filter, group] = textFilter("@asdf not:priority not:archived")
+  const [filter, group] = textFilter.filter("@asdf not:priority not:archived")
 
   expect(filter.subjectContains).toEqual("@asdf")
   expect(filter.isPriority).toEqual(false)

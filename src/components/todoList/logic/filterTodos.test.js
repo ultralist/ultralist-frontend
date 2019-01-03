@@ -84,7 +84,7 @@ it("filters by priority", () => {
 
   const filtered = filterTodos(todos, filterModel)
 
-  expect(filtered.length).toEqual(0)
+  expect(filtered.length).toEqual(2)
 })
 
 it("filters by completed", () => {
@@ -93,19 +93,22 @@ it("filters by completed", () => {
   const filtered = filterTodos(todos, filterModel)
 
   expect(filtered.length).toEqual(2)
-  expect(filtered.map(f => f.id)).toEqual([4,5])
+  expect(filtered.map(f => f.id)).toEqual([4, 5])
 })
 
-it("filters by priority or completed", () => {
+it("filters by priority and completed", () => {
   const filterModel = new FilterModel({ isPriority: true, completed: true })
 
   const filtered = filterTodos(todos, filterModel)
 
-  expect(filtered.length).toEqual(0)
+  expect(filtered.length).toEqual(1)
 })
 
 it("filters by subject and contexts", () => {
-  const filterModel = new FilterModel({ subjectContains: "presentation", contexts: ["dingle"] })
+  const filterModel = new FilterModel({
+    subjectContains: "presentation",
+    contexts: ["dingle"]
+  })
 
   const filtered = filterTodos(todos, filterModel)
 
@@ -113,7 +116,10 @@ it("filters by subject and contexts", () => {
 })
 
 it("filters by subject and contexts right contexts", () => {
-  const filterModel = new FilterModel({ subjectContains: "presentation", contexts: ["Nick"] })
+  const filterModel = new FilterModel({
+    subjectContains: "presentation",
+    contexts: ["Nick"]
+  })
 
   const filtered = filterTodos(todos, filterModel)
 
