@@ -25,6 +25,7 @@ import DueDate from "./dueDate"
 import TodoText from "./todoText"
 import SetDueButton from "./setDueButton"
 import TodoItemNote from "./todoItemNote"
+import EditTodo from "./editTodo"
 
 type Props = {
   todoItem: TodoItemModel,
@@ -68,6 +69,11 @@ const styles = theme => ({
 const TodoItem = (props: Props) => {
   const todoItem = props.todoItem
   const [showNotes, setShowNotes] = useState(false)
+  const [showEditTodo, setShowEditTodo] = useState(false)
+
+  const toggleShowEditTodo = () => {
+    setShowEditTodo(!showEditTodo)
+  }
 
   const toggleComplete = () => {
     todoItem.toggleCompleted()
@@ -174,7 +180,7 @@ const TodoItem = (props: Props) => {
           <div className={props.classes.shortWidthHide}>
             {firstButton()}
 
-            <IconButton aria-label="Edit">
+            <IconButton onClick={toggleShowEditTodo} aria-label="Edit">
               <EditIcon />
             </IconButton>
 
@@ -188,6 +194,13 @@ const TodoItem = (props: Props) => {
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
       </Collapse>
+
+      <EditTodo
+        show={showEditTodo}
+        onClose={toggleShowEditTodo}
+        todoItem={todoItem}
+        onEditTodo={onChangeTodo}
+      />
     </React.Fragment>
   )
 }
