@@ -1,12 +1,12 @@
 // @flow
 
 type ConstructorArgs = {
-  contexts: Array<string> | null,
-  projects: Array<string> | null,
-  subjectContains: string | null,
-  archived: boolean | null,
-  isPriority: boolean | null,
-  completed: boolean | null
+  contexts?: Array<string> | null,
+  projects?: Array<string> | null,
+  subjectContains?: string | null,
+  archived?: boolean | null,
+  isPriority?: boolean | null,
+  completed?: boolean | null
 }
 
 export default class Filter {
@@ -22,6 +22,8 @@ export default class Filter {
     this.projects = args.projects || null
     this.subjectContains = args.subjectContains || null
     this.archived = args.archived || null
+    this.isPriority = args.isPriority || null
+    this.completed = args.completed || null
 
     if (args.isPriority === undefined) {
       this.isPriority = null

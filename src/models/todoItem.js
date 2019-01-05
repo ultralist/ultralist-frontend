@@ -18,7 +18,7 @@ type ConstructorArgs = {
 }
 
 export default class TodoItem {
-  id: number
+  id: number | null
   uuid: string
   completed: boolean
   archived: boolean
@@ -31,7 +31,7 @@ export default class TodoItem {
   notes: Array<string>
 
   constructor(args: ConstructorArgs) {
-    if (args.id) this.id = args.id
+    this.id = args.id || null
     this.uuid = args.uuid || utils.generateUuid()
     this.completed = args.completed || false
     this.archived = args.archived || false
