@@ -24,7 +24,9 @@ import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
 
 type Props = {
-  todoList: TodoListModel
+  todoList: TodoListModel,
+  onAddTodoItem: (todoItem: TodoItemModel) => void,
+  onChangeTodoItem: (todoItem: TodoItemModel) => void
 }
 
 const useStyles = makeStyles({
@@ -42,20 +44,25 @@ const TodoList = (props: Props) => {
   const [filterModel, setFilterModel] = useState(
     new FilterModel({ archived: false })
   )
-  const filteredTodos = filterTodos(props.todoList.todos, filterModel)
+  const [todos, setTodos] = useState(props.todoList.todos)
+  const filteredTodos = filterTodos(todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
-
-  const onChange = (todoItem: TodoItemModel) => {
-    console.log("todoItem change", todoItem)
-  }
-
-  const onAddTodoItem = (todoItem: TodoItemModel) => {
-    console.log("add todo item")
-  }
 
   const changeFilterTextEvent = (ev: Event) => {
     ev.preventDefault()
     changeFilterText(searchRef.current.value)
+  }
+
+  const onAddTodo = (todo: TodoItemModel) => {
+    props.todoList.addTodo(todo)
+    setTodos(props.todoList.todos)
+    props.onAddTodoItem(todo)
+  }
+
+  const onChangeTodo = (todo: TodoItemModel) => {
+    props.todoList.updateTodo(todo)
+    setTodos(props.todoList.todos)
+    props.onChangeTodoItem(todo)
   }
 
   const changePriority = () => {
@@ -171,13 +178,13 @@ const TodoList = (props: Props) => {
 
       {groups.map(g => (
         <TodoGroup
-          onChange={onChange}
+          onChange={onChangeTodo}
           onSubjectClick={changeFilterText}
           group={g}
         />
       ))}
 
-      <AddTodo onAddTodoItem={onAddTodoItem} />
+      <AddTodo onAddTodoItem={onAddTodo} />
     </React.Fragment>
   )
 }
