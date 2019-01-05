@@ -33,7 +33,7 @@ export default class TodoList {
 export const findLowestUnusedID = (todos: Array<TodoItemModel>) => {
   const todoIds = todos.map(t => t.id || -1)
   const maxId = Math.max(...todoIds)
-  let i = 1
+
   for (let i = 1; i < maxId; i++) {
     if (i !== -1 && !todoIds.includes(i)) {
       return i
