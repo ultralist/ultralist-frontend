@@ -34,6 +34,8 @@ const useStyles = makeStyles({
   }
 })
 
+const subjectRef = React.createRef()
+
 const Margin = props => {
   const classes = useStyles()
   return <div className={classes.withMargin}>{props.children}</div>
@@ -42,11 +44,6 @@ const Margin = props => {
 const TodoForm = (props: Props) => {
   const classes = useStyles()
   const [todoItem, setTodoItem] = useState(props.todoItem)
-
-  const setTodoText = (ev: SyntheticEvent<HTMLButtonElement>) => {
-    todoItem.setSubject(ev.currentTarget.value)
-    setTodoItem(todoItem)
-  }
 
   const setTodoDate = (date: Date) => {
     todoItem.setDue(date)
@@ -69,6 +66,11 @@ const TodoForm = (props: Props) => {
   }
 
   const onChange = () => {
+    if (todoItem.subject !== subjectRef.current.value) {
+      todoItem.setSubject(subjectRef.current.value)
+      setTodoItem(todoItem)
+    }
+
     props.onChange(todoItem)
   }
 
@@ -84,9 +86,9 @@ const TodoForm = (props: Props) => {
           <TextField
             error={!isValid()}
             className={classes.text}
-            value={todoItem.subject}
+            defaultValue={todoItem.subject}
             label="Description"
-            onChange={setTodoText}
+            inputRef={subjectRef}
           />
         </Margin>
 
