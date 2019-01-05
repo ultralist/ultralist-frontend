@@ -27,12 +27,13 @@ const isContext = word => {
 const TodoText = (props: Props) => {
   const words = props.val.split(" ")
 
-  const parsedWords = words.map(word => {
+  const parsedWords = words.map((word, i) => {
     word = word + " "
 
     if (isContext(word)) {
       return (
         <a
+          key={i}
           className={props.grey ? null : props.classes.context}
           onClick={() => props.onClick(word.trim())}
         >
@@ -42,6 +43,7 @@ const TodoText = (props: Props) => {
     } else if (isProject(word)) {
       return (
         <a
+          key={i}
           className={props.grey ? null : props.classes.project}
           onClick={() => props.onClick(word.trim())}
         >

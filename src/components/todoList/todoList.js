@@ -178,6 +178,7 @@ const TodoList = (props: Props) => {
 
       {groups.map(g => (
         <TodoGroup
+          key={g.uuid}
           onChange={onChangeTodo}
           onSubjectClick={changeFilterText}
           group={g}

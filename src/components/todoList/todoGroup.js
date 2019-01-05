@@ -17,13 +17,19 @@ type Props = {
 
 const TodoGroup = (props: Props) => {
   return (
-    <List subheader={<ListSubheader component="div">{props.group.name}</ListSubheader>}>
+    <List
+      subheader={
+        <ListSubheader component="div">{props.group.name}</ListSubheader>
+      }
+    >
       {props.group.todos.map(todo => (
-        <TodoItem
-          onChange={props.onChange}
-          onSubjectClick={props.onSubjectClick}
-          todoItem={todo}
-        />
+        <React.Fragment key={todo.uuid}>
+          <TodoItem
+            onChange={props.onChange}
+            onSubjectClick={props.onSubjectClick}
+            todoItem={todo}
+          />
+        </React.Fragment>
       ))}
     </List>
   )

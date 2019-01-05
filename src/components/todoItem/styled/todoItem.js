@@ -105,7 +105,9 @@ const TodoItem = (props: Props) => {
 
   const notes = () => {
     return todoItem.notes.map(n => (
-      <TodoItemNote note={n} onDeleteNote={deleteNote} />
+      <React.Fragment key={n}>
+        <TodoItemNote note={n} onDeleteNote={deleteNote} />
+      </React.Fragment>
     ))
   }
 
