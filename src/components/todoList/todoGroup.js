@@ -22,7 +22,7 @@ const TodoGroup = (props: Props) => {
         <ListSubheader component="div">{props.group.name}</ListSubheader>
       }
     >
-      {props.group.todos.map(todo => (
+      {props.group.sortedTodos().map(todo => (
         <React.Fragment key={todo.uuid}>
           <TodoItem
             onChange={props.onChange}

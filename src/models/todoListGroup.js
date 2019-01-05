@@ -17,4 +17,8 @@ export default class TodoListGroup {
     this.uuid = utils.generateUuid()
     this.todos = args.todos
   }
+
+  sortedTodos(): Array<TodoItem> {
+    return this.todos.sort((t1, t2) => (t1.id || -1) - (t2.id || -1))
+  }
 }
