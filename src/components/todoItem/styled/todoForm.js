@@ -75,7 +75,8 @@ const TodoForm = (props: Props) => {
   }
 
   const isValid = () => {
-    return todoItem.subject !== ""
+    if (!subjectRef.current) return true
+    return subjectRef.current.value !== ""
   }
 
   return (
