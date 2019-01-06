@@ -58,6 +58,12 @@ export default class TodoItem {
 
   toggleCompleted() {
     this.completed = !this.completed
+
+    if (this.completed) {
+      this.completedDate = format(new Date(), "yyyy-MM-dd")
+    } else {
+      this.completedDate = null
+    }
   }
 
   togglePriority() {
