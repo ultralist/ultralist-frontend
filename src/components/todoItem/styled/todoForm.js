@@ -66,6 +66,8 @@ const TodoForm = (props: Props) => {
   }
 
   const onChange = () => {
+    if (!isValid()) return
+
     if (todoItem.subject !== subjectRef.current.value) {
       todoItem.setSubject(subjectRef.current.value)
       setTodoItem(todoItem)
@@ -132,7 +134,7 @@ const TodoForm = (props: Props) => {
       </DialogContent>
 
       <DialogActions>
-        <Button disabled={!isValid()} color="primary" onClick={onChange}>
+        <Button color="primary" onClick={onChange}>
           Submit
         </Button>
       </DialogActions>
