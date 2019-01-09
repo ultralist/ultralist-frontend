@@ -3,7 +3,10 @@ import { ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
 import TodoItemModel from "../../../models/todoItem"
 import TodoListGroup from "../../../models/todoListGroup"
 
-const group = (todos: Array<TodoItemModel>, grouping: string): Array<TodoListGroup> => {
+const group = (
+  todos: Array<TodoItemModel>,
+  grouping: string
+): Array<TodoListGroup> => {
   switch (grouping) {
     case BY_CONTEXT:
       return sort(byContext(todos))
@@ -55,7 +58,8 @@ const getContexts = (todos: Array<TodoItemModel>) => {
     todo.contexts.forEach(context => {
       if (!contexts.includes(context)) contexts.push(context)
     })
-    if (todo.contexts.length === 0) contexts.push("No contexts")
+    if (todo.contexts.length === 0 && !contexts.includes("No contexts"))
+      contexts.push("No contexts")
   })
   return contexts
 }
@@ -64,8 +68,7 @@ const todosWithContext = (todos: Array<TodoItemModel>, context: string) => {
   const ret = []
   todos.forEach(todo => {
     if (todo.contexts.includes(context)) ret.push(todo)
-    if (context === "No contexts" && todo.contexts.length === 0)
-      ret.push(todo)
+    if (context === "No contexts" && todo.contexts.length === 0) ret.push(todo)
   })
   return ret
 }
@@ -93,8 +96,7 @@ const todosWithProject = (todos: Array<TodoItemModel>, project: string) => {
   const ret = []
   todos.forEach(todo => {
     if (todo.projects.includes(project)) ret.push(todo)
-    if (project === "No projects" && todo.projects.length === 0)
-      ret.push(todo)
+    if (project === "No projects" && todo.projects.length === 0) ret.push(todo)
   })
   return ret
 }
