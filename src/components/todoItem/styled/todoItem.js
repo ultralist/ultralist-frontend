@@ -173,7 +173,7 @@ const TodoItem = (props: Props) => {
           secondary={
             <DueDate
               grey={todoItem.archived || todoItem.completed}
-              date={todoItem.due}
+              date={todoItem.dueDate()}
             />
           }
         />
