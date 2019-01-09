@@ -29,27 +29,43 @@ const isTomorrow = (date: Date): boolean => {
 const DueDate = (props: Props) => {
   if (props.date === null) return null
 
-  const formattedDate = format(props.date, "MMM Do")
+  const formattedDate = format(props.date, "MMM do")
   const realDate = toDate(props.date)
   const grey = props.classes.grey
 
   if (isYesterday(realDate)) {
-    return <span className={props.grey ? grey : props.classes.past}>Yesterday</span>
+    return (
+      <span className={props.grey ? grey : props.classes.past}>Yesterday</span>
+    )
   }
 
   if (isToday(realDate)) {
-    return <span className={props.grey ? grey : props.classes.today}>Today</span>
+    return (
+      <span className={props.grey ? grey : props.classes.today}>Today</span>
+    )
   }
 
   if (isBefore(realDate, new Date())) {
-    return <span className={props.grey ? grey : props.classes.past}>{formattedDate}</span>
+    return (
+      <span className={props.grey ? grey : props.classes.past}>
+        {formattedDate}
+      </span>
+    )
   }
 
   if (isTomorrow(realDate)) {
-    return <span className={props.grey ? grey : props.classes.tomorrow}>Tomorrow</span>
+    return (
+      <span className={props.grey ? grey : props.classes.tomorrow}>
+        Tomorrow
+      </span>
+    )
   }
 
-  return <span className={props.grey ? grey : props.classes.future}>{formattedDate}</span>
+  return (
+    <span className={props.grey ? grey : props.classes.future}>
+      {formattedDate}
+    </span>
+  )
 }
 
 export default DueDate
