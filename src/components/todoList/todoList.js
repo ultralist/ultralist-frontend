@@ -42,7 +42,7 @@ const searchRef = React.createRef()
 const TodoList = (props: Props) => {
   const classes = useStyles()
   const [filterModel, setFilterModel] = useState(
-    new FilterModel({ archived: false })
+    new FilterModel({ archived: false, completed: false })
   )
   const [todos, setTodos] = useState(props.todoList.todos)
   const filteredTodos = filterTodos(todos, filterModel)
@@ -123,7 +123,7 @@ const TodoList = (props: Props) => {
               className={classes.searchBox}
               margin="dense"
               autoComplete="off"
-              defaultValue="not:archived"
+              defaultValue="not:archived not:completed"
               inputRef={searchRef}
             />
           </form>
