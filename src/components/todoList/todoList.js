@@ -7,9 +7,15 @@ import Switch from "@material-ui/core/Switch"
 import TextField from "@material-ui/core/TextField"
 import ToggleButton from "@material-ui/lab/ToggleButton"
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
-import { makeStyles } from "@material-ui/styles"
+import Typography from "@material-ui/core/Typography"
+import { makeStyles, useTheme } from "@material-ui/styles"
 
-import { BY_CONTEXT, BY_PROJECT, BY_ALL } from "../../constants"
+import {
+  BY_CONTEXT,
+  BY_PROJECT,
+  BY_ALL,
+  DEFAULT_FILTER_STRING
+} from "../../constants"
 import utils from "../../utils"
 
 import FilterModel from "../../models/filter"
@@ -30,10 +36,27 @@ type Props = {
 }
 
 const useStyles = makeStyles({
+  searchBoxOuter: {
+    margin: 20
+  },
   searchBox: {
-    marginLeft: 20,
-    marginRight: 20,
     width: "90%"
+  },
+  hidden: {
+    display: "none"
+  },
+  toggleContainer: {
+    height: 56,
+    padding: "8px 16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    margin: "8px 0",
+    minWidth: 400
+  },
+  controls: {
+    marginLeft: 20,
+    minWidth: 400
   }
 })
 
@@ -41,9 +64,8 @@ const searchRef = React.createRef()
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const [filterModel, setFilterModel] = useState(
-    new FilterModel({ archived: false, completed: false })
-  )
+  const [defaultFilter, _] = textFilter.filter(DEFAULT_FILTER_STRING)
+  const [filterModel, setFilterModel] = useState(defaultFilter)
   const [todos, setTodos] = useState(props.todoList.todos)
   const filteredTodos = filterTodos(todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
@@ -109,70 +131,83 @@ const TodoList = (props: Props) => {
     setFilterModel(filterModel)
   }
 
+  const Controls = () => (
+    <div className={classes.controls}>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={textFilter.isPriority(searchRef)}
+            onChange={changePriority}
+          />
+        }
+        label="Priority"
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={textFilter.isArchived(searchRef)}
+            onChange={changeArchived}
+          />
+        }
+        label="Archived"
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            checked={textFilter.isCompleted(searchRef)}
+            onChange={changeCompleted}
+          />
+        }
+        label="Completed"
+      />
+    </div>
+  )
+
+  const GroupController = () => (
+    <div className={classes.toggleContainer}>
+      <ToggleButtonGroup
+        exclusive
+        value={textFilter.currentGrouping(searchRef)}
+        onChange={changeGrouping}
+      >
+        <ToggleButton value={BY_ALL} size="small">
+          No grouping
+        </ToggleButton>
+        <ToggleButton value={BY_PROJECT} size="small">
+          By project
+        </ToggleButton>
+        <ToggleButton value={BY_CONTEXT} size="small">
+          By context
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </div>
+  )
+
   return (
     <React.Fragment>
-      <h2>{props.todoList.name}</h2>
+      <Typography component="h3" variant="h3">
+        {props.todoList.name}
+      </Typography>
 
-      <Grid container spacing={24}>
-        <Grid item xs={12} sm={4}>
-          <form onSubmit={changeFilterTextEvent}>
-            <TextField
-              id="outlined-search"
-              label="Search"
-              type="search"
-              className={classes.searchBox}
-              margin="dense"
-              autoComplete="off"
-              defaultValue="not:archived not:completed"
-              inputRef={searchRef}
-            />
-          </form>
+      <form className={classes.searchBoxOuter} onSubmit={changeFilterTextEvent}>
+        <TextField
+          id="outlined-search"
+          label="Search"
+          type="search"
+          className={classes.searchBox}
+          margin="dense"
+          autoComplete="off"
+          defaultValue={DEFAULT_FILTER_STRING}
+          inputRef={searchRef}
+        />
+      </form>
+
+      <Grid alignContent="center" alignItems="center" container spacing={12}>
+        <Grid item sm={12} md={4}>
+          <Controls />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <ToggleButtonGroup
-            exclusive
-            value={textFilter.currentGrouping(searchRef)}
-            onChange={changeGrouping}
-          >
-            <ToggleButton value={BY_ALL} size="small">
-              No grouping
-            </ToggleButton>
-            <ToggleButton value={BY_PROJECT} size="small">
-              By project
-            </ToggleButton>
-            <ToggleButton value={BY_CONTEXT} size="small">
-              By context
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={textFilter.isPriority(searchRef)}
-                onChange={changePriority}
-              />
-            }
-            label="Priority"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={textFilter.isArchived(searchRef)}
-                onChange={changeArchived}
-              />
-            }
-            label="Archived"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={textFilter.isCompleted(searchRef)}
-                onChange={changeCompleted}
-              />
-            }
-            label="Completed"
-          />
+        <Grid item sm={12} md={4} classes={{ marginLeft: "auto" }}>
+          <GroupController />
         </Grid>
       </Grid>
 
