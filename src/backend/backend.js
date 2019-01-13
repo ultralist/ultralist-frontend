@@ -1,4 +1,5 @@
 import * as constants from "../constants"
+import { createTodoListFromBackend } from "../models/todoList"
 
 export default class Backend {
   token: string
@@ -8,7 +9,9 @@ export default class Backend {
   }
 
   fetchTodoLists() {
-    return this.apiRequest("api/v1/todo_lists", "GET")
+    return this.apiRequest("api/v1/todo_lists", "GET").then(todolists => {
+      return todolists.todolists.map(t => createTodoListFromBackend(t))
+    })
   }
 
   apiRequest(path: string, method: string, params: object = {}) {

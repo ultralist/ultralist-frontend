@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import TodoListApp from "./components/todoList"
+import TodoListApp from "./pages/todoList"
 import * as serviceWorker from "./serviceWorker"
 
 ReactDOM.render(<TodoListApp />, document.getElementById("root"))
