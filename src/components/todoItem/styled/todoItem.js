@@ -190,6 +190,11 @@ const TodoItem = (props: Props) => {
               {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </IconButton>
           </div>
+          <div className={props.classes.shortWidthShow}>
+            <IconButton onClick={toggleShowEditTodo} aria-label="Edit">
+              <EditIcon />
+            </IconButton>
+          </div>
         </ListItemSecondaryAction>
       </ListItem>
 

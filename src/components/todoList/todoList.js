@@ -1,6 +1,7 @@
 // @flow
 import React, { useState } from "react"
 
+import Divider from "@material-ui/core/Divider"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Grid from "@material-ui/core/Grid"
 import Switch from "@material-ui/core/Switch"
@@ -26,6 +27,7 @@ import textFilter from "./logic/textFilter"
 import filterTodos from "./logic/filterTodos"
 import group from "./logic/grouper"
 
+import AppBar from "./appBar"
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
 
@@ -52,11 +54,11 @@ const useStyles = makeStyles({
     alignItems: "center",
     justifyContent: "flex-start",
     margin: "8px 0",
-    minWidth: 400
+    minWidth: 300
   },
   controls: {
     marginLeft: 20,
-    minWidth: 400
+    minWidth: 300
   }
 })
 
@@ -171,13 +173,13 @@ const TodoList = (props: Props) => {
         onChange={changeGrouping}
       >
         <ToggleButton value={BY_ALL} size="small">
-          No grouping
+          None
         </ToggleButton>
         <ToggleButton value={BY_PROJECT} size="small">
-          By project
+          P
         </ToggleButton>
         <ToggleButton value={BY_CONTEXT} size="small">
-          By context
+          C
         </ToggleButton>
       </ToggleButtonGroup>
     </div>
@@ -185,6 +187,7 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
+      <AppBar />
       <Typography component="h3" variant="h3">
         {props.todoList.name}
       </Typography>
@@ -202,14 +205,16 @@ const TodoList = (props: Props) => {
         />
       </form>
 
-      <Grid alignContent="center" alignItems="center" container spacing={12}>
+      <Grid alignContent="center" alignItems="center" container spacing={16}>
         <Grid item sm={12} md={4}>
           <Controls />
         </Grid>
-        <Grid item sm={12} md={4} classes={{ marginLeft: "auto" }}>
+        <Grid item sm={12} md={4}>
           <GroupController />
         </Grid>
       </Grid>
+
+      <Divider variant="middle" />
 
       {groups.map(g => (
         <TodoGroup
