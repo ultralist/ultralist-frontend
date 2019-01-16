@@ -1,8 +1,18 @@
 {
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
   "parser": "babel-eslint",
-  "plugins": ["prettier","react-hooks"],
+  "plugins": [
+    "prettier","react-hooks",
+    "react",
+    "flowtype"
+  ],
   "rules": {
-    "prettier/prettier": "error",
-    "react-hooks/rules-of-hooks": "error"
+    "prettier/prettier": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
   }
 }
