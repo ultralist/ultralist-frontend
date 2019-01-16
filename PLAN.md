@@ -60,3 +60,19 @@ that generates this JSON, which can be fed into a searching class
 }
 
 ```
+
+# next
+
+1. Be able to fetch todos from server using service worker (explore how service workers work)
+2. Todo list switcher component
+3. Introduce routes - login page, logout page, signup page, todo list page
+4. create the actual app, host frontend on netlify
+
+
+## TODO
+
+* show app bar
+* todo list switcher component
+* login page
+* [ ] need a control to show notes in responsive mode
+*
