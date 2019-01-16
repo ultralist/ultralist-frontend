@@ -8,7 +8,6 @@ import EventCache from "../backend/eventCache"
 import TodoList from "../components/todoList/todoList"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
-import { createTodoListFromBackend } from "../models/todoList"
 
 type Props = {
   backend: Backend | TestBackend
