@@ -42,10 +42,15 @@ export const findLowestUnusedID = (todos: Array<TodoItemModel>) => {
   return maxId + 1
 }
 
-export const createTodoListFromBackend = (backendJSON: Object) => {
+const createTodoListFromBackend = (backendJSON: Object) => {
   return new TodoList({
     name: backendJSON.name,
     todos: backendJSON.todo_items_attributes.map(i => new TodoItemModel(i)),
     uuid: backendJSON.uuid
   })
+}
+
+export const LoadTodoListsFromStorage = () => {
+  const rawLists = JSON.parse(window.localStorage.getItem("todolists"))
+  return rawLists.map(rl => createTodoListFromBackend(rl))
 }

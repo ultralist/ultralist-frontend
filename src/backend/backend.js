@@ -9,9 +9,7 @@ export default class Backend {
   }
 
   fetchTodoLists() {
-    return this.apiRequest("api/v1/todo_lists", "GET").then(todolists => {
-      return todolists.todolists.map(t => createTodoListFromBackend(t))
-    })
+    return this.apiRequest("api/v1/todo_lists", "GET")
   }
 
   apiRequest(path: string, method: string, params: object = {}) {
