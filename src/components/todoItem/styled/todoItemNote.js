@@ -37,9 +37,9 @@ const styles = theme => ({
 
 const TodoItemNote = (props: Props) => {
   const onDelete = () => {
-    if (confirm("Are you sure you wish to delete this note?")) {
-      props.onDeleteNote(props.note)
-    }
+    // if (confirm("Are you sure you wish to delete this note?")) {
+    //   props.onDeleteNote(props.note)
+    // }
   }
 
   return (
