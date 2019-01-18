@@ -28,6 +28,14 @@ export default class TodoList {
     this.todos = this.todos.filter(t => t.uuid !== todo.uuid)
     this.addTodo(todo)
   }
+
+  toJSON() {
+    return {
+      name: this.name,
+      uuid: this.uuid,
+      todos: this.todos.map(todo => todo.toJSON())
+    }
+  }
 }
 
 export const findLowestUnusedID = (todos: Array<TodoItemModel>) => {
@@ -42,7 +50,7 @@ export const findLowestUnusedID = (todos: Array<TodoItemModel>) => {
   return maxId + 1
 }
 
-const createTodoListFromBackend = (backendJSON: Object) => {
+export const createTodoListFromBackend = (backendJSON: Object) => {
   return new TodoList({
     name: backendJSON.name,
     todos: backendJSON.todo_items_attributes.map(i => new TodoItemModel(i)),
@@ -50,7 +58,10 @@ const createTodoListFromBackend = (backendJSON: Object) => {
   })
 }
 
-export const LoadTodoListsFromStorage = () => {
-  const rawLists = JSON.parse(window.localStorage.getItem("todolists"))
-  return rawLists.map(rl => createTodoListFromBackend(rl))
+export const createTodoListFromJSON = (storageJSON: Object) => {
+  return new TodoList({
+    name: storageJSON.name,
+    todos: storageJSON.todos.map(i => new TodoItemModel(i)),
+    uuid: storageJSON.uuid
+  })
 }

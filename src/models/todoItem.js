@@ -102,4 +102,20 @@ export default class TodoItem {
   deleteNote(note: string) {
     this.notes = this.notes.filter(n => n !== note)
   }
+
+  toJSON() {
+    return {
+      id: this.id,
+      uuid: this.uuid,
+      completed: this.completed,
+      archived: this.archived,
+      isPriority: this.isPriority,
+      completedDate: this.completedDate,
+      subject: this.subject,
+      contexts: this.contexts,
+      projects: this.projects,
+      due: this.due,
+      notes: this.notes
+    }
+  }
 }

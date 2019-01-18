@@ -34,7 +34,7 @@ export default class User {
   }
 }
 
-export const LoadUser = (): User => {
+export const loadUser = (): User => {
   const json = JSON.parse(window.localStorage.getItem("user"))
   return new User(json || {})
 }

@@ -1,8 +1,14 @@
 // @flow
 
-import { todos } from "../test/test_helper"
+import { todoData } from "../test/test_helper"
+import EventCache from "./eventCache"
+import utils from "../utils"
 
-import TodoList from "../models/todoList"
+const todoList = {
+  name: "test list",
+  todo_items_attributes: todoData,
+  uuid: utils.generateUuid()
+}
 
 export default class TestBackend {
   token: string
@@ -11,9 +17,11 @@ export default class TestBackend {
     this.token = token
   }
 
-  fetchTodoLists() {
-    const todoList = new TodoList({ name: "test list", todos })
+  updateTodolist(uuid: string, cache: EventCache) {
+    return new Promise(resolve => resolve(todoList))
+  }
 
+  fetchTodoLists() {
     return new Promise(resolve => {
       resolve([todoList])
     })

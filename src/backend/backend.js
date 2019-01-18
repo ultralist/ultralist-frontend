@@ -1,5 +1,5 @@
 import * as constants from "../constants"
-import { createTodoListFromBackend } from "../models/todoList"
+import EventCache from "./eventCache"
 
 export default class Backend {
   token: string
@@ -10,6 +10,12 @@ export default class Backend {
 
   fetchTodoLists() {
     return this.apiRequest("api/v1/todo_lists", "GET")
+  }
+
+  updateTodolist(todolistUUID: string, cache: EventCache) {
+    return this.apiRequest(`api/v1/todo_lists/${todolistUUID}`, "PUT", {
+      events: cache.toJSON()
+    })
   }
 
   apiRequest(path: string, method: string, params: object = {}) {

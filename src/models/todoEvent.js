@@ -16,6 +16,7 @@ export default class TodoEvent {
     return {
       eventType: this.eventType,
       id: this.todo.id,
+      uuid: this.todo.uuid,
       subject: this.todo.subject,
       projects: this.todo.projects,
       contexts: this.todo.contexts,

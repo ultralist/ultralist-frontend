@@ -2,7 +2,7 @@ import { format, addDays } from "date-fns"
 import utils from "../utils"
 import TodoItemModel from "../models/todoItem"
 
-const todoData = [
+export const todoData = [
   {
     id: 1,
     uuid: utils.generateUuid(),
@@ -66,7 +66,8 @@ const todoData = [
   {
     id: 6,
     uuid: utils.generateUuid(),
-    subject: "Work on +budget presentation for leadership team, sell to @Nick first",
+    subject:
+      "Work on +budget presentation for leadership team, sell to @Nick first",
     projects: ["budget"],
     contexts: ["Nick"],
     due: format(addDays(new Date(), -2), "yyyy-MM-dd"),
