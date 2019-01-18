@@ -1,13 +1,15 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
 import Backend from "../backend/backend"
 import TestBackend from "../backend/testBackend"
 import EventCache from "../backend/eventCache"
 
+import AppBar from "../components/appBar"
 import TodoList from "../components/todoList/todoList"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
+import { LoadTodoListsFromStorage } from "../models/todoList"
 
 type Props = {
   backend: Backend | TestBackend
@@ -28,33 +30,18 @@ const onChangeTodoItem = (todoItem: TodoItemModel) => {
 }
 
 const TodoListApp = (props: Props) => {
-  const [todoLists, setTodoLists] = useState([])
-
-  const backend =
-    props.backend || new Backend(process.env.REACT_APP_TODOLIST_TOKEN)
-
-  useEffect(
-    () => {
-      if (todoLists.length > 0) return
-      backend.fetchTodoLists().then(todoLists => {
-        setTodoLists(todoLists)
-      })
-    },
-    [todoLists]
-  )
-
-  const currentTodoList = null
-
-  if (todoLists.length === 0) {
-    return "<h1>Loading...</h1>"
-  }
+  const todoLists = LoadTodoListsFromStorage()
+  const [todoList, setTodoList] = useState(todoLists[0])
 
   return (
-    <TodoList
-      todoList={todoLists[0]}
-      onAddTodoItem={onAddTodoItem}
-      onChangeTodoItem={onChangeTodoItem}
-    />
+    <React.Fragment>
+      <AppBar />
+      <TodoList
+        todoList={todoList}
+        onAddTodoItem={onAddTodoItem}
+        onChangeTodoItem={onChangeTodoItem}
+      />
+    </React.Fragment>
   )
 }
 export default TodoListApp

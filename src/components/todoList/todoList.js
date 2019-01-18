@@ -27,7 +27,6 @@ import textFilter from "./logic/textFilter"
 import filterTodos from "./logic/filterTodos"
 import group from "./logic/grouper"
 
-import AppBar from "./appBar"
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
 
@@ -187,7 +186,6 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <AppBar />
       <Typography component="h3" variant="h3">
         {props.todoList.name}
       </Typography>
