@@ -40,7 +40,14 @@ const TodoListApp = (props: Props) => {
     })
   }
 
-  window.onfocus = () => {
+  // TODO: this will probably add a ton of event listeners
+  // since there is no subsequent removeEventListener
+  console.log("about to register")
+  document.addEventListener("visibilityChange", () => {
+    console.log("visibilityChange")
+    if (document.visibilityState !== "visible") return
+    console.log("visible")
+
     const lastSync =
       parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
     const diff = new Date().getTime() / 1000 - lastSync / 1000
@@ -48,7 +55,7 @@ const TodoListApp = (props: Props) => {
     if (lastSync === null || diff > 10) {
       fetchLists()
     }
-  }
+  })
 
   const update = () => {
     backend.updateTodolist(todoList.uuid, eventCache).then(list => {
