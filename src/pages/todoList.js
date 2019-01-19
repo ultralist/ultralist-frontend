@@ -1,5 +1,6 @@
 // @flow
 import React, { useState } from "react"
+import { toDate } from "date-fns"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -26,6 +27,28 @@ const TodoListApp = (props: Props) => {
   const [todoList, setTodoList] = useState(todoLists[0])
   const user = loadUser()
   const backend = props.backend || new Backend(user.token)
+
+  const fetchLists = () => {
+    backend.fetchTodoLists().then(todoLists => {
+      const lists = todoLists.todolists.map(list =>
+        createTodoListFromBackend(list)
+      )
+      const currentList = lists.find(l => l.uuid === todoList.uuid)
+      storage.saveTodoLists(lists)
+      setTodoList(currentList)
+      window.localStorage.setItem("todolists_last_sync", new Date().getTime())
+    })
+  }
+
+  window.onfocus = () => {
+    const lastSync =
+      parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
+    const diff = new Date().getTime() / 1000 - lastSync / 1000
+
+    if (lastSync === null || diff > 10) {
+      fetchLists()
+    }
+  }
 
   const update = () => {
     backend.updateTodolist(todoList.uuid, eventCache).then(list => {
