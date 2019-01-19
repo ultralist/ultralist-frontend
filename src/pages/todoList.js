@@ -29,7 +29,6 @@ const TodoListApp = (props: Props) => {
   const backend = props.backend || new Backend(user.token)
 
   const fetchLists = () => {
-    console.log("fetchLists")
     backend.fetchTodoLists().then(todoLists => {
       const lists = todoLists.todolists.map(list =>
         createTodoListFromBackend(list)
@@ -42,7 +41,6 @@ const TodoListApp = (props: Props) => {
   }
 
   window.onfocus = () => {
-    console.log("onfocus")
     const lastSync =
       parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
     const diff = new Date().getTime() / 1000 - lastSync / 1000

@@ -67,8 +67,7 @@ const TodoList = (props: Props) => {
   const classes = useStyles()
   const [defaultFilter, _] = textFilter.filter(DEFAULT_FILTER_STRING)
   const [filterModel, setFilterModel] = useState(defaultFilter)
-  const [todos, setTodos] = useState(props.todoList.todos)
-  const filteredTodos = filterTodos(todos, filterModel)
+  const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
 
   const changeFilterTextEvent = (ev: Event) => {
@@ -78,13 +77,11 @@ const TodoList = (props: Props) => {
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.todoList.addTodo(todo)
-    setTodos(props.todoList.todos)
     props.onAddTodoItem(todo)
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
     props.todoList.updateTodo(todo)
-    setTodos(props.todoList.todos)
     props.onChangeTodoItem(todo)
   }
 
