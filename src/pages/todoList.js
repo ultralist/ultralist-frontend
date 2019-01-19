@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { toDate } from "date-fns"
 
 import Backend from "../backend/backend"
@@ -28,6 +28,18 @@ const TodoListApp = (props: Props) => {
   const user = loadUser()
   const backend = props.backend || new Backend(user.token)
 
+  const visibilityChangeHandler = () => {
+    if (document.visibilityState !== "visible") return
+
+    const lastSync =
+      parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
+    const diff = new Date().getTime() / 1000 - lastSync / 1000
+
+    if (lastSync === null || diff > 10) {
+      fetchLists()
+    }
+  }
+
   const fetchLists = () => {
     backend.fetchTodoLists().then(todoLists => {
       const lists = todoLists.todolists.map(list =>
@@ -40,26 +52,12 @@ const TodoListApp = (props: Props) => {
     })
   }
 
-  // TODO: this will probably add a ton of event listeners
-  // since there is no subsequent removeEventListener
-  console.log("about to register22")
-  document.addEventListener(
-    "visibilitychange",
-    () => {
-      console.log("visibilityChange")
-      if (document.visibilityState !== "visible") return
-      console.log("visible")
-
-      const lastSync =
-        parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
-      const diff = new Date().getTime() / 1000 - lastSync / 1000
-
-      if (lastSync === null || diff > 10) {
-        fetchLists()
-      }
-    },
-    false
-  )
+  useEffect(() => {
+    document.addEventListener("visibilitychange", visibilityChangeHandler)
+    return () => {
+      document.removeEventListener("visibilitychange", visibilityChangeHandler)
+    }
+  })
 
   const update = () => {
     backend.updateTodolist(todoList.uuid, eventCache).then(list => {
