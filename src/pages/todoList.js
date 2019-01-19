@@ -43,19 +43,23 @@ const TodoListApp = (props: Props) => {
   // TODO: this will probably add a ton of event listeners
   // since there is no subsequent removeEventListener
   console.log("about to register")
-  document.addEventListener("visibilityChange", () => {
-    console.log("visibilityChange")
-    if (document.visibilityState !== "visible") return
-    console.log("visible")
+  document.addEventListener(
+    "visibilityChange",
+    () => {
+      console.log("visibilityChange")
+      if (document.visibilityState !== "visible") return
+      console.log("visible")
 
-    const lastSync =
-      parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
-    const diff = new Date().getTime() / 1000 - lastSync / 1000
+      const lastSync =
+        parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
+      const diff = new Date().getTime() / 1000 - lastSync / 1000
 
-    if (lastSync === null || diff > 10) {
-      fetchLists()
-    }
-  })
+      if (lastSync === null || diff > 10) {
+        fetchLists()
+      }
+    },
+    false
+  )
 
   const update = () => {
     backend.updateTodolist(todoList.uuid, eventCache).then(list => {
