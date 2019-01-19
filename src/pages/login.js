@@ -1,8 +1,14 @@
 // @flow
 import React from "react"
 import { BACKEND_URL } from "../constants"
+import { isUserLoggedIn } from "../models/user"
 
-const Login = () => {
+const Login = props => {
+  if (isUserLoggedIn()) {
+    props.history.push("/todolist")
+    return null
+  }
+
   return (
     <React.Fragment>
       <h1>Login page</h1>

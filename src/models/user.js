@@ -38,3 +38,9 @@ export const loadUser = (): User => {
   const json = JSON.parse(window.localStorage.getItem("user"))
   return new User(json || {})
 }
+
+export const isUserLoggedIn = (): boolean => {
+  const user = JSON.parse(window.localStorage.getItem("user"))
+  if (user === null) return false
+  return true
+}
