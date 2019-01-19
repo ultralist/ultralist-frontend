@@ -39,6 +39,10 @@ export const loadUser = (): User => {
   return new User(json || {})
 }
 
+export const logoutUser = (): User => {
+  window.localStorage.setItem("user", null)
+}
+
 export const isUserLoggedIn = (): boolean => {
   const user = JSON.parse(window.localStorage.getItem("user"))
   if (user === null) return false

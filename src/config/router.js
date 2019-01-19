@@ -6,6 +6,7 @@ import createBrowserHistory from "history/createBrowserHistory"
 
 import TodoList from "../pages/todoList"
 import Login from "../pages/login"
+import Logout from "../pages/logout"
 import Auth from "../pages/auth"
 import LoadTodoLists from "../pages/loadTodoLists"
 
@@ -18,6 +19,7 @@ const Routes = () => (
       <Route path="/todolist" component={TodoList} />
 
       <Route path="/login" component={Login} />
+      <Route path="/logout" component={Logout} />
       <Route path="/auth" component={Auth} />
       <Route path="/loading" component={LoadTodoLists} />
 
