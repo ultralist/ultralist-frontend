@@ -42,9 +42,9 @@ const TodoListApp = (props: Props) => {
 
   // TODO: this will probably add a ton of event listeners
   // since there is no subsequent removeEventListener
-  console.log("about to register")
+  console.log("about to register22")
   document.addEventListener(
-    "visibilityChange",
+    "visibilitychange",
     () => {
       console.log("visibilityChange")
       if (document.visibilityState !== "visible") return
