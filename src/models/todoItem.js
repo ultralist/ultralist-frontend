@@ -1,7 +1,7 @@
 // @flow
 import TodoItemNote from "./todoItemNote"
 import utils from "../utils"
-import { format, addDays, setDay, toDate } from "date-fns"
+import { format, addDays, setDay, parseISO } from "date-fns"
 
 type ConstructorArgs = {
   id?: number,
@@ -45,7 +45,7 @@ export default class TodoItem {
   }
 
   dueDate(): Date | null {
-    return this.due ? toDate(this.due || "") : null
+    return this.due ? parseISO(this.due || "") : null
   }
 
   setDue(date: Date | null) {
