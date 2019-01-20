@@ -27,14 +27,13 @@ type Props = {
 }
 
 const TodoListSelection = props => (
-  <ListItem key={props.uuid} button onClick={props.onClick}>
+  <ListItem button onClick={props.onClick}>
     <ListItemText primary={props.name} />
   </ListItem>
 )
 
 const Chooser = (props: Props) => {
   const classes = useStyles()
-  console.log("classes = ", classes)
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleOpen = () => {
@@ -59,7 +58,7 @@ const Chooser = (props: Props) => {
           {props.todoLists.map(l => (
             <TodoListSelection
               name={l.name}
-              uuid={l.uuid}
+              key={l.uuid}
               onClick={onSelectList.bind(this, l)}
             />
           ))}
