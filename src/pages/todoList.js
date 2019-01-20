@@ -1,6 +1,5 @@
 // @flow
 import React, { useState, useEffect } from "react"
-import { toDate } from "date-fns"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -9,6 +8,7 @@ import EventCache from "../backend/eventCache"
 
 import AppBar from "../components/appBar"
 import TodoList from "../components/todoList/todoList"
+import TodoListChooser from "../components/todoListChooser"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
@@ -80,7 +80,10 @@ const TodoListApp = (props: Props) => {
 
   return (
     <React.Fragment>
-      <AppBar />
+      <AppBar>
+        <TodoListChooser todoLists={todoLists} onSelectTodoList={setTodoList} />
+      </AppBar>
+
       <TodoList
         todoList={todoList}
         onAddTodoItem={onAddTodoItem}

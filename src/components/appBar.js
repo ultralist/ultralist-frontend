@@ -9,6 +9,9 @@ import { makeStyles } from "@material-ui/styles"
 const useStyles = makeStyles({
   root: {
     flexGrow: 1
+  },
+  grow: {
+    flexGrow: 1
   }
 })
 
@@ -22,6 +25,9 @@ const TopBar = props => {
           <Typography variant="title" color="inherit">
             Ultralist
           </Typography>
+
+          <div className={classes.grow} />
+          <div>{props.children}</div>
         </Toolbar>
       </AppBar>
     </div>
