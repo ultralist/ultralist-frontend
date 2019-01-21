@@ -7,6 +7,7 @@ import TestBackend from "../backend/testBackend"
 import EventCache from "../backend/eventCache"
 
 import AppBar from "../components/appBar"
+import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/todoListChooser"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
@@ -82,6 +83,7 @@ const TodoListApp = (props: Props) => {
     <React.Fragment>
       <AppBar>
         <TodoListChooser todoLists={todoLists} onSelectTodoList={setTodoList} />
+        <UserIcon />
       </AppBar>
 
       <TodoList
