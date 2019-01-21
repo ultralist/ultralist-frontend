@@ -1,6 +1,5 @@
 // @flow
 import React from "react"
-import { isToday } from "date-fns"
 import IconButton from "@material-ui/core/IconButton"
 import TodayIcon from "@material-ui/icons/Today"
 import Menu from "@material-ui/core/Menu"
@@ -55,10 +54,9 @@ class SetDueButton extends React.Component<Props, State> {
   }
 
   render() {
-
     return (
-      <IconButton aria-label="Due Today">
-        <TodayIcon onClick={this.onOpenMenu} />
+      <IconButton onClick={this.onOpenMenu} aria-label="Due Today">
+        <TodayIcon />
         <Menu
           id="s"
           anchorEl={this.state.anchorEl}
