@@ -200,14 +200,16 @@ const TodoList = (props: Props) => {
         />
       </form>
 
-      <Grid alignContent="center" alignItems="center" container spacing={16}>
-        <Grid item sm={12} md={4}>
-          <Controls />
+      <div style={{ padding: 20 }}>
+        <Grid alignContent="center" alignItems="center" container spacing={16}>
+          <Grid item sm={12} md={4}>
+            <Controls />
+          </Grid>
+          <Grid item sm={12} md={4}>
+            <GroupController />
+          </Grid>
         </Grid>
-        <Grid item sm={12} md={4}>
-          <GroupController />
-        </Grid>
-      </Grid>
+      </div>
 
       <Divider variant="middle" />
 
