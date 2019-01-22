@@ -58,6 +58,9 @@ const useStyles = makeStyles({
   controls: {
     marginLeft: 20,
     minWidth: 300
+  },
+  listContainer: {
+    paddingBottom: 70
   }
 })
 
@@ -213,14 +216,16 @@ const TodoList = (props: Props) => {
 
       <Divider variant="middle" />
 
-      {groups.map(g => (
-        <TodoGroup
-          key={g.uuid}
-          onChange={onChangeTodo}
-          onSubjectClick={changeFilterText}
-          group={g}
-        />
-      ))}
+      <div className={classes.listContainer}>
+        {groups.map(g => (
+          <TodoGroup
+            key={g.uuid}
+            onChange={onChangeTodo}
+            onSubjectClick={changeFilterText}
+            group={g}
+          />
+        ))}
+      </div>
 
       <AddTodo onAddTodoItem={onAddTodo} />
     </React.Fragment>
