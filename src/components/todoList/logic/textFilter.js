@@ -41,6 +41,8 @@ const textFilter = {
         filter.completed = false
       } else if (word === "not:archived") {
         filter.archived = false
+      } else if (word === "due:agenda") {
+        filter.due = "agenda"
       } else {
         filter.subjectContains = word
       }

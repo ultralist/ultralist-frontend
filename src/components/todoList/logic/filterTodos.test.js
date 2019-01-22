@@ -12,7 +12,7 @@ it("a blank filter will return all todos", () => {
 
   const filtered = filterTodos(todos, filterModel)
 
-  expect(filtered.length).toEqual(6)
+  expect(filtered.length).toEqual(7)
 })
 
 it("filters by project", () => {
@@ -124,4 +124,16 @@ it("filters by subject and contexts right contexts", () => {
   const filtered = filterTodos(todos, filterModel)
 
   expect(filtered.length).toEqual(1)
+})
+
+describe("filtering by date", () => {
+  it("filtering by agenda takes out todos due in the future, or have no due date", () => {
+    const filterModel = new FilterModel({
+      due: "agenda"
+    })
+
+    const filtered = filterTodos(todos, filterModel)
+
+    expect(filtered.length).toEqual(6)
+  })
 })

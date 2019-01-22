@@ -75,6 +75,18 @@ export const todoData = [
     completed: false,
     isPriority: false,
     archived: false
+  },
+  {
+    id: 7,
+    uuid: utils.generateUuid(),
+    subject: "no +due @date",
+    projects: ["due"],
+    contexts: ["date"],
+    due: null,
+    notes: [],
+    completed: false,
+    isPriority: false,
+    archived: false
   }
 ]
 

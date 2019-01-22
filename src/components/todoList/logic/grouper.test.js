@@ -9,7 +9,7 @@ import { todos } from "../../../test/test_helper"
 
 it("groups by context", () => {
   const grouped = group(todos, BY_CONTEXT)
-  expect(grouped.length).toEqual(6)
+  expect(grouped.length).toEqual(7)
 
   const nickGroup = grouped.find(g => g.name === "Nick")
   expect(nickGroup.todos.length).toEqual(2)
@@ -17,8 +17,15 @@ it("groups by context", () => {
 
 it("groups by project", () => {
   const grouped = group(todos, BY_PROJECT)
-  expect(grouped.length).toEqual(5)
+  expect(grouped.length).toEqual(6)
 
-  const projects = ["bigProject","budget","mobile","No projects","testProject"]
+  const projects = [
+    "bigProject",
+    "budget",
+    "due",
+    "mobile",
+    "No projects",
+    "testProject"
+  ]
   expect(grouped.map(g => g.name)).toEqual(projects)
 })

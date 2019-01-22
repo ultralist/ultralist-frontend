@@ -3,7 +3,10 @@
 import TodoItemModel from "../../../models/todoItem"
 import FilterModel from "../../../models/filter"
 
-const filterTodos = (todos: Array<TodoItemModel>, filter: FilterModel): Array<TodoItemModel> => {
+const filterTodos = (
+  todos: Array<TodoItemModel>,
+  filter: FilterModel
+): Array<TodoItemModel> => {
   const filterSubject = (subject: string | null, todo): boolean => {
     if (!subject) return false
     return todo.subject.toLowerCase().includes(subject.toLowerCase())
@@ -35,6 +38,10 @@ const filterTodos = (todos: Array<TodoItemModel>, filter: FilterModel): Array<To
 
     if (filter.completed !== null)
       if (todo.completed !== filter.completed) return false
+
+    // for agenda filtering, we only want to see todos due today or are overdue
+    if (filter.due == "agenda")
+      if (todo.dueDate() !== null && todo.dueDate() > new Date()) return false
 
     return true
   })
