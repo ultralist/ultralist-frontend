@@ -15,7 +15,7 @@ type Props = {
 
 const useStyles = makeStyles({
   fab: {
-    position: "absolute",
+    position: "fixed",
     zIndex: 10000,
     bottom: 30,
     left: 0,
