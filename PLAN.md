@@ -76,3 +76,20 @@ that generates this JSON, which can be fed into a searching class
 * login page
 * [ ] need a control to show notes in responsive mode
 *
+bottom bar:
+
+* Filter
+  * is completed
+  * is priority
+  * is archived
+  * due
+    * agenda view
+    * due this week
+    * due monday
+* Group
+  * no grouping
+  * by project
+  * by context
+* view
+  * save this view
+  * load view
