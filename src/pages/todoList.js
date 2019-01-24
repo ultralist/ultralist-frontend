@@ -92,8 +92,6 @@ const TodoListApp = (props: Props) => {
         onAddTodoItem={onAddTodoItem}
         onChangeTodoItem={onChangeTodoItem}
       />
-
-      <BottomBar />
     </React.Fragment>
   )
 }

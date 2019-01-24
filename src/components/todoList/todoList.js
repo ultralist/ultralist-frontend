@@ -17,9 +17,7 @@ import {
   BY_ALL,
   DEFAULT_FILTER_STRING
 } from "../../constants"
-import utils from "../../utils"
 
-import FilterModel from "../../models/filter"
 import TodoItemModel from "../../models/todoItem"
 import TodoListModel from "../../models/todoList"
 
@@ -29,6 +27,7 @@ import group from "./logic/grouper"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
+import BottomBar from "../bottomBar"
 
 type Props = {
   todoList: TodoListModel,
@@ -118,7 +117,7 @@ const TodoList = (props: Props) => {
     }
   }
 
-  const changeGrouping = (ev: Event, group: string) => {
+  const changeGrouping = (group: string) => {
     if (group === BY_ALL) {
       changeFilterText(textFilter.removeTextFilter(searchRef, "group", null))
     } else {
@@ -208,9 +207,6 @@ const TodoList = (props: Props) => {
           <Grid item sm={12} md={4}>
             <Controls />
           </Grid>
-          <Grid item sm={12} md={4}>
-            <GroupController />
-          </Grid>
         </Grid>
       </div>
 
@@ -228,6 +224,7 @@ const TodoList = (props: Props) => {
       </div>
 
       <AddTodo onAddTodoItem={onAddTodo} />
+      <BottomBar onChooseGrouping={changeGrouping} />
     </React.Fragment>
   )
 }
