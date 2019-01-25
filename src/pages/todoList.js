@@ -7,7 +7,6 @@ import TestBackend from "../backend/testBackend"
 import EventCache from "../backend/eventCache"
 
 import AppBar from "../components/appBar"
-import BottomBar from "../components/bottomBar"
 import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/todoListChooser"
@@ -15,7 +14,7 @@ import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
 
-import { createTodoListFromBackend } from "../models/todoList"
+import TodoListModel, { createTodoListFromBackend } from "../models/todoList"
 
 type Props = {
   backend?: TestBackend
@@ -23,10 +22,15 @@ type Props = {
 
 const eventCache = new EventCache()
 const storage = new Storage()
+const TODOLIST_MRU_KEY = "todolist-mru-id"
 
 const TodoListApp = (props: Props) => {
   const todoLists = storage.loadTodoLists()
-  const [todoList, setTodoList] = useState(todoLists[0])
+  const mostRecentTodoList = todoLists.find(
+    tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
+  )
+  const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
+
   const user = loadUser()
   const backend = props.backend || new Backend(user.token)
 
@@ -80,10 +84,18 @@ const TodoListApp = (props: Props) => {
     update()
   }
 
+  const onChangeTodoList = (todoList: TodoListModel) => {
+    window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
+    setTodoList(todoList)
+  }
+
   return (
     <React.Fragment>
       <AppBar>
-        <TodoListChooser todoLists={todoLists} onSelectTodoList={setTodoList} />
+        <TodoListChooser
+          todoLists={todoLists}
+          onSelectTodoList={onChangeTodoList}
+        />
         <UserIcon />
       </AppBar>
 
