@@ -64,10 +64,14 @@ const useStyles = makeStyles({
 })
 
 const searchRef = React.createRef()
+const FILTER_KEY = "filter-key"
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const [defaultFilter, _] = textFilter.filter(DEFAULT_FILTER_STRING)
+  const storedFilter = window.localStorage.getItem(FILTER_KEY)
+  const [defaultFilter, _] = textFilter.filter(
+    storedFilter || DEFAULT_FILTER_STRING
+  )
   const [filterModel, setFilterModel] = useState(defaultFilter)
   const filteredTodos = filterTodos(props.todoList.todos, filterModel)
   const groups = group(filteredTodos, textFilter.currentGrouping(searchRef))
@@ -127,6 +131,7 @@ const TodoList = (props: Props) => {
 
   const changeFilterText = (str: string) => {
     searchRef.current.value = str
+    window.localStorage.setItem(FILTER_KEY, str)
     const [filterModel, grouping] = textFilter.filter(str)
     setFilterModel(filterModel)
   }
@@ -197,7 +202,7 @@ const TodoList = (props: Props) => {
           className={classes.searchBox}
           margin="dense"
           autoComplete="off"
-          defaultValue={DEFAULT_FILTER_STRING}
+          defaultValue={storedFilter || DEFAULT_FILTER_STRING}
           inputRef={searchRef}
         />
       </form>
