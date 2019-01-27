@@ -4,10 +4,13 @@ import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import Button from "@material-ui/core/Button"
 
+import FilterModel from "../../models/filter"
+
 import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
 
 type Props = {
-  onChooseGrouping: (group: string) => void
+  currentFilter: FilterModel,
+  onChangeFilter: (f: FilterModel) => void
 }
 
 const GroupingMenu = (props: Props) => {
@@ -23,7 +26,8 @@ const GroupingMenu = (props: Props) => {
 
   const onChooseGrouping = (group: string) => {
     handleClose()
-    props.onChooseGrouping(group)
+    props.currentFilter.group = group
+    props.onChangeFilter(props.currentFilter)
   }
 
   return (

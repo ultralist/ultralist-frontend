@@ -1,11 +1,11 @@
 // @flow
-import { ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
-import TodoItemModel from "../../../models/todoItem"
-import TodoListGroup from "../../../models/todoListGroup"
+import { BY_CONTEXT, BY_PROJECT } from "../../constants"
+import TodoItemModel from "../todoItem"
+import TodoListGroup from "../todoListGroup"
 
-const group = (
+const applyGrouping = (
   todos: Array<TodoItemModel>,
-  grouping: string
+  grouping: string | null
 ): Array<TodoListGroup> => {
   switch (grouping) {
     case BY_CONTEXT:
@@ -101,4 +101,4 @@ const todosWithProject = (todos: Array<TodoItemModel>, project: string) => {
   return ret
 }
 
-export default group
+export default applyGrouping

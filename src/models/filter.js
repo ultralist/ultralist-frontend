@@ -1,4 +1,11 @@
 // @flow
+import TodoItemModel from "./todoItem"
+import TodoListGroup from "./todoListGroup"
+import { FILTER_KEY, DEFAULT_FILTER_STRING } from "../constants"
+
+import filterTodos from "./logic/filterTodos"
+import textFilter from "./logic/textFilter"
+import applyGrouping from "./logic/grouper"
 
 type ConstructorArgs = {
   contexts?: Array<string>,
@@ -7,7 +14,9 @@ type ConstructorArgs = {
   archived?: boolean,
   isPriority?: boolean,
   completed?: boolean,
-  due?: string
+  due?: string,
+  group?: string,
+  filterString?: string
 }
 
 export default class Filter {
@@ -18,6 +27,7 @@ export default class Filter {
   isPriority: boolean | null
   completed: boolean | null
   due: string | null
+  group: string | null
 
   constructor(args: ConstructorArgs) {
     this.contexts = args.contexts || null
@@ -27,6 +37,7 @@ export default class Filter {
     this.isPriority = args.isPriority || null
     this.completed = args.completed || null
     this.due = args.due || null
+    this.group = args.group || null
 
     if (args.isPriority === undefined) {
       this.isPriority = null
@@ -46,4 +57,86 @@ export default class Filter {
       this.archived = args.archived
     }
   }
+
+  toggleCompleted() {
+    if (this.completed) {
+      this.completed = !this.completed
+      return
+    }
+    this.completed = true
+  }
+
+  toggleUseCompleted() {
+    this.completed = this.completed === null ? true : null
+  }
+
+  toggleIsPriority() {
+    if (this.isPriority) {
+      this.isPriority = !this.isPriority
+      return
+    }
+    this.isPriority = true
+  }
+
+  toggleUseIsPriority() {
+    this.isPriority = this.isPriority === null ? true : null
+  }
+
+  toggleArchived() {
+    if (this.archived) {
+      this.archived = !this.archived
+      return
+    }
+    this.archived = true
+  }
+
+  toggleUseArchived() {
+    this.archived = this.archived === null ? true : null
+  }
+
+  addSubjectContains(s: string) {
+    if (this.subjectContains) {
+      this.subjectContains += ` ${s}`
+    } else {
+      this.subjectContains = s
+    }
+  }
+
+  applyFilter(todos: Array<TodoItemModel>): Array<TodoListGroup> {
+    const filteredTodos = filterTodos(todos, this)
+    return applyGrouping(filteredTodos, this.group)
+  }
+
+  toFilterString(): string {
+    const str = []
+    if (this.subjectContains) str.push(this.subjectContains)
+
+    if (this.archived === true) str.push("is:archived")
+    if (this.archived === false) str.push("not:archived")
+
+    if (this.isPriority === true) str.push("is:priority")
+    if (this.isPriority === false) str.push("not:priority")
+
+    if (this.completed === true) str.push("is:completed")
+    if (this.completed === false) str.push("not:completed")
+
+    if (this.due === "agenda") str.push("due:agenda")
+
+    if (this.group) str.push("group:" + this.group)
+
+    return str.join(" ")
+  }
+
+  saveFilterString() {
+    window.localStorage.setItem(FILTER_KEY, this.toFilterString())
+  }
+}
+
+export const LoadFromFilterString = (filterString: string): Filter => {
+  return textFilter.filter(filterString)
+}
+
+export const LoadDefaultOrStoredFilter = (): Filter => {
+  const storedFilterString = window.localStorage.getItem(FILTER_KEY)
+  return LoadFromFilterString(storedFilterString || DEFAULT_FILTER_STRING)
 }

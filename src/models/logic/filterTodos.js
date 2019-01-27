@@ -1,7 +1,7 @@
 // @flow
 
-import TodoItemModel from "../../../models/todoItem"
-import FilterModel from "../../../models/filter"
+import TodoItemModel from "../todoItem"
+import FilterModel from "../filter"
 
 const filterTodos = (
   todos: Array<TodoItemModel>,

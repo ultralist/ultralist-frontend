@@ -1,9 +1,8 @@
 // @flow
 import React from "react"
-import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../../constants"
+import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
 
-import TodoItemModel from "../../../models/todoItem"
-import FilterModel from "../../../models/filter"
+import FilterModel from "../filter"
 
 // group:context
 // @context
@@ -18,13 +17,12 @@ import FilterModel from "../../../models/filter"
 // not:completed
 // not:archived
 const textFilter = {
-  filter: (input: string): [FilterModel, string] => {
+  filter: (input: string): FilterModel => {
     const filter = {}
-    let group = BY_ALL
 
     input.split(" ").forEach(word => {
       if (word.startsWith("group:")) {
-        group = byGroup(word)
+        filter.group = byGroup(word)
       } else if (word === "no:context") {
         filter.contexts = []
       } else if (word === "no:project") {
@@ -48,8 +46,7 @@ const textFilter = {
       }
     })
 
-    const filterModel = new FilterModel(filter)
-    return [filterModel, group]
+    return new FilterModel(filter)
   },
   textFilterHasPrefix: (searchRef: React.ElementRef, prefix: string) => {
     if (!searchRef.current) return false
@@ -81,25 +78,41 @@ const textFilter = {
       return group[0].split(":")[1]
     }
   },
-  removeTextFilter: (searchRef: React.ElementRef, prefix: string, filter: string | null): string => {
+  removeTextFilter: (
+    searchRef: React.ElementRef,
+    prefix: string,
+    filter: string | null
+  ): string => {
     let currentFilter = []
     if (searchRef.current) currentFilter = searchRef.current.value.split(" ")
     const cFilter = filter ? filter : ""
-    return currentFilter.filter(word => !word.startsWith(`${prefix}:${cFilter}`)).join(" ")
+    return currentFilter
+      .filter(word => !word.startsWith(`${prefix}:${cFilter}`))
+      .join(" ")
   },
-  changeTextFilter: (searchRef: React.ElementRef, prefix: string, filter: string): string => {
+  changeTextFilter: (
+    searchRef: React.ElementRef,
+    prefix: string,
+    filter: string
+  ): string => {
     let currentFilter = []
     if (searchRef.current) currentFilter = searchRef.current.value.split(" ")
 
     if (textFilter.textFilterHasPrefix(searchRef, prefix)) {
-      currentFilter = currentFilter.filter(word => !word.startsWith(`${prefix}:`))
+      currentFilter = currentFilter.filter(
+        word => !word.startsWith(`${prefix}:`)
+      )
     }
 
     currentFilter.push(`${prefix}:${filter}`)
 
     return currentFilter.join(" ")
   },
-  addTextFilter: (searchRef: React.ElementREf, prefix: string, filter: string): string => {
+  addTextFilter: (
+    searchRef: React.ElementREf,
+    prefix: string,
+    filter: string
+  ): string => {
     let currentFilter = []
     if (searchRef.current) currentFilter = searchRef.current.value.split(" ")
 
