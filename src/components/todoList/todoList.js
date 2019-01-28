@@ -3,6 +3,7 @@ import React, { useState } from "react"
 
 import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
+import Snackbar from "@material-ui/core/Snackbar"
 import { makeStyles } from "@material-ui/styles"
 
 import TodoItemModel from "../../models/todoItem"
@@ -44,17 +45,23 @@ const useStyles = makeStyles({
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-
   const [filterModel, setFilterModel] = useState(LoadDefaultOrStoredFilter())
+  const [snackbarText, setSnackbarText] = useState("")
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+
   const groups = filterModel.applyFilter(props.todoList.todos)
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.todoList.addTodo(todo)
+    setSnackbarText("Todo added.")
+    setSnackbarOpen(true)
     props.onAddTodoItem(todo)
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
     props.todoList.updateTodo(todo)
+    setSnackbarText("Todo updated.")
+    setSnackbarOpen(true)
     props.onChangeTodoItem(todo)
   }
 
@@ -89,6 +96,13 @@ const TodoList = (props: Props) => {
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={<span>{snackbarText}</span>}
+      />
     </React.Fragment>
   )
 }
