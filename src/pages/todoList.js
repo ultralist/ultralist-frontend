@@ -60,7 +60,6 @@ const TodoListApp = (props: Props) => {
 
   useEffect(() => {
     document.addEventListener("visibilitychange", visibilityChangeHandler)
-    fetchLists()
     return () => {
       document.removeEventListener("visibilitychange", visibilityChangeHandler)
     }
