@@ -60,10 +60,11 @@ const TodoListApp = (props: Props) => {
 
   useEffect(() => {
     document.addEventListener("visibilitychange", visibilityChangeHandler)
+    update()
     return () => {
       document.removeEventListener("visibilitychange", visibilityChangeHandler)
     }
-  })
+  }, [])
 
   const update = () => {
     backend.updateTodolist(todoList.uuid, eventCache).then(list => {
