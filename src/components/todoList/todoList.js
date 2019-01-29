@@ -1,7 +1,6 @@
 // @flow
 import React, { useState } from "react"
 
-import Divider from "@material-ui/core/Divider"
 import Typography from "@material-ui/core/Typography"
 import Snackbar from "@material-ui/core/Snackbar"
 import { makeStyles } from "@material-ui/styles"
@@ -9,7 +8,6 @@ import { makeStyles } from "@material-ui/styles"
 import TodoItemModel from "../../models/todoItem"
 import TodoListModel from "../../models/todoList"
 import FilterModel, { LoadDefaultOrStoredFilter } from "../../models/filter"
-import { FILTER_KEY } from "../../constants"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
@@ -39,7 +37,11 @@ const useStyles = makeStyles({
     minWidth: 300
   },
   listContainer: {
+    paddingTop: 70,
     paddingBottom: 70
+  },
+  listName: {
+    textAlign: "center"
   }
 })
 
@@ -77,13 +79,11 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Typography component="h3" variant="h3">
-        {props.todoList.name}
-      </Typography>
-
-      <Divider variant="middle" />
-
       <div className={classes.listContainer}>
+        <Typography component="h4" variant="h4" className={classes.listName}>
+          {props.todoList.name}
+        </Typography>
+
         {groups.map(g => (
           <TodoGroup
             key={g.uuid}
