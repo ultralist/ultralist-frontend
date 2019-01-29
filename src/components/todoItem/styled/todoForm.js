@@ -91,6 +91,7 @@ const TodoForm = (props: Props) => {
             className={classes.text}
             defaultValue={todoItem.subject}
             label="Description"
+            autoFocus
             inputRef={subjectRef}
           />
         </Margin>
