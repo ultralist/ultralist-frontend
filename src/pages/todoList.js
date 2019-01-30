@@ -80,6 +80,7 @@ const TodoListApp = (props: Props) => {
 
   useEffect(() => {
     // document.addEventListener("visibilitychange", visibilityChangeHandler)
+    fetchList()
 
     const socketProcessor = new WebsocketProcessor(
       "todolist_update",
