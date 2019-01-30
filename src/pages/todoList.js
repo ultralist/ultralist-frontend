@@ -31,7 +31,9 @@ const TodoListApp = (props: Props) => {
   const mostRecentTodoList = todoLists.find(
     tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
   )
+  console.log("mostRecentTodoList = ", mostRecentTodoList)
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
+  console.log("todoList = ", todoList)
 
   const user = loadUser()
   window.socket.registerSocket(user)
@@ -49,19 +51,20 @@ const TodoListApp = (props: Props) => {
   //   }
   // }
 
-  // const fetchLists = () => {
-  //   backend.fetchTodoLists().then(todoLists => {
-  //     const lists = todoLists.todolists.map(list =>
-  //       createTodoListFromBackend(list)
-  //     )
-  //     const currentList = lists.find(l => l.uuid === todoList.uuid)
-  //     storage.saveTodoLists(lists)
-  //     setTodoList(currentList)
-  //     window.localStorage.setItem("todolists_last_sync", new Date().getTime())
-  //   })
-  // }
+  const fetchLists = () => {
+    backend.fetchTodoLists().then(todoLists => {
+      const lists = todoLists.todolists.map(list =>
+        createTodoListFromBackend(list)
+      )
+      const currentList = lists.find(l => l.uuid === todoList.uuid)
+      storage.saveTodoLists(lists)
+      setTodoList(currentList)
+      window.localStorage.setItem("todolists_last_sync", new Date().getTime())
+    })
+  }
 
   const fetchList = () => {
+    console.log("fetchList for ", todoList.uuid)
     backend.fetchTodoList(todoList.uuid).then(list => {
       list = createTodoListFromBackend(list)
       storage.updateTodoList(list)
@@ -75,7 +78,9 @@ const TodoListApp = (props: Props) => {
       "yyyy-MM-dd kk:mm:ss",
       new Date()
     )
-    if (updatedAt > todoList.updatedAt) fetchList()
+    if (updatedAt > todoList.updatedAt) {
+      fetchLists()
+    }
   }
 
   useEffect(() => {
