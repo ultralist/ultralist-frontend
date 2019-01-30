@@ -50,7 +50,8 @@ export class WebsocketHandler {
   }
 
   ping() {
-    if (this.socket && this.socket.readyState !== this.socket.OPEN) return
+    if (!this.socket) return
+    if (this.socket.readyState !== this.socket.OPEN) return
 
     const msg = {
       client_id: "frontend",
