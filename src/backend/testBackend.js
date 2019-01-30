@@ -17,6 +17,10 @@ export default class TestBackend {
     this.token = token
   }
 
+  fetchTodoList(uuid: string) {
+    return new Promise(resolve => resolve(todoList))
+  }
+
   updateTodolist(uuid: string, cache: EventCache) {
     return new Promise(resolve => resolve(todoList))
   }

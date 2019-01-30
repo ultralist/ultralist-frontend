@@ -12,3 +12,9 @@ export const BACKEND_URL =
 // filter stuff
 export const DEFAULT_FILTER_STRING = "not:archived not:completed"
 export const FILTER_KEY = "filter-key"
+
+// sockets stuff
+export const PROD_SOCKET_URL = "wss://ws.ultralist.io"
+export const DEV_SOCKET_URL = "ws://localhost:8080"
+export const SOCKET_URL =
+  process.env.NODE_ENV === "production" ? PROD_SOCKET_URL : DEV_SOCKET_URL

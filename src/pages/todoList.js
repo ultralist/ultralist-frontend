@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useEffect } from "react"
+import { parse } from "date-fns"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -13,6 +14,7 @@ import TodoListChooser from "../components/todoListChooser"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
+import { WebsocketProcessor } from "../config/websocket"
 
 import TodoListModel, { createTodoListFromBackend } from "../models/todoList"
 
@@ -32,37 +34,62 @@ const TodoListApp = (props: Props) => {
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
 
   const user = loadUser()
+  window.socket.registerSocket(user)
   const backend = props.backend || new Backend(user.token)
 
-  const visibilityChangeHandler = () => {
-    if (document.visibilityState !== "visible") return
+  // const visibilityChangeHandler = () => {
+  //   if (document.visibilityState !== "visible") return
+  //
+  //   const lastSync =
+  //     parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
+  //   const diff = new Date().getTime() / 1000 - lastSync / 1000
+  //
+  //   if (lastSync === null || diff > 10) {
+  //     fetchLists()
+  //   }
+  // }
 
-    const lastSync =
-      parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
-    const diff = new Date().getTime() / 1000 - lastSync / 1000
+  // const fetchLists = () => {
+  //   backend.fetchTodoLists().then(todoLists => {
+  //     const lists = todoLists.todolists.map(list =>
+  //       createTodoListFromBackend(list)
+  //     )
+  //     const currentList = lists.find(l => l.uuid === todoList.uuid)
+  //     storage.saveTodoLists(lists)
+  //     setTodoList(currentList)
+  //     window.localStorage.setItem("todolists_last_sync", new Date().getTime())
+  //   })
+  // }
 
-    if (lastSync === null || diff > 10) {
-      fetchLists()
-    }
-  }
-
-  const fetchLists = () => {
-    backend.fetchTodoLists().then(todoLists => {
-      const lists = todoLists.todolists.map(list =>
-        createTodoListFromBackend(list)
-      )
-      const currentList = lists.find(l => l.uuid === todoList.uuid)
-      storage.saveTodoLists(lists)
-      setTodoList(currentList)
-      window.localStorage.setItem("todolists_last_sync", new Date().getTime())
+  const fetchList = () => {
+    backend.fetchTodoList(todoList.uuid).then(list => {
+      list = createTodoListFromBackend(list)
+      storage.updateTodoList(list)
+      setTodoList(list)
     })
   }
 
+  const processSocketUpdate = data => {
+    const updatedAt = parse(
+      data.data.updated_at,
+      "yyyy-MM-dd kk:mm:ss",
+      new Date()
+    )
+    if (updatedAt > todoList.updatedAt) fetchList()
+  }
+
   useEffect(() => {
-    document.addEventListener("visibilitychange", visibilityChangeHandler)
-    update()
+    // document.addEventListener("visibilitychange", visibilityChangeHandler)
+
+    const socketProcessor = new WebsocketProcessor(
+      "todolist_update",
+      processSocketUpdate
+    )
+    window.socket.registerProcessor(socketProcessor)
+
     return () => {
-      document.removeEventListener("visibilitychange", visibilityChangeHandler)
+      // document.removeEventListener("visibilitychange", visibilityChangeHandler)
+      window.socket.deregisterProcessor("todolist_update")
     }
   }, [])
 

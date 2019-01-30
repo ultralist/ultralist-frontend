@@ -5,6 +5,7 @@ import indigo from "@material-ui/core/colors/indigo"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles"
 
 import Router from "../config/router"
+import { WebsocketHandler } from "../config/websocket"
 
 const theme = createMuiTheme({
   palette: {
@@ -14,6 +15,8 @@ const theme = createMuiTheme({
     }
   }
 })
+
+window.socket = new WebsocketHandler()
 
 const Index = () => {
   return (
