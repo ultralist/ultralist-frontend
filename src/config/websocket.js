@@ -60,7 +60,7 @@ export class WebsocketHandler {
     }
 
     this.socket.send(JSON.stringify(msg))
-    setTimeout(this.ping.bind(this), 5000)
+    setTimeout(this.ping.bind(this), 10000)
   }
 
   registerProcessor(processor: WebsocketProcessor) {
