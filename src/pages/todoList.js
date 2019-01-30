@@ -1,6 +1,6 @@
 // @flow
 import React, { useState, useEffect } from "react"
-import { parse } from "date-fns"
+import { parseISO } from "date-fns"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -56,7 +56,9 @@ const TodoListApp = (props: Props) => {
       const lists = todoLists.todolists.map(list =>
         createTodoListFromBackend(list)
       )
-      const currentList = lists.find(l => l.uuid === todoList.uuid)
+      const currentList = lists.find(
+        l => l.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
+      )
       storage.saveTodoLists(lists)
       setTodoList(currentList)
       window.localStorage.setItem("todolists_last_sync", new Date().getTime())
@@ -73,11 +75,7 @@ const TodoListApp = (props: Props) => {
   }
 
   const processSocketUpdate = data => {
-    const updatedAt = parse(
-      data.data.updated_at,
-      "yyyy-MM-dd kk:mm:ss",
-      new Date()
-    )
+    const updatedAt = parseISO(data.data.updated_at)
     if (updatedAt > todoList.updatedAt) {
       fetchLists()
     }
