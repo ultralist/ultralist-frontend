@@ -36,6 +36,7 @@ export class WebsocketHandler {
 
     this.socket.onopen = () => {
       this.socket.send(JSON.stringify(msg))
+      this.ping()
     }
 
     this.socket.onmessage = event => {
@@ -46,6 +47,19 @@ export class WebsocketHandler {
     this.socket.onclose = event => {
       setTimeout(this.registerSocket.bind(this), 5000)
     }
+  }
+
+  ping() {
+    if (this.socket && this.socket.readyState !== this.socket.OPEN) return
+
+    const msg = {
+      client_id: "frontend",
+      channel: this.user.uuid,
+      request: "ping"
+    }
+
+    this.socket.send(JSON.stringify(msg))
+    setTimeout(this.ping.bind(this), 5000)
   }
 
   registerProcessor(processor: WebsocketProcessor) {
