@@ -31,25 +31,11 @@ const TodoListApp = (props: Props) => {
   const mostRecentTodoList = todoLists.find(
     tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
   )
-  console.log("mostRecentTodoList = ", mostRecentTodoList)
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
-  console.log("todoList = ", todoList)
 
   const user = loadUser()
   window.socket.registerSocket(user)
   const backend = props.backend || new Backend(user.token)
-
-  // const visibilityChangeHandler = () => {
-  //   if (document.visibilityState !== "visible") return
-  //
-  //   const lastSync =
-  //     parseInt(window.localStorage.getItem("todolists_last_sync")) || 301
-  //   const diff = new Date().getTime() / 1000 - lastSync / 1000
-  //
-  //   if (lastSync === null || diff > 10) {
-  //     fetchLists()
-  //   }
-  // }
 
   const fetchLists = () => {
     backend.fetchTodoLists().then(todoLists => {
@@ -66,7 +52,6 @@ const TodoListApp = (props: Props) => {
   }
 
   const fetchList = () => {
-    console.log("fetchList for ", todoList.uuid)
     backend.fetchTodoList(todoList.uuid).then(list => {
       list = createTodoListFromBackend(list)
       storage.updateTodoList(list)
@@ -75,10 +60,7 @@ const TodoListApp = (props: Props) => {
   }
 
   const processSocketUpdate = data => {
-    console.log("socket update")
     const updatedAt = parseISO(data.data.updated_at)
-    console.log("updatedAt", updatedAt)
-    console.log("todolist.updatedAt", todoList.updatedAt)
     if (updatedAt > todoList.updatedAt) {
       fetchLists()
     }
