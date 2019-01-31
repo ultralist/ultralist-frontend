@@ -87,7 +87,8 @@ const getProjects = (todos: Array<TodoItemModel>) => {
     todo.projects.forEach(project => {
       if (!projects.includes(project)) projects.push(project)
     })
-    if (todo.projects.length === 0) projects.push("No projects")
+    if (todo.projects.length === 0 && !projects.includes("No projects"))
+      projects.push("No projects")
   })
   return projects
 }
