@@ -104,6 +104,7 @@ const TodoListApp = (props: Props) => {
   const onChangeTodoList = (todoList: TodoListModel) => {
     window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
     setTodoList(todoList)
+    fetchLists()
   }
 
   return (
