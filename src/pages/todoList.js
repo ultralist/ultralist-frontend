@@ -60,10 +60,13 @@ const TodoListApp = (props: Props) => {
   }
 
   const processSocketUpdate = data => {
-    const updatedAt = parseISO(data.data.updated_at)
-    if (updatedAt > todoList.updatedAt) {
-      fetchLists()
-    }
+    setTimeout(() => {
+      const updatedAt = parseISO(data.data.updated_at)
+      const currentList = storage.loadTodoList(todoList.uuid)
+      if (updatedAt > currentList.updatedAt) {
+        fetchLists()
+      }
+    }, 500)
   }
 
   useEffect(() => {

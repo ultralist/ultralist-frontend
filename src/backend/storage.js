@@ -7,6 +7,10 @@ export default class Storage {
     return rawLists.map(list => createTodoListFromJSON(list))
   }
 
+  loadTodoList(uuid: string): TodoList {
+    return this.loadTodoLists().find(list => list.uuid === uuid)
+  }
+
   saveTodoLists(todoLists: Array<TodoList>) {
     const storageJSON = todoLists.map(list => list.toJSON())
     window.localStorage.setItem("todolists", JSON.stringify(storageJSON))

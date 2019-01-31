@@ -68,6 +68,7 @@ export const createTodoListFromJSON = (storageJSON: Object) => {
   return new TodoList({
     name: storageJSON.name,
     todos: storageJSON.todos.map(i => new TodoItemModel(i)),
+    updatedAt: parseISO(storageJSON.updatedAt),
     uuid: storageJSON.uuid
   })
 }
