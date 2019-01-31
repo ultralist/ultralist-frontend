@@ -75,7 +75,10 @@ const TodoListApp = (props: Props) => {
   }
 
   const processSocketUpdate = data => {
+    console.log("socket update")
     const updatedAt = parseISO(data.data.updated_at)
+    console.log("updatedAt", updatedAt)
+    console.log("todolist.updatedAt", todoList.updatedAt)
     if (updatedAt > todoList.updatedAt) {
       fetchLists()
     }
