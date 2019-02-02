@@ -122,8 +122,6 @@ export default class Filter {
 
     if (this.due !== null) str.push(`due:${this.due}`)
 
-    if (this.group) str.push("group:" + this.group)
-
     return str
   }
 
