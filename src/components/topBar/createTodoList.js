@@ -58,6 +58,7 @@ const CreateTodoList = (props: Props) => {
         <TextField
           label="Name"
           margin="dense"
+          autoFocus
           className={classes.margin}
           autoComplete="off"
           inputRef={nameRef}
