@@ -3,10 +3,10 @@ import React, { useState } from "react"
 
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
+import DialogActions from "@material-ui/core/DialogActions"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Checkbox from "@material-ui/core/Checkbox"
 import Switch from "@material-ui/core/Switch"
-import Divider from "@material-ui/core/Divider"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
@@ -91,68 +91,75 @@ const FilterDialog = (props: Props) => {
       <Button onClick={toggleOpen} color="inherit">
         Filter
       </Button>
-      <Dialog onClose={toggleOpen} open={isOpen}>
+      <Dialog fullWidth maxWidth="sm" onClose={toggleOpen} open={isOpen}>
         <DialogTitle>Filter your list</DialogTitle>
-        <form
-          className={classes.searchBoxOuter}
-          onSubmit={changeFilterStringEvent}
-        >
-          <TextField
-            id="outlined-search"
-            label="Search"
-            type="search"
-            className={classes.searchBox}
-            margin="dense"
-            autoComplete="off"
-            defaultValue={currentFilter.toFilterString()}
-            inputRef={filterStringRef}
+        <div className={classes.searchBoxOuter}>
+          <form onSubmit={changeFilterStringEvent}>
+            <TextField
+              id="outlined-search"
+              label="Search"
+              type="search"
+              className={classes.searchBox}
+              margin="dense"
+              autoComplete="off"
+              defaultValue={currentFilter.toFilterString()}
+              inputRef={filterStringRef}
+            />
+          </form>
+          <FormControlLabel
+            control={
+              <React.Fragment>
+                <Checkbox
+                  checked={currentFilter.completed !== null}
+                  onChange={onToggleUseCompleted}
+                />
+                <Switch
+                  checked={currentFilter.completed === true}
+                  onChange={onChangeCompleted}
+                />
+              </React.Fragment>
+            }
+            label="Is Completed"
           />
-        </form>
-        <FormControlLabel
-          control={
-            <React.Fragment>
-              <Checkbox
-                checked={currentFilter.completed !== null}
-                onChange={onToggleUseCompleted}
-              />
-              <Switch
-                checked={currentFilter.completed === true}
-                onChange={onChangeCompleted}
-              />
-            </React.Fragment>
-          }
-          label="Is Completed"
-        />
-        <FormControlLabel
-          control={
-            <React.Fragment>
-              <Checkbox
-                checked={currentFilter.isPriority !== null}
-                onChange={onToggleUseIsPriority}
-              />
-              <Switch
-                checked={currentFilter.isPriority === true}
-                onChange={onChangeIsPriority}
-              />
-            </React.Fragment>
-          }
-          label="Is Priority"
-        />
-        <FormControlLabel
-          control={
-            <React.Fragment>
-              <Checkbox
-                checked={currentFilter.archived !== null}
-                onChange={onToggleUseArchived}
-              />
-              <Switch
-                checked={currentFilter.archived === true}
-                onChange={onChangeArchived}
-              />
-            </React.Fragment>
-          }
-          label="Is Archived"
-        />
+          <br />
+          <FormControlLabel
+            control={
+              <React.Fragment>
+                <Checkbox
+                  checked={currentFilter.isPriority !== null}
+                  onChange={onToggleUseIsPriority}
+                />
+                <Switch
+                  checked={currentFilter.isPriority === true}
+                  onChange={onChangeIsPriority}
+                />
+              </React.Fragment>
+            }
+            label="Is Priority"
+          />
+          <br />
+          <FormControlLabel
+            control={
+              <React.Fragment>
+                <Checkbox
+                  checked={currentFilter.archived !== null}
+                  onChange={onToggleUseArchived}
+                />
+                <Switch
+                  checked={currentFilter.archived === true}
+                  onChange={onChangeArchived}
+                />
+              </React.Fragment>
+            }
+            label="Is Archived"
+          />
+        </div>
+
+        <DialogActions>
+          <Button color="primary" onClick={toggleOpen}>
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     </React.Fragment>
   )
