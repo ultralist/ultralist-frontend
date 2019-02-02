@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Button from "@material-ui/core/Button"
 import { DatePicker, MuiPickersUtilsProvider } from "material-ui-pickers"
 import DateFnsUtils from "@date-io/date-fns"
@@ -80,6 +80,18 @@ const TodoForm = (props: Props) => {
     if (!subjectRef.current) return true
     return subjectRef.current.value !== ""
   }
+
+  const onKeypress = event => {
+    if (event.keyCode === 13) onChange()
+  }
+
+  useEffect(() => {
+    subjectRef.current.addEventListener("keypress", onKeypress)
+
+    return () => {
+      subjectRef.current.removeEventListener("keypress", onKeypress)
+    }
+  }, [])
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
