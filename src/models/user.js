@@ -44,7 +44,7 @@ export const loadUser = (): User => {
 }
 
 export const logoutUser = (): User => {
-  window.localStorage.setItem("user", null)
+  window.localStorage.clear()
 }
 
 export const isUserLoggedIn = (): boolean => {
