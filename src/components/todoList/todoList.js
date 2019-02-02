@@ -7,7 +7,8 @@ import { makeStyles } from "@material-ui/styles"
 
 import TodoItemModel from "../../models/todoItem"
 import TodoListModel from "../../models/todoList"
-import FilterModel, { LoadDefaultOrStoredFilter } from "../../models/filter"
+import FilterModel, { LoadFromStorage } from "../../models/filter"
+import FilterChips from "./filterChips"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
@@ -41,13 +42,18 @@ const useStyles = makeStyles({
     paddingBottom: 70
   },
   listName: {
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: 5
+  },
+  filterChips: {
+    display: "flex",
+    justifyContent: "center"
   }
 })
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const [filterModel, setFilterModel] = useState(LoadDefaultOrStoredFilter())
+  const [filterModel, setFilterModel] = useState(LoadFromStorage())
   const [snackbarText, setSnackbarText] = useState("")
   const [snackbarOpen, setSnackbarOpen] = useState(false)
 
@@ -68,7 +74,7 @@ const TodoList = (props: Props) => {
   }
 
   const onChangeFilter = (filter: FilterModel) => {
-    filter.saveFilterString()
+    filter.save()
     setFilterModel(filter)
   }
 
@@ -83,6 +89,13 @@ const TodoList = (props: Props) => {
         <Typography component="h4" variant="h4" className={classes.listName}>
           {props.todoList.name}
         </Typography>
+
+        <div className={classes.filterChips}>
+          <FilterChips
+            currentFilter={filterModel}
+            onChangeFilter={onChangeFilter}
+          />
+        </div>
 
         {groups.map(g => (
           <TodoGroup

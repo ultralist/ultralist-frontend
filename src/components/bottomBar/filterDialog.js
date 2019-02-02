@@ -5,20 +5,23 @@ import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Input from "@material-ui/core/Input"
+import InputLabel from "@material-ui/core/InputLabel"
+import Select from "@material-ui/core/Select"
+import MenuItem from "@material-ui/core/MenuItem"
 import Checkbox from "@material-ui/core/Checkbox"
 import Switch from "@material-ui/core/Switch"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
 
-import FilterModel, { LoadFromFilterString } from "../../models/filter"
+import FilterModel from "../../models/filter"
+import FilterChips from "../todoList/filterChips"
 
 type Props = {
   currentFilter: FilterModel,
   onChangeFilter: (f: FilterModel) => void
 }
-
-const filterStringRef = React.createRef()
 
 const useStyles = makeStyles({
   searchBoxOuter: {
@@ -26,6 +29,9 @@ const useStyles = makeStyles({
   },
   searchBox: {
     width: "90%"
+  },
+  dueLabel: {
+    margin: 15
   }
 })
 
@@ -38,20 +44,15 @@ const FilterDialog = (props: Props) => {
     setIsOpen(!isOpen)
   }
 
-  const changeFilterStringEvent = (ev: Event) => {
+  const changeSearchStringEvent = (ev: Event) => {
     ev.preventDefault()
-    changeFilterString(filterStringRef.current.value)
-  }
-
-  const changeFilterString = (str: string) => {
-    filterStringRef.current.value = str
-    const filter = LoadFromFilterString(str)
-    setCurrentFilter(filter)
-    props.onChangeFilter(filter)
+    currentFilter.subjectContains = ev.target.value
+    update()
+    setCurrentFilter(currentFilter)
+    props.onChangeFilter(currentFilter)
   }
 
   const update = () => {
-    filterStringRef.current.value = currentFilter.toFilterString()
     setCurrentFilter(currentFilter)
     props.onChangeFilter(currentFilter)
   }
@@ -81,6 +82,12 @@ const FilterDialog = (props: Props) => {
     update()
   }
 
+  const onChangeDue = event => {
+    currentFilter.due = event.target.value
+    if (event.target.value === "none") currentFilter.due = null
+    update()
+  }
+
   const onToggleUseArchived = () => {
     currentFilter.toggleUseArchived()
     update()
@@ -93,19 +100,21 @@ const FilterDialog = (props: Props) => {
       </Button>
       <Dialog fullWidth maxWidth="sm" onClose={toggleOpen} open={isOpen}>
         <DialogTitle>Filter your list</DialogTitle>
+
         <div className={classes.searchBoxOuter}>
-          <form onSubmit={changeFilterStringEvent}>
-            <TextField
-              id="outlined-search"
-              label="Search"
-              type="search"
-              className={classes.searchBox}
-              margin="dense"
-              autoComplete="off"
-              defaultValue={currentFilter.toFilterString()}
-              inputRef={filterStringRef}
-            />
-          </form>
+          <FilterChips currentFilter={currentFilter} onChangeFilter={update} />
+
+          <TextField
+            id="outlined-search"
+            label="Subject"
+            type="search"
+            className={classes.searchBox}
+            margin="dense"
+            autoComplete="off"
+            value={currentFilter.subjectContains || ""}
+            onChange={changeSearchStringEvent}
+          />
+
           <FormControlLabel
             control={
               <React.Fragment>
@@ -152,6 +161,33 @@ const FilterDialog = (props: Props) => {
               </React.Fragment>
             }
             label="Is Archived"
+          />
+          <br />
+          <FormControlLabel
+            control={
+              <React.Fragment>
+                <InputLabel className={classes.dueLabel} htmlFor="due">
+                  Due
+                </InputLabel>
+                <Select
+                  value={currentFilter.due || "none"}
+                  onChange={onChangeDue}
+                  input={<Input name="due" id="due" />}
+                >
+                  <MenuItem value="none">No due filter</MenuItem>
+                  <MenuItem value="nodue">No date set</MenuItem>
+                  <MenuItem value="agenda">Agenda</MenuItem>
+                  <MenuItem value="overdue">Overdue</MenuItem>
+                  <MenuItem value="mon">Monday</MenuItem>
+                  <MenuItem value="tue">Tuesday</MenuItem>
+                  <MenuItem value="wed">Wednesday</MenuItem>
+                  <MenuItem value="thu">Thursday</MenuItem>
+                  <MenuItem value="fri">Friday</MenuItem>
+                  <MenuItem value="sat">Saturday</MenuItem>
+                  <MenuItem value="sun">Sunday</MenuItem>
+                </Select>
+              </React.Fragment>
+            }
           />
         </div>
 

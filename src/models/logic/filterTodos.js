@@ -2,6 +2,16 @@
 
 import TodoItemModel from "../todoItem"
 import FilterModel from "../filter"
+import {
+  differenceInDays,
+  isMonday,
+  isTuesday,
+  isWednesday,
+  isThursday,
+  isFriday,
+  isSaturday,
+  isSunday
+} from "date-fns"
 
 const filterTodos = (
   todos: Array<TodoItemModel>,
@@ -40,8 +50,51 @@ const filterTodos = (
       if (todo.completed !== filter.completed) return false
 
     // for agenda filtering, we only want to see todos due today or are overdue
-    if (filter.due == "agenda")
-      if (todo.dueDate() !== null && todo.dueDate() > new Date()) return false
+    switch (filter.due) {
+      case "agenda":
+        if (todo.dueDate() !== null && todo.dueDate() > new Date()) return false
+        break
+      case "nodue":
+        if (todo.dueDate() !== null) return false
+        break
+      case "overdue":
+        if (todo.dueDate() === null) return false
+        if (todo.dueDate() !== null && todo.dueDate() >= new Date())
+          return false
+        break
+      case "mon":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isMonday(todo.dueDate())) return false
+        break
+      case "tue":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isTuesday(todo.dueDate())) return false
+        break
+      case "wed":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isWednesday(todo.dueDate())) return false
+        break
+      case "thu":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isThursday(todo.dueDate())) return false
+      case "fri":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isFriday(todo.dueDate())) return false
+      case "sat":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isSaturday(todo.dueDate())) return false
+      case "sun":
+        if (todo.dueDate() === null) return false
+        if (differenceInDays(todo.dueDate(), new Date()) > 6) return false
+        if (!isSunday(todo.dueDate())) return false
+        break
+    }
 
     return true
   })

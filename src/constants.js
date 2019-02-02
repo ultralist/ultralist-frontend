@@ -10,7 +10,6 @@ export const BACKEND_URL =
   process.env.NODE_ENV === "production" ? PROD_BACKEND_URL : LOCAL_BACKEND_URL
 
 // filter stuff
-export const DEFAULT_FILTER_STRING = "not:archived not:completed"
 export const FILTER_KEY = "filter-key"
 
 // sockets stuff

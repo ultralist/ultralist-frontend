@@ -107,7 +107,7 @@ export default class Filter {
     return applyGrouping(filteredTodos, this.group)
   }
 
-  toFilterString(): string {
+  toFilterStrings(): Array<string> {
     const str = []
     if (this.subjectContains) str.push(this.subjectContains)
 
@@ -120,23 +120,39 @@ export default class Filter {
     if (this.completed === true) str.push("is:completed")
     if (this.completed === false) str.push("not:completed")
 
-    if (this.due === "agenda") str.push("due:agenda")
+    if (this.due !== null) str.push(`due:${this.due}`)
 
     if (this.group) str.push("group:" + this.group)
 
-    return str.join(" ")
+    return str
   }
 
-  saveFilterString() {
-    window.localStorage.setItem(FILTER_KEY, this.toFilterString())
+  removeFilterString(str: string) {
+    switch (true) {
+      case str == "is:archived" || str == "not:archived":
+        this.archived = null
+        break
+      case str == "is:priority" || str == "not:priority":
+        this.isPriority = null
+        break
+      case str == "is:completed" || str == "not:completed":
+        this.completed = null
+        break
+      case str.startsWith("due:"):
+        this.due = null
+        break
+      default:
+        this.subjectContains = null
+    }
+  }
+
+  save() {
+    window.localStorage.setItem(FILTER_KEY, JSON.stringify(this))
   }
 }
 
-export const LoadFromFilterString = (filterString: string): Filter => {
-  return textFilter.filter(filterString)
-}
-
-export const LoadDefaultOrStoredFilter = (): Filter => {
-  const storedFilterString = window.localStorage.getItem(FILTER_KEY)
-  return LoadFromFilterString(storedFilterString || DEFAULT_FILTER_STRING)
+export const LoadFromStorage = (): Filter => {
+  const storedFilter = window.localStorage.getItem(FILTER_KEY)
+  if (!storedFilter) return new Filter({ archived: false, completed: false })
+  return new Filter(JSON.parse(storedFilter))
 }
