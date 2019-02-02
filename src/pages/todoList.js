@@ -7,10 +7,12 @@ import Storage from "../backend/storage"
 import TestBackend from "../backend/testBackend"
 import EventCache from "../backend/eventCache"
 
-import AppBar from "../components/appBar"
+import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
-import TodoListChooser from "../components/todoListChooser"
+import TodoListChooser from "../components/topBar/todoListChooser"
+import CreateTodoList from "../components/topBar/createTodoList"
+import Snackbar from "@material-ui/core/Snackbar"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
@@ -32,6 +34,8 @@ const TodoListApp = (props: Props) => {
     tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
   )
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarText, setSnackbarText] = useState("")
 
   const user = loadUser()
   window.socket.registerSocket(user)
@@ -86,7 +90,7 @@ const TodoListApp = (props: Props) => {
   }, [])
 
   const update = () => {
-    backend.updateTodolist(todoList.uuid, eventCache).then(list => {
+    backend.updateTodoList(todoList.uuid, eventCache).then(list => {
       const newTodoList = createTodoListFromBackend(list)
       storage.updateTodoList(newTodoList)
       setTodoList(newTodoList)
@@ -110,20 +114,39 @@ const TodoListApp = (props: Props) => {
     fetchLists()
   }
 
+  const onCreateTodoList = (todoList: TodoListModel) => {
+    backend.createTodoList(todoList.uuid, todoList.name).then(todoList => {
+      todoList = createTodoListFromBackend(todoList)
+      const lists = storage.loadTodoLists()
+      lists.push(todoList)
+      storage.saveTodoLists(lists)
+      setSnackbarText("Todolist created.")
+      setSnackbarOpen(true)
+      setTodoList(todoList)
+    })
+  }
+
   return (
     <React.Fragment>
-      <AppBar>
+      <TopBar>
+        <CreateTodoList onCreateTodoList={onCreateTodoList} />
         <TodoListChooser
           todoLists={todoLists}
           onSelectTodoList={onChangeTodoList}
         />
         <UserIcon />
-      </AppBar>
+      </TopBar>
 
       <TodoList
         todoList={todoList}
         onAddTodoItem={onAddTodoItem}
         onChangeTodoItem={onChangeTodoItem}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message={<span>{snackbarText}</span>}
       />
     </React.Fragment>
   )

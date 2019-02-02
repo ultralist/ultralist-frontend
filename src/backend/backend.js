@@ -16,9 +16,18 @@ export default class Backend {
     return this.apiRequest(`api/v1/todo_lists/${uuid}`, "GET")
   }
 
-  updateTodolist(todolistUUID: string, cache: EventCache) {
+  updateTodoList(todolistUUID: string, cache: EventCache) {
     return this.apiRequest(`api/v1/todo_lists/${todolistUUID}`, "PUT", {
       events: cache.toJSON()
+    })
+  }
+
+  createTodoList(uuid: string, name: string) {
+    return this.apiRequest(`api/v1/todo_lists`, "POST", {
+      todolist: {
+        uuid: uuid,
+        name
+      }
     })
   }
 

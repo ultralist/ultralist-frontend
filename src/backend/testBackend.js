@@ -21,7 +21,11 @@ export default class TestBackend {
     return new Promise(resolve => resolve(todoList))
   }
 
-  updateTodolist(uuid: string, cache: EventCache) {
+  updateTodoList(uuid: string, cache: EventCache) {
+    return new Promise(resolve => resolve(todoList))
+  }
+
+  createTodoList(uuid: string, name: string) {
     return new Promise(resolve => resolve(todoList))
   }
 
