@@ -48,7 +48,7 @@ const CreateTodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Tooltip title="Create new todolist">
+      <Tooltip disableFocusListener={true} title="Create new todolist">
         <IconButton className={classes.icon} onClick={toggleOpen}>
           <AddIcon />
         </IconButton>

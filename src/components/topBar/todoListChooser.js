@@ -47,7 +47,7 @@ const Chooser = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Tooltip title="Choose todolist">
+      <Tooltip disableFocusListener={true} title="Choose todolist">
         <IconButton className={classes.icon} onClick={toggleOpen}>
           <ViewArrayIcon />
         </IconButton>
