@@ -8,6 +8,7 @@ import TodoItemModel from "../../models/todoItem"
 import TodoListGroup from "../../models/todoListGroup"
 
 import TodoItem from "../todoItem/styled/todoItem"
+import { makeStyles } from "@material-ui/styles"
 
 type Props = {
   group: TodoListGroup,
@@ -15,11 +16,23 @@ type Props = {
   onSubjectClick: (str: string) => void
 }
 
+const useStyles = makeStyles({
+  list: {
+    margin: "auto",
+    width: "100vw",
+    maxWidth: 1200
+  }
+})
+
 const TodoGroup = (props: Props) => {
+  const classes = useStyles()
   return (
     <List
+      className={classes.list}
       subheader={
-        <ListSubheader component="div">{props.group.name}</ListSubheader>
+        <ListSubheader className={classes.subheader} component="div">
+          {props.group.name}
+        </ListSubheader>
       }
     >
       {props.group.sortedTodos().map(todo => (

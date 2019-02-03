@@ -57,6 +57,12 @@ const styles = theme => ({
       display: "none"
     }
   },
+  paper: {
+    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {},
+    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+      maxWidth: 1200
+    }
+  },
   starIcon: {
     color: yellow[800]
   },
@@ -141,7 +147,7 @@ const TodoItem = (props: Props) => {
   }
 
   return (
-    <Paper>
+    <Paper className={props.classes.paper}>
       <ListItem key={todoItem.id}>
         <Checkbox
           tabIndex={-1}
