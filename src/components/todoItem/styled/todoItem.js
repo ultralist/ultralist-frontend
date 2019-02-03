@@ -10,6 +10,7 @@ import StarBorder from "@material-ui/icons/StarBorder"
 import ListItemText from "@material-ui/core/ListItemText"
 import Star from "@material-ui/icons/Star"
 import Collapse from "@material-ui/core/Collapse"
+import Paper from "@material-ui/core/Paper"
 
 import EditIcon from "@material-ui/icons/Edit"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
@@ -140,7 +141,7 @@ const TodoItem = (props: Props) => {
   }
 
   return (
-    <React.Fragment>
+    <Paper>
       <ListItem key={todoItem.id}>
         <Checkbox
           tabIndex={-1}
@@ -208,7 +209,7 @@ const TodoItem = (props: Props) => {
         todoItem={todoItem}
         onEditTodo={onChangeTodo}
       />
-    </React.Fragment>
+    </Paper>
   )
 }
 
