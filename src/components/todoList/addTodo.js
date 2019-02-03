@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/styles"
 import Fab from "@material-ui/core/Fab"
 import AddIcon from "@material-ui/icons/Add"
 import Dialog from "@material-ui/core/Dialog"
+import Tooltip from "@material-ui/core/Tooltip"
 
 import TodoForm from "../todoItem/styled/todoForm"
 import TodoItemModel from "../../models/todoItem"
@@ -41,7 +42,9 @@ const AddTodo = (props: Props) => {
   return (
     <React.Fragment>
       <Fab onClick={toggleModalOpen} className={classes.fab}>
-        <AddIcon />
+        <Tooltip disableFocusListener={true} title="Create new todo">
+          <AddIcon />
+        </Tooltip>
       </Fab>
       <Dialog
         fullWidth
