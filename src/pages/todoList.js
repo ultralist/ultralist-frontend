@@ -1,6 +1,7 @@
 // @flow
 import React, { useState, useEffect } from "react"
 import { parseISO } from "date-fns"
+import Snackbar from "@material-ui/core/Snackbar"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -12,7 +13,6 @@ import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
 import CreateTodoList from "../components/topBar/createTodoList"
-import Snackbar from "@material-ui/core/Snackbar"
 import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
