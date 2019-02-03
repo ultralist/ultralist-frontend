@@ -47,7 +47,8 @@ const useStyles = makeStyles({
   },
   filterChips: {
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    flexWrap: "wrap"
   }
 })
 
