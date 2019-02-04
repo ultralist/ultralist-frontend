@@ -114,7 +114,11 @@ const TodoList = (props: Props) => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
+        onClose={(event, reason) => {
+          if (reason === "clickaway") return
+          setSnackbarOpen(false)
+        }}
+        disableWindowBlurListener={true}
         message={<span>{snackbarText}</span>}
       />
     </React.Fragment>
