@@ -1,12 +1,11 @@
 // @flow
-import React from "react"
 import { withStyles } from "@material-ui/core/styles"
 import red from "@material-ui/core/colors/red"
 import blue from "@material-ui/core/colors/blue"
 
 import DueDate from "../basic/dueDate"
 
-const styles = theme => ({
+const styles = () => ({
   past: {
     color: red[700]
   },

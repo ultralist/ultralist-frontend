@@ -1,5 +1,4 @@
 // @flow
-import TodoItemNote from "./todoItemNote"
 import utils from "../utils"
 import { format, addDays, setDay, parseISO } from "date-fns"
 

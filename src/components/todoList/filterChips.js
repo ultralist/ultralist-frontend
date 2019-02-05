@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React from "react"
 import { makeStyles } from "@material-ui/styles"
 
 import Chip from "@material-ui/core/Chip"
