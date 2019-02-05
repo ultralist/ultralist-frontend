@@ -43,7 +43,7 @@ const useStyles = makeStyles({
   },
   listName: {
     textAlign: "center",
-    marginBottom: 5
+    marginTop: 20
   },
   filterChips: {
     display: "flex",
