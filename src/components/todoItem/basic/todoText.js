@@ -33,7 +33,6 @@ const TodoText = (props: Props) => {
     if (isContext(word)) {
       return (
         <a
-          href="#"
           key={i}
           className={props.grey ? null : props.classes.context}
           onClick={() => props.onClick(word.trim())}
@@ -44,7 +43,6 @@ const TodoText = (props: Props) => {
     } else if (isProject(word)) {
       return (
         <a
-          href="#"
           key={i}
           className={props.grey ? null : props.classes.project}
           onClick={() => props.onClick(word.trim())}
