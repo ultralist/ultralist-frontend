@@ -12,7 +12,6 @@ import Star from "@material-ui/icons/Star"
 import Collapse from "@material-ui/core/Collapse"
 import Paper from "@material-ui/core/Paper"
 
-import EditIcon from "@material-ui/icons/Edit"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
 import ArchiveIcon from "@material-ui/icons/Archive"
@@ -147,7 +146,7 @@ const TodoItem = (props: Props) => {
   }
 
   return (
-    <Paper className={props.classes.paper}>
+    <Paper className={props.classes.paper} onClick={toggleShowEditTodo}>
       <ListItem key={todoItem.id}>
         <Checkbox
           tabIndex={-1}
@@ -189,17 +188,8 @@ const TodoItem = (props: Props) => {
           <div className={props.classes.shortWidthHide}>
             {firstButton()}
 
-            <IconButton onClick={toggleShowEditTodo} aria-label="Edit">
-              <EditIcon />
-            </IconButton>
-
             <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
               {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-            </IconButton>
-          </div>
-          <div className={props.classes.shortWidthShow}>
-            <IconButton onClick={toggleShowEditTodo} aria-label="Edit">
-              <EditIcon />
             </IconButton>
           </div>
         </ListItemSecondaryAction>
