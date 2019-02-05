@@ -27,7 +27,7 @@ const LoadTodoLists = (props: Props) => {
       createTodoListFromBackend(list)
     )
     storage.saveTodoLists(lists)
-    props.history.push("/todolist")
+    props.history.push(`/todolist/${lists[0].uuid}`)
   })
 
   return <h1>Loading...</h1>

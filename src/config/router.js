@@ -15,8 +15,8 @@ const history = createBrowserHistory()
 const Routes = () => (
   <Router history={history}>
     <React.Fragment>
-      <Route path="/todolist/:id" component={TodoList} />
-      <Route path="/todolist" component={TodoList} />
+      <Route exact={true} path="/todolist" component={TodoList} />
+      <Route exact={true} path="/todolist/:id" component={TodoList} />
 
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />

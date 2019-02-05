@@ -30,9 +30,15 @@ const TODOLIST_MRU_KEY = "todolist-mru-id"
 
 const TodoListApp = (props: Props) => {
   const todoLists = storage.loadTodoLists()
-  const mostRecentTodoList = todoLists.find(
-    tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
-  )
+  let mostRecentTodoList
+  if (props.match.params.id) {
+    mostRecentTodoList = todoLists.find(t => t.uuid === props.match.params.id)
+  } else {
+    mostRecentTodoList = todoLists.find(
+      tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
+    )
+  }
+
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarText, setSnackbarText] = useState("")
@@ -74,7 +80,6 @@ const TodoListApp = (props: Props) => {
   }
 
   useEffect(() => {
-    // document.addEventListener("visibilitychange", visibilityChangeHandler)
     fetchList()
 
     const socketProcessor = new WebsocketProcessor(
@@ -84,7 +89,6 @@ const TodoListApp = (props: Props) => {
     window.socket.registerProcessor(socketProcessor)
 
     return () => {
-      // document.removeEventListener("visibilitychange", visibilityChangeHandler)
       window.socket.deregisterProcessor("todolist_update")
     }
   }, [])
@@ -110,7 +114,7 @@ const TodoListApp = (props: Props) => {
 
   const onChangeTodoList = (todoList: TodoListModel) => {
     window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
-    setTodoList(todoList)
+    props.history.push(`/todolist/${todoList.uuid}`)
     fetchLists()
   }
 
