@@ -19,7 +19,7 @@ type Props = {
 const useStyles = makeStyles({
   list: {
     margin: "auto",
-    width: "100vw",
+    width: "calc(100vw - 15px)",
     maxWidth: 1200
   }
 })
