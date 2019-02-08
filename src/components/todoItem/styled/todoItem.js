@@ -35,7 +35,9 @@ type Props = {
     shortWidthHide: string,
     shortWidthShow: string,
     starIcon: string,
-    notesArea: string
+    notesArea: string,
+    paper: string,
+    listItem: string
   }
 }
 
@@ -69,6 +71,9 @@ const styles = theme => ({
     backgroundColor: "#efefef",
     marginLeft: 40,
     marginBottom: 20
+  },
+  listItem: {
+    cursor: "pointer"
   }
 })
 
@@ -146,8 +151,12 @@ const TodoItem = (props: Props) => {
   }
 
   return (
-    <Paper className={props.classes.paper} onClick={toggleShowEditTodo}>
-      <ListItem key={todoItem.id}>
+    <Paper className={props.classes.paper}>
+      <ListItem
+        key={todoItem.id}
+        onClick={toggleShowEditTodo}
+        className={props.classes.listItem}
+      >
         <Checkbox
           tabIndex={-1}
           checked={todoItem.completed}
