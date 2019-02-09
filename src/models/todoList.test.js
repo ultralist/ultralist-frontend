@@ -3,6 +3,10 @@ import TodoItemModel from "./todoItem"
 import TodoList, { findLowestUnusedID } from "./todoList"
 
 describe("findLowestUnusedID", () => {
+  it("returns 1 for the first todo", () => {
+    expect(findLowestUnusedID([])).toEqual(1)
+  })
+
   it("finds the lowest in the middle", () => {
     const todos = []
     todos.push(new TodoItemModel({}))

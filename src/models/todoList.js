@@ -44,6 +44,8 @@ export default class TodoList {
 }
 
 export const findLowestUnusedID = (todos: Array<TodoItemModel>) => {
+  if (todos.length === 0) return 1
+
   const todoIds = todos.map(t => t.id || -1)
   const maxId = Math.max(...todoIds)
 
