@@ -22,4 +22,12 @@ export default class Storage {
     lists[index] = todoList
     this.saveTodoLists(lists)
   }
+
+  isModalOpen(): boolean {
+    return window.localStorage.getItem("modalOpen") === "true"
+  }
+
+  setModalIsOpen(open: boolean) {
+    window.localStorage.setItem("modalOpen", open)
+  }
 }

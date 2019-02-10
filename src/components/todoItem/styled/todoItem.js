@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import { withStyles } from "@material-ui/core/styles"
 import IconButton from "@material-ui/core/IconButton"
@@ -19,6 +19,7 @@ import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
 import yellow from "@material-ui/core/colors/yellow"
 
+import Storage from "../../../backend/storage"
 import TodoItemModel from "../../../models/todoItem"
 
 import DueDate from "./dueDate"
@@ -29,15 +30,18 @@ import EditTodo from "./editTodo"
 
 type Props = {
   todoItem: TodoItemModel,
+  isSelected: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
+  showEditTodo: boolean,
   classes: {
     shortWidthHide: string,
     shortWidthShow: string,
     starIcon: string,
     notesArea: string,
     paper: string,
-    listItem: string
+    listItem: string,
+    selectedListItem: string
   }
 }
 
@@ -73,14 +77,24 @@ const styles = theme => ({
     marginBottom: 20
   },
   listItem: {
-    cursor: "pointer"
+    cursor: "pointer",
+    border: "2px solid transparent"
+  },
+  selectedListItem: {
+    cursor: "pointer",
+    border: "2px solid maroon",
+    borderRadius: 3
   }
 })
 
 const TodoItem = (props: Props) => {
   const todoItem = props.todoItem
+  const storage = new Storage()
+
   const [showNotes, setShowNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
+
+  storage.setModalIsOpen(showEditTodo)
 
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
@@ -150,12 +164,33 @@ const TodoItem = (props: Props) => {
     }
   }
 
+  const onKeypress = event => {
+    if (!props.isSelected) return
+
+    if (event.keyCode === 13) setShowEditTodo(true)
+    if (event.keyCode === 99) toggleComplete()
+    if (event.keyCode === 112) togglePriority()
+    if (event.keyCode === 65) toggleArchived()
+  }
+
+  useEffect(() => {
+    document.addEventListener("keypress", onKeypress)
+
+    return () => {
+      document.removeEventListener("keypress", onKeypress)
+    }
+  }, [])
+
   return (
     <Paper className={props.classes.paper}>
       <ListItem
         key={todoItem.id}
         onClick={toggleShowEditTodo}
-        className={props.classes.listItem}
+        className={
+          props.isSelected
+            ? props.classes.selectedListItem
+            : props.classes.listItem
+        }
       >
         <Checkbox
           tabIndex={-1}

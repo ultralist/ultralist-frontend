@@ -1,10 +1,11 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import Typography from "@material-ui/core/Typography"
 import Snackbar from "@material-ui/core/Snackbar"
 import { makeStyles } from "@material-ui/styles"
 
+import Storage from "../../backend/storage"
 import TodoItemModel from "../../models/todoItem"
 import TodoListModel from "../../models/todoList"
 import FilterModel, { LoadFromStorage } from "../../models/filter"
@@ -54,9 +55,11 @@ const useStyles = makeStyles({
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
+  const storage = new Storage()
   const [filterModel, setFilterModel] = useState(LoadFromStorage())
   const [snackbarText, setSnackbarText] = useState("")
   const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
   const groups = filterModel.applyFilter(props.todoList.todos)
 
@@ -84,6 +87,29 @@ const TodoList = (props: Props) => {
     onChangeFilter(filterModel)
   }
 
+  const todoUUIDs = groups.map(g => g.todos.map(t => t.uuid)).flat()
+  const onKeypress = event => {
+    if (storage.isModalOpen()) return
+
+    let nextTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) + 1]
+    if (nextTodoUUID === undefined) nextTodoUUID = todoUUIDs[0]
+
+    let prevTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) - 1]
+    if (prevTodoUUID === undefined)
+      prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
+
+    if (event.keyCode === 106) setSelectedTodoUUID(nextTodoUUID)
+    if (event.keyCode === 107) setSelectedTodoUUID(prevTodoUUID)
+  }
+
+  useEffect(() => {
+    document.addEventListener("keypress", onKeypress)
+
+    return () => {
+      document.removeEventListener("keypress", onKeypress)
+    }
+  })
+
   return (
     <React.Fragment>
       <div className={classes.listContainer}>
@@ -101,6 +127,7 @@ const TodoList = (props: Props) => {
         {groups.map(g => (
           <TodoGroup
             key={g.uuid}
+            selectedTodoUUID={selectedTodoUUID}
             onChange={onChangeTodo}
             onSubjectClick={onSubjectClick}
             group={g}

@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles"
 
 import Fab from "@material-ui/core/Fab"
@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add"
 import Dialog from "@material-ui/core/Dialog"
 import Tooltip from "@material-ui/core/Tooltip"
 
+import Storage from "../../backend/storage"
 import TodoForm from "../todoItem/styled/todoForm"
 import TodoItemModel from "../../models/todoItem"
 
@@ -26,9 +27,12 @@ const useStyles = makeStyles({
 })
 
 const AddTodo = (props: Props) => {
+  const storage = new Storage()
   const classes = useStyles()
   const [modalOpen, setModalOpen] = useState(false)
   const todoItem = new TodoItemModel({})
+
+  storage.setModalIsOpen(modalOpen)
 
   const toggleModalOpen = () => {
     setModalOpen(!modalOpen)
@@ -38,6 +42,21 @@ const AddTodo = (props: Props) => {
     setModalOpen(false)
     props.onAddTodoItem(todoItem)
   }
+
+  const onKeypress = event => {
+    if (event.keyCode === 97 && !storage.isModalOpen()) {
+      setTimeout(() => setModalOpen(true), 10)
+    }
+    return false
+  }
+
+  useEffect(() => {
+    document.addEventListener("keypress", onKeypress)
+
+    return () => {
+      document.removeEventListener("keypress", onKeypress)
+    }
+  }, [])
 
   return (
     <React.Fragment>

@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/styles"
 
 type Props = {
   group: TodoListGroup,
+  selectedTodoUUID: string,
   onChange: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void
 }
@@ -38,6 +39,7 @@ const TodoGroup = (props: Props) => {
       {props.group.sortedTodos().map(todo => (
         <React.Fragment key={todo.uuid}>
           <TodoItem
+            isSelected={todo.uuid === props.selectedTodoUUID}
             onChange={props.onChange}
             onSubjectClick={props.onSubjectClick}
             todoItem={todo}
