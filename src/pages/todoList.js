@@ -13,7 +13,11 @@ import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
 import CreateTodoList from "../components/topBar/createTodoList"
-import { createAddEvent, createUpdateEvent } from "../models/todoEvent"
+import {
+  createAddEvent,
+  createUpdateEvent,
+  createDeleteEvent
+} from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
 import { WebsocketProcessor } from "../config/websocket"
@@ -112,6 +116,11 @@ const TodoListApp = (props: Props) => {
     update()
   }
 
+  const onDeleteTodoItem = (todoItem: TodoItemModel) => {
+    eventCache.addItem(createDeleteEvent(todoItem))
+    update()
+  }
+
   const onChangeTodoList = (todoList: TodoListModel) => {
     window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
     props.history.push(`/todolist/${todoList.uuid}`)
@@ -145,6 +154,7 @@ const TodoListApp = (props: Props) => {
         todoList={todoList}
         onAddTodoItem={onAddTodoItem}
         onChangeTodoItem={onChangeTodoItem}
+        onDeleteTodoItem={onDeleteTodoItem}
       />
       <Snackbar
         open={snackbarOpen}

@@ -10,7 +10,8 @@ type Props = {
   todoItem: TodoItemModel,
   show: boolean,
   onClose: () => void,
-  onEditTodo: (todoItem: TodoItemModel) => void
+  onEditTodo: (todoItem: TodoItemModel) => void,
+  onDeleteTodo: (todoItem: TodoItemModel) => void
 }
 
 const EditTodo = (props: Props) => {
@@ -19,12 +20,18 @@ const EditTodo = (props: Props) => {
     props.onEditTodo(todoItem)
   }
 
+  const onDelete = (todoItem: TodoItemModel) => {
+    props.onClose()
+    props.onDeleteTodo(todoItem)
+  }
+
   return (
     <Dialog fullWidth maxWidth="sm" open={props.show} onClose={props.onClose}>
       <TodoForm
         title="Edit todo"
         todoItem={props.todoItem}
         onChange={onChange}
+        onDelete={onDelete}
       />
     </Dialog>
   )

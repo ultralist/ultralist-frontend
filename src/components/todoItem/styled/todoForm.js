@@ -7,6 +7,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Switch from "@material-ui/core/Switch"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
+import Dialog from "@material-ui/core/Dialog"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogActions from "@material-ui/core/DialogActions"
@@ -14,13 +15,15 @@ import DialogActions from "@material-ui/core/DialogActions"
 import KeyboardIcon from "@material-ui/icons/Keyboard"
 import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
 import RightArrowIcon from "@material-ui/icons/ArrowRight"
+import red from "@material-ui/core/colors/red"
 
 import TodoItemModel from "../../../models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,
   title: string,
-  onChange: (todoItem: TodoItemModel) => void
+  onChange: (todoItem: TodoItemModel) => void,
+  onDelete: (todoItem: TodoItemModel) => void
 }
 
 const useStyles = makeStyles({
@@ -31,6 +34,13 @@ const useStyles = makeStyles({
   withMargin: {
     marginTop: 20,
     marginBottom: 20
+  },
+  red: {
+    color: "white",
+    backgroundColor: red[800],
+    "&:hover": {
+      backgroundColor: red[500]
+    }
   }
 })
 
@@ -44,6 +54,7 @@ const Margin = props => {
 const TodoForm = (props: Props) => {
   const classes = useStyles()
   const [todoItem, setTodoItem] = useState(props.todoItem)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const setTodoDate = (date: Date) => {
     todoItem.setDue(date)
@@ -74,6 +85,19 @@ const TodoForm = (props: Props) => {
     }
 
     props.onChange(todoItem)
+  }
+
+  const onShowDeleteDialog = () => {
+    setShowDeleteDialog(true)
+  }
+
+  const onCloseDeleteDialog = () => {
+    setShowDeleteDialog(false)
+  }
+
+  const onDelete = () => {
+    setShowDeleteDialog(false)
+    props.onDelete(todoItem)
   }
 
   const isValid = () => {
@@ -144,6 +168,16 @@ const TodoForm = (props: Props) => {
             label="Archived"
           />
         </Margin>
+        <Button className={classes.red} onClick={onShowDeleteDialog}>
+          Delete this todo
+        </Button>
+        <Dialog open={showDeleteDialog} onClose={onCloseDeleteDialog}>
+          <DialogTitle>Delete this todo?</DialogTitle>
+          <DialogActions>
+            <Button onClick={onDelete}>Delete</Button>
+            <Button onClick={onCloseDeleteDialog}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
       </DialogContent>
 
       <DialogActions>

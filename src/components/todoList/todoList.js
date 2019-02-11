@@ -18,7 +18,8 @@ import BottomBar from "../bottomBar"
 type Props = {
   todoList: TodoListModel,
   onAddTodoItem: (todoItem: TodoItemModel) => void,
-  onChangeTodoItem: (todoItem: TodoItemModel) => void
+  onChangeTodoItem: (todoItem: TodoItemModel) => void,
+  onDeleteTodoItem: (todoItem: TodoItemModel) => void
 }
 
 const useStyles = makeStyles({
@@ -77,6 +78,13 @@ const TodoList = (props: Props) => {
     props.onChangeTodoItem(todo)
   }
 
+  const onDeleteTodo = (todo: TodoItemModel) => {
+    props.todoList.deleteTodo(todo)
+    setSnackbarText("Todo deleted.")
+    setSnackbarOpen(true)
+    props.onDeleteTodoItem(todo)
+  }
+
   const onChangeFilter = (filter: FilterModel) => {
     filter.save()
     setFilterModel(filter)
@@ -129,6 +137,7 @@ const TodoList = (props: Props) => {
             key={g.uuid}
             selectedTodoUUID={selectedTodoUUID}
             onChange={onChangeTodo}
+            onDelete={onDeleteTodo}
             onSubjectClick={onSubjectClick}
             group={g}
           />

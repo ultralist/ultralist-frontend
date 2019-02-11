@@ -29,8 +29,12 @@ export default class TodoList {
   }
 
   updateTodo(todo: TodoItemModel) {
-    this.todos = this.todos.filter(t => t.uuid !== todo.uuid)
+    this.deleteTodo(todo)
     this.addTodo(todo)
+  }
+
+  deleteTodo(todo: TodoItemModel) {
+    this.todos = this.todos.filter(t => t.uuid !== todo.uuid)
   }
 
   toJSON() {

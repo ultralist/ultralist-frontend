@@ -32,6 +32,7 @@ type Props = {
   todoItem: TodoItemModel,
   isSelected: boolean,
   onChange: (todoItem: TodoItemModel) => void,
+  onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
   showEditTodo: boolean,
   classes: {
@@ -248,6 +249,7 @@ const TodoItem = (props: Props) => {
         onClose={toggleShowEditTodo}
         todoItem={todoItem}
         onEditTodo={onChangeTodo}
+        onDeleteTodo={props.onDelete}
       />
     </Paper>
   )

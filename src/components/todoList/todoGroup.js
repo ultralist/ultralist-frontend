@@ -14,6 +14,7 @@ type Props = {
   group: TodoListGroup,
   selectedTodoUUID: string,
   onChange: (todoItem: TodoItemModel) => void,
+  onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void
 }
 
@@ -41,6 +42,7 @@ const TodoGroup = (props: Props) => {
           <TodoItem
             isSelected={todo.uuid === props.selectedTodoUUID}
             onChange={props.onChange}
+            onDelete={props.onDelete}
             onSubjectClick={props.onSubjectClick}
             todoItem={todo}
           />
