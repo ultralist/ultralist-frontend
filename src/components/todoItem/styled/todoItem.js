@@ -166,7 +166,7 @@ const TodoItem = (props: Props) => {
   }
 
   const onKeypress = event => {
-    if (!props.isSelected) return
+    if (!props.isSelected || storage.isModalOpen()) return
 
     if (event.keyCode === 13) setShowEditTodo(true)
     if (event.keyCode === 99) toggleComplete()
