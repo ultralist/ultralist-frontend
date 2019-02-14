@@ -4,6 +4,8 @@ import TodoItemModel from "../todoItem"
 import FilterModel from "../filter"
 import {
   differenceInDays,
+  addDays,
+  isSameDay,
   isMonday,
   isTuesday,
   isWednesday,
@@ -61,6 +63,15 @@ const filterTodos = (
         if (todo.dueDate() === null) return false
         if (todo.dueDate() !== null && todo.dueDate() >= new Date())
           return false
+        break
+      case "today":
+        if (todo.dueDate() === null) return false
+        if (!isSameDay(todo.dueDate(), new Date())) return false
+        break
+      case "tomorrow":
+        if (todo.dueDate() === null) return false
+        if (!isSameDay(todo.dueDate(), addDays(new Date(), 1))) return false
+        return false
         break
       case "mon":
         if (todo.dueDate() === null) return false

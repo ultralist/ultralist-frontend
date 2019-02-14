@@ -7,6 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Input from "@material-ui/core/Input"
 import InputLabel from "@material-ui/core/InputLabel"
+import Divider from "@material-ui/core/Divider"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import Checkbox from "@material-ui/core/Checkbox"
@@ -176,8 +177,13 @@ const FilterDialog = (props: Props) => {
                 >
                   <MenuItem value="none">No due filter</MenuItem>
                   <MenuItem value="nodue">No date set</MenuItem>
+                  <Divider />
                   <MenuItem value="agenda">Agenda</MenuItem>
                   <MenuItem value="overdue">Overdue</MenuItem>
+                  <Divider />
+                  <MenuItem value="today">today</MenuItem>
+                  <MenuItem value="tomorrow">tomorrow</MenuItem>
+                  <Divider />
                   <MenuItem value="mon">Monday</MenuItem>
                   <MenuItem value="tue">Tuesday</MenuItem>
                   <MenuItem value="wed">Wednesday</MenuItem>
