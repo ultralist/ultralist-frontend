@@ -37,6 +37,7 @@ const TodoListApp = (props: Props) => {
   let mostRecentTodoList
   if (props.match.params.id) {
     mostRecentTodoList = todoLists.find(t => t.uuid === props.match.params.id)
+    window.localStorage.setItem(TODOLIST_MRU_KEY, mostRecentTodoList.uuid)
   } else {
     mostRecentTodoList = todoLists.find(
       tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
@@ -44,7 +45,6 @@ const TodoListApp = (props: Props) => {
   }
 
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
-  window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
 
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarText, setSnackbarText] = useState("")
@@ -123,9 +123,8 @@ const TodoListApp = (props: Props) => {
     update()
   }
 
-  const onChangeTodoList = (todoList: TodoListModel) => {
-    window.localStorage.setItem(TODOLIST_MRU_KEY, todoList.uuid)
-    props.history.push(`/todolist/${todoList.uuid}`)
+  const onChangeTodoList = (newList: TodoListModel) => {
+    props.history.push(`/todolist/${newList.uuid}`)
     fetchLists()
   }
 
