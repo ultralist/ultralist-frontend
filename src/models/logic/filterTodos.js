@@ -71,7 +71,6 @@ const filterTodos = (
       case "tomorrow":
         if (todo.dueDate() === null) return false
         if (!isSameDay(todo.dueDate(), addDays(new Date(), 1))) return false
-        return false
         break
       case "mon":
         if (todo.dueDate() === null) return false
