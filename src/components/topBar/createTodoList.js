@@ -13,6 +13,7 @@ import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
 
 import TodoListModel from "../../models/todoList"
+import Storage from "../../backend/storage"
 
 type Props = {
   onCreateTodoList: (newList: TodoListModel) => void
@@ -39,6 +40,9 @@ const CreateTodoList = (props: Props) => {
   const toggleOpen = () => {
     setIsOpen(!isOpen)
   }
+
+  const storage = new Storage()
+  storage.setModalIsOpen(isOpen)
 
   const createList = () => {
     const newList = new TodoListModel({ name: nameRef.current.value })

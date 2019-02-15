@@ -18,6 +18,7 @@ import { makeStyles } from "@material-ui/styles"
 
 import FilterModel from "../../models/filter"
 import FilterChips from "../todoList/filterChips"
+import Storage from "../../backend/storage"
 
 type Props = {
   currentFilter: FilterModel,
@@ -37,9 +38,11 @@ const useStyles = makeStyles({
 })
 
 const FilterDialog = (props: Props) => {
+  const storage = new Storage()
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
   const [currentFilter, setCurrentFilter] = useState(props.currentFilter)
+  storage.setModalIsOpen(isOpen)
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
