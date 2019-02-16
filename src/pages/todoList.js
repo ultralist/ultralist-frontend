@@ -53,6 +53,16 @@ const TodoListApp = (props: Props) => {
   window.socket.registerSocket(user)
   const backend = props.backend || new Backend(user.token)
 
+  const fetchList = (list: TodoListModel, cb) => {
+    if (!navigator.onLine) return
+
+    backend.fetchTodoList(list.uuid).then(l => {
+      l = createTodoListFromBackend(l)
+      storage.updateTodoList(l)
+      if (cb) cb(l)
+    })
+  }
+
   const fetchLists = () => {
     backend.fetchTodoLists().then(todoLists => {
       const lists = todoLists.todolists.map(list =>
@@ -63,30 +73,21 @@ const TodoListApp = (props: Props) => {
       )
       storage.saveTodoLists(lists)
       setTodoList(currentList)
-      window.localStorage.setItem("todolists_last_sync", new Date().getTime())
-    })
-  }
-
-  const fetchList = () => {
-    backend.fetchTodoList(todoList.uuid).then(list => {
-      list = createTodoListFromBackend(list)
-      storage.updateTodoList(list)
-      setTodoList(list)
     })
   }
 
   const processSocketUpdate = data => {
     setTimeout(() => {
       const updatedAt = parseISO(data.data.updated_at)
-      const currentList = storage.loadTodoList(todoList.uuid)
-      if (updatedAt > currentList.updatedAt) {
-        fetchLists()
+      const updatedList = storage.loadTodoList(data.data.uuid)
+      if (updatedAt > updatedList.updatedAt) {
+        fetchList(updatedList)
       }
     }, 500)
   }
 
   useEffect(() => {
-    fetchList()
+    fetchLists()
 
     const socketProcessor = new WebsocketProcessor(
       "todolist_update",
@@ -125,7 +126,8 @@ const TodoListApp = (props: Props) => {
 
   const onChangeTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
-    fetchLists()
+    setTodoList(newList)
+    fetchList(newList, list => setTodoList(list))
   }
 
   const onCreateTodoList = (todoList: TodoListModel) => {
