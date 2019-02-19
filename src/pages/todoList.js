@@ -81,7 +81,11 @@ const TodoListApp = (props: Props) => {
       const updatedAt = parseISO(data.data.updated_at)
       const updatedList = storage.loadTodoList(data.data.uuid)
       if (updatedAt > updatedList.updatedAt) {
-        fetchList(updatedList)
+        if (updatedList.uuid === todoList.uuid) {
+          fetchList(updatedList, list => setTodoList(list))
+        } else {
+          fetchList(updatedList)
+        }
       }
     }, 500)
   }
