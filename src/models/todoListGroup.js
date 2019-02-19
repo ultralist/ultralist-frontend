@@ -19,6 +19,11 @@ export default class TodoListGroup {
   }
 
   sortedTodos(): Array<TodoItem> {
-    return this.todos.sort((t1, t2) => (t1.id || -1) - (t2.id || -1))
+    return this.todos.sort((t1, t2) => {
+      if (t1.isPriority) return -1
+      if (t2.isPriority) return 1
+      if (t1.dueDate() < t2.dueDate()) return 1
+      return -1
+    })
   }
 }
