@@ -89,9 +89,9 @@ const styles = theme => ({
 })
 
 const TodoItem = (props: Props) => {
-  const todoItem = props.todoItem
   const storage = new Storage()
 
+  const [todoItem, setTodoItem] = useState(props.todoItem)
   const [showNotes, setShowNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
@@ -103,21 +103,25 @@ const TodoItem = (props: Props) => {
 
   const toggleComplete = () => {
     todoItem.toggleCompleted()
+    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const togglePriority = () => {
     todoItem.togglePriority()
+    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const deleteNote = note => {
     todoItem.deleteNote(note)
+    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const toggleArchived = () => {
     todoItem.toggleArchived()
+    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 

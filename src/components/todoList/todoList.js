@@ -69,9 +69,9 @@ const TodoList = (props: Props) => {
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
+    props.onChangeTodoItem(todo)
     props.todoList.updateTodo(todo)
     props.enqueueSnackbar("Todo updated.")
-    props.onChangeTodoItem(todo)
   }
 
   const onDeleteTodo = (todo: TodoItemModel) => {
