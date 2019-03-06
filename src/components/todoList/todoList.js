@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react"
 
 import Typography from "@material-ui/core/Typography"
-import Snackbar from "@material-ui/core/Snackbar"
 import { makeStyles } from "@material-ui/styles"
+import { withSnackbar } from "notistack"
 
 import Storage from "../../backend/storage"
 import TodoItemModel from "../../models/todoItem"
@@ -58,30 +58,25 @@ const TodoList = (props: Props) => {
   const classes = useStyles()
   const storage = new Storage()
   const [filterModel, setFilterModel] = useState(LoadFromStorage())
-  const [snackbarText, setSnackbarText] = useState("")
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
   const groups = filterModel.applyFilter(props.todoList.todos)
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.todoList.addTodo(todo)
-    setSnackbarText("Todo added.")
-    setSnackbarOpen(true)
+    props.enqueueSnackbar("Todo Added.")
     props.onAddTodoItem(todo)
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
     props.todoList.updateTodo(todo)
-    setSnackbarText("Todo updated.")
-    setSnackbarOpen(true)
+    props.enqueueSnackbar("Todo updated.")
     props.onChangeTodoItem(todo)
   }
 
   const onDeleteTodo = (todo: TodoItemModel) => {
     props.todoList.deleteTodo(todo)
-    setSnackbarText("Todo deleted.")
-    setSnackbarOpen(true)
+    props.enqueueSnackbar("Todo deleted.")
     props.onDeleteTodoItem(todo)
   }
 
@@ -146,19 +141,8 @@ const TodoList = (props: Props) => {
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          if (reason === "clickaway") return
-          setSnackbarOpen(false)
-        }}
-        disableWindowBlurListener={true}
-        message={<span>{snackbarText}</span>}
-      />
     </React.Fragment>
   )
 }
 
-export default TodoList
+export default withSnackbar(TodoList)

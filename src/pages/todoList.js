@@ -1,7 +1,7 @@
 // @flow
 import React, { useState, useEffect } from "react"
 import { parseISO } from "date-fns"
-import Snackbar from "@material-ui/core/Snackbar"
+import { withSnackbar } from "notistack"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -45,9 +45,6 @@ const TodoListApp = (props: Props) => {
   }
 
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
-
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarText, setSnackbarText] = useState("")
 
   const user = loadUser()
   window.socket.registerSocket(user)
@@ -140,8 +137,7 @@ const TodoListApp = (props: Props) => {
       const lists = storage.loadTodoLists()
       lists.push(todoList)
       storage.saveTodoLists(lists)
-      setSnackbarText("Todolist created.")
-      setSnackbarOpen(true)
+      props.enqueueSnackbar("Todolist created.")
       setTodoList(todoList)
     })
   }
@@ -163,16 +159,7 @@ const TodoListApp = (props: Props) => {
         onChangeTodoItem={onChangeTodoItem}
         onDeleteTodoItem={onDeleteTodoItem}
       />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={(event, reason) => {
-          if (reason === "clickaway") return
-          setSnackbarOpen(false)
-        }}
-        message={<span>{snackbarText}</span>}
-      />
     </React.Fragment>
   )
 }
-export default TodoListApp
+export default withSnackbar(TodoListApp)

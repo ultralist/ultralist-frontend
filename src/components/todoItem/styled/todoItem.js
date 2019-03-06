@@ -186,7 +186,6 @@ const TodoItem = (props: Props) => {
     <Paper className={props.classes.paper}>
       <ListItem
         key={todoItem.id}
-        onClick={toggleShowEditTodo}
         className={
           props.isSelected
             ? props.classes.selectedListItem
@@ -212,6 +211,7 @@ const TodoItem = (props: Props) => {
         </IconButton>
 
         <ListItemText
+          onClick={toggleShowEditTodo}
           primary={
             <TodoText
               bold={todoItem.isPriority}
