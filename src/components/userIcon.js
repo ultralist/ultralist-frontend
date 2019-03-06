@@ -15,6 +15,10 @@ const useStyles = makeStyles(theme => {
   return {
     icon: {
       color: "#fff !important" // TODO: make this use theme
+    },
+    link: {
+      color: "rgba(0, 0, 0, 0.87)",
+      textDecoration: "none"
     }
   }
 })
@@ -50,6 +54,25 @@ const UserIcon = () => {
       </IconButton>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={toggleOpen}>
         <MenuItem onClick={onLogout}>Logout</MenuItem>
+        <MenuItem>
+          <a
+            className={classes.link}
+            target="_blank"
+            href="https://docs.ultralist.io"
+          >
+            Docs
+          </a>
+        </MenuItem>
+        <MenuItem>
+          <a
+            className={classes.link}
+            target="_blank"
+            href="mailto:hello@ultralist.io"
+          >
+            {" "}
+            Email support{" "}
+          </a>
+        </MenuItem>
       </Menu>
     </React.Fragment>
   )
