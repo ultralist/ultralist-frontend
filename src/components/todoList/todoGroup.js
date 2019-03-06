@@ -22,12 +22,13 @@ const useStyles = makeStyles({
   list: {
     margin: "auto",
     width: "calc(100vw - 15px)",
-    maxWidth: 1200
+    maxWidth: 1200,
   }
 })
 
 const TodoGroup = (props: Props) => {
   const classes = useStyles()
+  const todos = props.group.sortedTodos()
   return (
     <List
       className={classes.list}
@@ -37,9 +38,10 @@ const TodoGroup = (props: Props) => {
         </ListSubheader>
       }
     >
-      {props.group.sortedTodos().map(todo => (
+      {todos.map(todo => (
         <React.Fragment key={todo.uuid}>
           <TodoItem
+            isFirst={todo.uuid == todos[0].uuid}
             isSelected={todo.uuid === props.selectedTodoUUID}
             onChange={props.onChange}
             onDelete={props.onDelete}

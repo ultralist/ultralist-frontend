@@ -10,7 +10,6 @@ import StarBorder from "@material-ui/icons/StarBorder"
 import ListItemText from "@material-ui/core/ListItemText"
 import Star from "@material-ui/icons/Star"
 import Collapse from "@material-ui/core/Collapse"
-import Paper from "@material-ui/core/Paper"
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import ExpandLessIcon from "@material-ui/icons/ExpandLess"
@@ -31,6 +30,7 @@ import EditTodo from "./editTodo"
 type Props = {
   todoItem: TodoItemModel,
   isSelected: boolean,
+  isFirst: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
@@ -63,11 +63,20 @@ const styles = theme => ({
       display: "none"
     }
   },
-  paper: {
+  todo: {
     [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {},
     [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
       maxWidth: 1200
-    }
+    },
+    backgroundColor: "#fff",
+    borderTop: "1px solid #eee"
+  },
+  firstTodo: {
+    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {},
+    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+      maxWidth: 1200
+    },
+    backgroundColor: "#fff"
   },
   starIcon: {
     color: yellow[800]
@@ -76,15 +85,6 @@ const styles = theme => ({
     backgroundColor: "#efefef",
     marginLeft: 40,
     marginBottom: 20
-  },
-  listItem: {
-    cursor: "pointer",
-    border: "2px solid transparent"
-  },
-  selectedListItem: {
-    cursor: "pointer",
-    border: "2px solid maroon",
-    borderRadius: 3
   }
 })
 
@@ -187,62 +187,56 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <Paper className={props.classes.paper}>
-      <ListItem
-        key={todoItem.id}
-        className={
-          props.isSelected
-            ? props.classes.selectedListItem
-            : props.classes.listItem
-        }
+    <ListItem
+      key={todoItem.id}
+      className={props.isFirst ? props.classes.firstTodo : props.classes.todo}
+    >
+      <Checkbox
+        tabIndex={-1}
+        checked={todoItem.completed}
+        onChange={toggleComplete}
+      />
+
+      <IconButton
+        onClick={togglePriority}
+        className={props.classes.shortWidthHide}
+        aria-label="Prioritize"
       >
-        <Checkbox
-          tabIndex={-1}
-          checked={todoItem.completed}
-          onChange={toggleComplete}
-        />
+        {todoItem.isPriority ? (
+          <Star className={props.classes.starIcon} />
+        ) : (
+          <StarBorder />
+        )}
+      </IconButton>
 
-        <IconButton
-          onClick={togglePriority}
-          className={props.classes.shortWidthHide}
-          aria-label="Prioritize"
-        >
-          {todoItem.isPriority ? (
-            <Star className={props.classes.starIcon} />
-          ) : (
-            <StarBorder />
-          )}
-        </IconButton>
+      <ListItemText
+        onClick={toggleShowEditTodo}
+        primary={
+          <TodoText
+            bold={todoItem.isPriority}
+            strike={todoItem.completed}
+            grey={todoItem.archived}
+            val={todoItem.subject}
+            onClick={props.onSubjectClick}
+          />
+        }
+        secondary={
+          <DueDate
+            grey={todoItem.archived || todoItem.completed}
+            date={todoItem.dueDate()}
+          />
+        }
+      />
 
-        <ListItemText
-          onClick={toggleShowEditTodo}
-          primary={
-            <TodoText
-              bold={todoItem.isPriority}
-              strike={todoItem.completed}
-              grey={todoItem.archived}
-              val={todoItem.subject}
-              onClick={props.onSubjectClick}
-            />
-          }
-          secondary={
-            <DueDate
-              grey={todoItem.archived || todoItem.completed}
-              date={todoItem.dueDate()}
-            />
-          }
-        />
+      <ListItemSecondaryAction>
+        <div className={props.classes.shortWidthHide}>
+          {firstButton()}
 
-        <ListItemSecondaryAction>
-          <div className={props.classes.shortWidthHide}>
-            {firstButton()}
-
-            <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
-              {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-            </IconButton>
-          </div>
-        </ListItemSecondaryAction>
-      </ListItem>
+          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
+            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </IconButton>
+        </div>
+      </ListItemSecondaryAction>
 
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
@@ -255,7 +249,7 @@ const TodoItem = (props: Props) => {
         onEditTodo={onChangeTodo}
         onDeleteTodo={props.onDelete}
       />
-    </Paper>
+    </ListItem>
   )
 }
 
