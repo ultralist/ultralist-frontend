@@ -1,10 +1,9 @@
 // @flow
 import TodoItemModel from "./todoItem"
 import TodoListGroup from "./todoListGroup"
-import { FILTER_KEY, DEFAULT_FILTER_STRING } from "../constants"
+import { FILTER_KEY } from "../constants"
 
 import filterTodos from "./logic/filterTodos"
-import textFilter from "./logic/textFilter"
 import applyGrouping from "./logic/grouper"
 
 type ConstructorArgs = {
