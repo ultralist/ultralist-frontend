@@ -8,6 +8,7 @@ import TodoList from "../pages/todoList"
 import Login from "../pages/login"
 import Logout from "../pages/logout"
 import Auth from "../pages/auth"
+import Plan from "../pages/plan"
 import LoadTodoLists from "../pages/loadTodoLists"
 
 const history = createBrowserHistory()
@@ -21,6 +22,7 @@ const Routes = () => (
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/auth" component={Auth} />
+      <Route path="/plan" component={Plan} />
       <Route path="/loading" component={LoadTodoLists} />
 
       <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
