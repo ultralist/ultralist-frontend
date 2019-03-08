@@ -40,7 +40,6 @@ const useStyles = makeStyles({
     minWidth: 300
   },
   listContainer: {
-    paddingTop: 70,
     paddingBottom: 70
   },
   listName: {

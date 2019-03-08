@@ -8,7 +8,8 @@ import { makeStyles } from "@material-ui/styles"
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    paddingBottom: 70
   },
   grow: {
     flexGrow: 1
