@@ -23,7 +23,11 @@ const Index = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <SnackbarProvider maxSnack={1} preventDuplicate>
+      <SnackbarProvider
+        maxSnack={1}
+        preventDuplicate
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
         <MuiThemeProvider theme={theme}>
           <Router />
         </MuiThemeProvider>
