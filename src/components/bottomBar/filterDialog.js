@@ -41,7 +41,10 @@ const FilterDialog = (props: Props) => {
   const storage = new Storage()
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
-  const [currentFilter, setCurrentFilter] = useState(props.currentFilter)
+  const [currentFilterAttrs, setCurrentFilter] = useState(
+    props.currentFilter.toJSON()
+  )
+  const currentFilter = new FilterModel(currentFilterAttrs)
   storage.setModalIsOpen(isOpen)
 
   const toggleOpen = () => {
@@ -52,12 +55,12 @@ const FilterDialog = (props: Props) => {
     ev.preventDefault()
     currentFilter.subjectContains = ev.target.value
     update()
-    setCurrentFilter(currentFilter)
+    setCurrentFilter(currentFilter.toJSON())
     props.onChangeFilter(currentFilter)
   }
 
   const update = () => {
-    setCurrentFilter(currentFilter)
+    setCurrentFilter(currentFilter.toJSON())
     props.onChangeFilter(currentFilter)
   }
 

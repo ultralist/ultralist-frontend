@@ -53,7 +53,8 @@ const Margin = props => {
 
 const TodoForm = (props: Props) => {
   const classes = useStyles()
-  const [todoItem, setTodoItem] = useState(props.todoItem)
+  const [todoItemAttrs, setTodoItem] = useState(props.todoItem.toJSON())
+  const todoItem = new TodoItemModel(todoItemAttrs)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const setTodoDate = (date: Date) => {
@@ -63,7 +64,7 @@ const TodoForm = (props: Props) => {
 
   const toggleIsPriority = () => {
     todoItem.togglePriority()
-    setTodoItem(todoItem)
+    setTodoItem(todoItem.toJSON())
   }
 
   const toggleArchived = () => {
