@@ -57,7 +57,8 @@ const useStyles = makeStyles({
 const TodoList = (props: Props) => {
   const classes = useStyles()
   const storage = new Storage()
-  const [filterModel, setFilterModel] = useState(LoadFromStorage())
+  const [filterModelAttrs, setFilterModelAttrs] = useState(LoadFromStorage())
+  const filterModel = new FilterModel(filterModelAttrs)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
   const groups = filterModel.applyFilter(props.todoList.todos)
@@ -82,7 +83,7 @@ const TodoList = (props: Props) => {
 
   const onChangeFilter = (filter: FilterModel) => {
     filter.save()
-    setFilterModel(filter)
+    setFilterModelAttrs(filter.toJSON())
   }
 
   const onSubjectClick = (subject: string) => {
