@@ -91,7 +91,9 @@ const styles = theme => ({
 const TodoItem = (props: Props) => {
   const storage = new Storage()
 
-  const [todoItem, setTodoItem] = useState(props.todoItem)
+  const [todoItemAttrs, setTodoItemAttrs] = useState(props.todoItem.toJSON())
+  const todoItem = new TodoItemModel(todoItemAttrs)
+
   const [showNotes, setShowNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
@@ -126,7 +128,7 @@ const TodoItem = (props: Props) => {
   }
 
   const onChangeTodo = todoItem => {
-    setTodoItem(todoItem)
+    setTodoItemAttrs(todoItem.toJSON())
     props.onChange(todoItem)
   }
 
