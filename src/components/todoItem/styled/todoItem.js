@@ -227,16 +227,6 @@ const TodoItem = (props: Props) => {
         }
       />
 
-      <ListItemSecondaryAction>
-        <div className={props.classes.shortWidthHide}>
-          {firstButton()}
-
-          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
-            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-          </IconButton>
-        </div>
-      </ListItemSecondaryAction>
-
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
       </Collapse>
@@ -248,6 +238,15 @@ const TodoItem = (props: Props) => {
         onEditTodo={onChangeTodo}
         onDeleteTodo={props.onDelete}
       />
+      <ListItemSecondaryAction>
+        <div className={props.classes.shortWidthHide}>
+          {firstButton()}
+
+          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
+            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </IconButton>
+        </div>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
