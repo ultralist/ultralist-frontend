@@ -103,25 +103,21 @@ const TodoItem = (props: Props) => {
 
   const toggleComplete = () => {
     todoItem.toggleCompleted()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const togglePriority = () => {
     todoItem.togglePriority()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const deleteNote = note => {
     todoItem.deleteNote(note)
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const toggleArchived = () => {
     todoItem.toggleArchived()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
@@ -130,6 +126,7 @@ const TodoItem = (props: Props) => {
   }
 
   const onChangeTodo = todoItem => {
+    setTodoItem(todoItem)
     props.onChange(todoItem)
   }
 
