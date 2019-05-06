@@ -20,6 +20,7 @@ const theme = createMuiTheme({
 window.socket = new WebsocketHandler()
 
 const Index = () => {
+  console.log("Index page")
   return (
     <React.Fragment>
       <CssBaseline />

@@ -2,7 +2,8 @@
 
 import React from "react"
 import { Router, Route, Redirect } from "react-router-dom"
-import createBrowserHistory from "history/createBrowserHistory"
+// import createBrowserHistory from "history/createBrowserHistory"
+import createHashHistory from "history/createHashHistory"
 
 import TodoList from "../pages/todoList"
 import Login from "../pages/login"
@@ -10,7 +11,14 @@ import Logout from "../pages/logout"
 import Auth from "../pages/auth"
 import LoadTodoLists from "../pages/loadTodoLists"
 
-const history = createBrowserHistory()
+const isCordova = !!window.cordova
+
+let history
+if (isCordova) {
+  history = createHashHistory()
+} else {
+  history = createHashHistory()
+}
 
 const Routes = () => (
   <Router history={history}>

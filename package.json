@@ -8,6 +8,8 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.19",
     "@material-ui/styles": "^3.0.0-alpha.6",
+    "cordova-android": "^8.0.0",
+    "cordova-browser": "^6.0.0",
     "date-fns": "^2.0.0-alpha.26",
     "eslint-plugin-flowtype": "^3.2.1",
     "eslint-plugin-react-hooks": "^0.0.0",
@@ -21,13 +23,15 @@
     "typeface-roboto": "^0.0.54"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm run remove:www && react-scripts start",
+    "build": "npm run remove:www && react-scripts build",
+    "build:cordova": "npm run remove:www && react-scripts build && node __script.js && mv build www",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "build-storybook": "build-storybook -s public",
-    "analyze": "source-map-explorer build/static/js/main.*"
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "remove:www": "rm -rf www"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,6 +52,16 @@
     "babel-loader": "^8.0.4",
     "eslint-plugin-prettier": "^3.0.0",
     "flow-bin": "^0.86.0",
-    "prettier": "^1.14.3"
+    "prettier": "^1.14.3",
+    "cordova-plugin-whitelist": "1"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {}
+    },
+    "platforms": [
+      "browser",
+      "android"
+    ]
   }
 }
