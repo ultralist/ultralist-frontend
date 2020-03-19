@@ -1,4 +1,3 @@
-import * as constants from "../constants"
 import EventCache from "./eventCache"
 
 export default class Backend {
@@ -48,7 +47,7 @@ export default class Backend {
       }
       const opts: OptsInterface = { headers, mode: "cors", method }
 
-      let url = `${constants.BACKEND_URL}/${path}`
+      let url = `${backendUrl()}/${path}`
 
       if (process.env.NODE_ENV !== "production") {
         console.log("******************************")
@@ -88,4 +87,14 @@ export default class Backend {
     }
     return parts.join("&")
   }
+}
+
+export const backendUrl = () => {
+  if (window.location.hostname === "app.ultralist.io") {
+    return "https://api.ultralist.io"
+  }
+  if (window.location.hostname === "stag.ultralist.io") {
+    return "https://api-stag.ultralist.io"
+  }
+  return "http://localhost:3000"
 }
