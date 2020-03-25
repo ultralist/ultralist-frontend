@@ -74,7 +74,7 @@ window.socket = new WebsocketHandler()
 
 export const socketUrl = () => {
   if (window.location.hostname === "app.ultralist.io") {
-    return "wss://ws.ultralist.io"
+    return "wss://api.ultralist.io/ws"
   }
   if (window.location.hostname === "staging.ultralist.io") {
     return "wss://api-stag.ultralist.io/ws"
