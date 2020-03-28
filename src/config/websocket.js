@@ -79,5 +79,5 @@ export const socketUrl = () => {
   if (window.location.hostname === "staging.ultralist.io") {
     return "wss://api-stag.ultralist.io/ws"
   }
-  return "http://localhost:3000"
+  return "ws://localhost:8080"
 }
