@@ -102,6 +102,8 @@ const TodoListApp = (props: Props) => {
   }, [])
 
   const update = () => {
+    if (!navigator.onLine) return
+
     backend.updateTodoList(todoList.uuid, eventCache).then(list => {
       const newTodoList = createTodoListFromBackend(list)
       storage.updateTodoList(newTodoList)

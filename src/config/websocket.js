@@ -1,5 +1,4 @@
 // @flow
-import { SOCKET_URL } from "../constants"
 import UserModel from "../models/user"
 
 export class WebsocketProcessor {
@@ -32,7 +31,7 @@ export class WebsocketHandler {
       request: "register_listener"
     }
 
-    this.socket = new WebSocket(SOCKET_URL)
+    this.socket = new WebSocket(socketUrl())
 
     this.socket.onopen = () => {
       this.socket.send(JSON.stringify(msg))
@@ -72,3 +71,13 @@ export class WebsocketHandler {
   }
 }
 window.socket = new WebsocketHandler()
+
+export const socketUrl = () => {
+  if (window.location.hostname === "app.ultralist.io") {
+    return "wss://api.ultralist.io/ws"
+  }
+  if (window.location.hostname === "staging.ultralist.io") {
+    return "wss://api-stag.ultralist.io/ws"
+  }
+  return "ws://localhost:8080"
+}

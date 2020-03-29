@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/styles"
 
 import TopBar from "../components/topBar"
 
-import { BACKEND_URL } from "../constants"
+import { backendUrl } from "../backend/backend"
 import { isUserLoggedIn } from "../models/user"
 
 const useStyles = makeStyles({
@@ -44,20 +44,10 @@ const Login = props => {
           <Typography variant="h4" marked="center" align="center">
             Sign In
           </Typography>
-          <Button
-            variant="contained"
-            color="default"
-            href={`${BACKEND_URL}/users/auth/google_oauth2`}
-            className={classes.paperItem}
-          >
+          <Button variant="contained" color="default" href={`${backendUrl()}/users/auth/google_oauth2`} className={classes.paperItem}>
             Login with Google
           </Button>
-          <Button
-            variant="contained"
-            color="default"
-            href={`${BACKEND_URL}/users/auth/github`}
-            className={classes.paperItem}
-          >
+          <Button variant="contained" color="default" href={`${backendUrl()}/users/auth/github`} className={classes.paperItem}>
             Login with Github
           </Button>
         </Paper>

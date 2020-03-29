@@ -12,64 +12,50 @@ type Props = {
   onChange: (todoItem: TodoItemModel) => void
 }
 
-type State = {
-  isOpen: boolean,
-  anchorEl: EventTarget | null
-}
+const SetDueButton = (props: Props) => {
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [isOpen, setIsOpen] = React.useState(false)
 
-class SetDueButton extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      anchorEl: null,
-      isOpen: false
-    }
+  const onOpenMenu = (event: Event) => {
+    setAnchorEl(event.currentTarget)
+    setIsOpen(true)
   }
 
-  onOpenMenu = (event: Event) => {
-    this.setState({ anchorEl: event.currentTarget, isOpen: true })
+  const onCloseMenu = () => {
+    setIsOpen(false)
+    setAnchorEl(null)
   }
 
-  onCloseMenu = () => {
-    this.setState({ anchorEl: null, isOpen: false })
+  const setDueToday = () => {
+    props.todoItem.setDueToday()
+    onCloseMenu()
+    props.onChange(props.todoItem)
   }
 
-  setDueToday = () => {
-    this.props.todoItem.setDueToday()
-    this.onCloseMenu()
-    this.props.onChange(this.props.todoItem)
+  const setDueTomorrow = () => {
+    props.todoItem.setDueTomorrow()
+    onCloseMenu()
+    props.onChange(props.todoItem)
   }
 
-  setDueTomorrow = () => {
-    this.props.todoItem.setDueTomorrow()
-    this.onCloseMenu()
-    this.props.onChange(this.props.todoItem)
+  const setDueMonday = () => {
+    props.todoItem.setDueMonday()
+    onCloseMenu()
+    props.onChange(props.todoItem)
   }
 
-  setDueMonday = () => {
-    this.props.todoItem.setDueMonday()
-    this.onCloseMenu()
-    this.props.onChange(this.props.todoItem)
-  }
-
-  render() {
-    return (
-      <IconButton onClick={this.onOpenMenu} aria-label="Due Today">
+  return (
+    <React.Fragment>
+      <IconButton onClick={onOpenMenu} aria-label="Due Today">
         <TodayIcon />
-        <Menu
-          id="s"
-          anchorEl={this.state.anchorEl}
-          open={this.state.isOpen}
-          onClose={this.onCloseMenu}
-        >
-          <MenuItem onClick={this.setDueToday}>Due Today</MenuItem>
-          <MenuItem onClick={this.setDueTomorrow}>Due Tomorrow</MenuItem>
-          <MenuItem onClick={this.setDueMonday}>Due Monday</MenuItem>
-        </Menu>
       </IconButton>
-    )
-  }
+      <Menu anchorEl={anchorEl} open={isOpen} onClose={onCloseMenu}>
+        <MenuItem onClick={setDueToday}>Due Today</MenuItem>
+        <MenuItem onClick={setDueTomorrow}>Due Tomorrow</MenuItem>
+        <MenuItem onClick={setDueMonday}>Due Monday</MenuItem>
+      </Menu>
+    </React.Fragment>
+  )
 }
 
 export default SetDueButton

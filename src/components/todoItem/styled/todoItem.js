@@ -91,7 +91,9 @@ const styles = theme => ({
 const TodoItem = (props: Props) => {
   const storage = new Storage()
 
-  const [todoItem, setTodoItem] = useState(props.todoItem)
+  const [todoItemAttrs, setTodoItemAttrs] = useState(props.todoItem.toJSON())
+  const todoItem = new TodoItemModel(todoItemAttrs)
+
   const [showNotes, setShowNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
@@ -103,25 +105,21 @@ const TodoItem = (props: Props) => {
 
   const toggleComplete = () => {
     todoItem.toggleCompleted()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const togglePriority = () => {
     todoItem.togglePriority()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const deleteNote = note => {
     todoItem.deleteNote(note)
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
   const toggleArchived = () => {
     todoItem.toggleArchived()
-    setTodoItem(todoItem)
     onChangeTodo(todoItem)
   }
 
@@ -130,6 +128,7 @@ const TodoItem = (props: Props) => {
   }
 
   const onChangeTodo = todoItem => {
+    setTodoItemAttrs(todoItem.toJSON())
     props.onChange(todoItem)
   }
 
@@ -228,16 +227,6 @@ const TodoItem = (props: Props) => {
         }
       />
 
-      <ListItemSecondaryAction>
-        <div className={props.classes.shortWidthHide}>
-          {firstButton()}
-
-          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
-            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
-          </IconButton>
-        </div>
-      </ListItemSecondaryAction>
-
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
       </Collapse>
@@ -249,6 +238,15 @@ const TodoItem = (props: Props) => {
         onEditTodo={onChangeTodo}
         onDeleteTodo={props.onDelete}
       />
+      <ListItemSecondaryAction>
+        <div className={props.classes.shortWidthHide}>
+          {firstButton()}
+
+          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
+            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+          </IconButton>
+        </div>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
