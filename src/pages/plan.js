@@ -5,7 +5,8 @@ import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 
 import Typography from "@material-ui/core/Typography"
-import Paper from "@material-ui/core/Paper"
+import Card from "@material-ui/core/Card"
+import Container from "@material-ui/core/Container"
 
 const Plan = () => {
   return (
@@ -14,9 +15,16 @@ const Plan = () => {
         <UserIcon />
       </TopBar>
 
-      <Paper>
+      <Container>
         <Typography variant="h2">Plan</Typography>
-      </Paper>
+        <Typography variant="body1">Ultralist includes a 30-day free trial.</Typography>
+        <Typography variant="body1">Refer a friend and get free months!</Typography>
+        <Typography variant="h4">What's included?</Typography>
+
+        <Card>
+          <Typography variant="h4">Ultralist Premium</Typography>
+        </Card>
+      </Container>
     </React.Fragment>
   )
 }

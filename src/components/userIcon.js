@@ -48,7 +48,7 @@ const UserIcon = () => {
     <React.Fragment>
       <IconButton className={classes.icon} onClick={toggleOpen}>
         <PersonIcon />
-        <Typography className={classes.icon} variant="subheading">
+        <Typography className={classes.icon} variant="body1">
           {user.name}
         </Typography>
       </IconButton>
