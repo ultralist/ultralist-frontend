@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton"
 import PersonIcon from "@material-ui/icons/Person"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
-import { Redirect } from "react-router-dom"
+import { Redirect, Link } from "react-router-dom"
 
 import { loadUser, logoutUser, isUserLoggedIn } from "../models/user"
 
@@ -53,26 +53,23 @@ const UserIcon = () => {
         </Typography>
       </IconButton>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={toggleOpen}>
-        <MenuItem onClick={onLogout}>Logout</MenuItem>
         <MenuItem>
-          <a
-            className={classes.link}
-            target="_blank"
-            href="https://docs.ultralist.io"
-          >
+          <Link to="/plan" className={classes.link}>
+            Choose plan
+          </Link>
+        </MenuItem>
+        <MenuItem>
+          <a className={classes.link} target="_blank" href="https://docs.ultralist.io">
             Docs
           </a>
         </MenuItem>
         <MenuItem>
-          <a
-            className={classes.link}
-            target="_blank"
-            href="mailto:hello@ultralist.io"
-          >
+          <a className={classes.link} target="_blank" href="mailto:hello@ultralist.io">
             {" "}
             Email support{" "}
           </a>
         </MenuItem>
+        <MenuItem onClick={onLogout}>Logout</MenuItem>
       </Menu>
     </React.Fragment>
   )

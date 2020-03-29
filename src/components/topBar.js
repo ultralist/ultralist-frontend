@@ -5,6 +5,7 @@ import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles({
   root: {
@@ -13,6 +14,10 @@ const useStyles = makeStyles({
   },
   grow: {
     flexGrow: 1
+  },
+  link: {
+    color: "#fff",
+    textDecoration: "none"
   }
 })
 
@@ -24,7 +29,9 @@ const TopBar = props => {
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="title" color="inherit">
-            Ultralist
+            <Link to="/" className={classes.link}>
+              Ultralist
+            </Link>
           </Typography>
 
           <div className={classes.grow} />
