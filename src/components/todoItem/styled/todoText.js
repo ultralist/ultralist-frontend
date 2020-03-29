@@ -9,11 +9,15 @@ import TodoText from "../basic/todoText"
 const styles = () => ({
   project: {
     color: red[500],
-    cursor: "pointer"
+    "&:hover": {
+      textDecoration: "underline"
+    }
   },
   context: {
     color: blue[500],
-    cursor: "pointer"
+    "&:hover": {
+      textDecoration: "underline"
+    }
   },
   strike: {
     textDecoration: "line-through"
