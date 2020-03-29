@@ -20,9 +20,9 @@ const TopBar = props => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar position="static">
         <Toolbar>
-          <Typography variant="title" color="inherit">
+          <Typography variant="h4" color="inherit">
             Ultralist
           </Typography>
 

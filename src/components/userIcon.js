@@ -48,27 +48,19 @@ const UserIcon = () => {
     <React.Fragment>
       <IconButton className={classes.icon} onClick={toggleOpen}>
         <PersonIcon />
-        <Typography className={classes.icon} variant="subheading">
+        <Typography className={classes.icon} variant="body1">
           {user.name}
         </Typography>
       </IconButton>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={toggleOpen}>
         <MenuItem onClick={onLogout}>Logout</MenuItem>
         <MenuItem>
-          <a
-            className={classes.link}
-            target="_blank"
-            href="https://docs.ultralist.io"
-          >
+          <a className={classes.link} target="_blank" href="https://docs.ultralist.io">
             Docs
           </a>
         </MenuItem>
         <MenuItem>
-          <a
-            className={classes.link}
-            target="_blank"
-            href="mailto:hello@ultralist.io"
-          >
+          <a className={classes.link} target="_blank" href="mailto:hello@ultralist.io">
             {" "}
             Email support{" "}
           </a>

@@ -18,20 +18,13 @@ type Props = {
   onSubjectClick: (str: string) => void
 }
 
-const useStyles = makeStyles({
-  list: {
-    margin: "auto",
-    width: "calc(100vw - 15px)",
-    maxWidth: 1200,
-  }
-})
+const useStyles = makeStyles({})
 
 const TodoGroup = (props: Props) => {
   const classes = useStyles()
   const todos = props.group.sortedTodos()
   return (
     <List
-      className={classes.list}
       subheader={
         <ListSubheader className={classes.subheader} component="div">
           {props.group.name}
@@ -40,14 +33,7 @@ const TodoGroup = (props: Props) => {
     >
       {todos.map(todo => (
         <React.Fragment key={todo.uuid}>
-          <TodoItem
-            isFirst={todo.uuid == todos[0].uuid}
-            isSelected={todo.uuid === props.selectedTodoUUID}
-            onChange={props.onChange}
-            onDelete={props.onDelete}
-            onSubjectClick={props.onSubjectClick}
-            todoItem={todo}
-          />
+          <TodoItem isFirst={todo.uuid == todos[0].uuid} isSelected={todo.uuid === props.selectedTodoUUID} onChange={props.onChange} onDelete={props.onDelete} onSubjectClick={props.onSubjectClick} todoItem={todo} />
         </React.Fragment>
       ))}
     </List>
