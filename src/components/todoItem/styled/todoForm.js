@@ -24,6 +24,7 @@ type Props = {
   title: string,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete?: (todoItem: TodoItemModel) => void,
+  onClose: () => void,
   showDelete: boolean
 }
 
@@ -123,7 +124,7 @@ const TodoForm = (props: Props) => {
     if (props.showDelete === false) return
     return (
       <React.Fragment>
-        <Button className={classes.red} onClick={onShowDeleteDialog}>
+        <Button variant="outlined" size="small" onClick={onShowDeleteDialog}>
           Delete this todo
         </Button>
         <Dialog open={showDeleteDialog} onClose={onCloseDeleteDialog}>
@@ -158,6 +159,9 @@ const TodoForm = (props: Props) => {
       </DialogContent>
 
       <DialogActions>
+        <Button color="primary" onClick={props.onClose}>
+          Cancel
+        </Button>
         <Button color="primary" onClick={onChange}>
           Submit
         </Button>
