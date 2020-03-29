@@ -18,7 +18,11 @@ type Props = {
   onSubjectClick: (str: string) => void
 }
 
-const useStyles = makeStyles({})
+const useStyles = makeStyles({
+  cursor: {
+    cursor: "pointer"
+  }
+})
 
 const TodoGroup = (props: Props) => {
   const classes = useStyles()
@@ -32,9 +36,9 @@ const TodoGroup = (props: Props) => {
       }
     >
       {todos.map(todo => (
-        <React.Fragment key={todo.uuid}>
+        <div key={todo.uuid} className={classes.cursor}>
           <TodoItem isFirst={todo.uuid == todos[0].uuid} isSelected={todo.uuid === props.selectedTodoUUID} onChange={props.onChange} onDelete={props.onDelete} onSubjectClick={props.onSubjectClick} todoItem={todo} />
-        </React.Fragment>
+        </div>
       ))}
     </List>
   )
