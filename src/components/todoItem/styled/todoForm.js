@@ -23,7 +23,8 @@ type Props = {
   todoItem: TodoItemModel,
   title: string,
   onChange: (todoItem: TodoItemModel) => void,
-  onDelete: (todoItem: TodoItemModel) => void
+  onDelete?: (todoItem: TodoItemModel) => void,
+  showDelete: boolean
 }
 
 const useStyles = makeStyles({
@@ -118,57 +119,10 @@ const TodoForm = (props: Props) => {
     }
   }, [])
 
-  return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <DialogTitle>{props.title}</DialogTitle>
-      <DialogContent>
-        <Margin>
-          <TextField
-            error={!isValid()}
-            className={classes.text}
-            defaultValue={todoItem.subject}
-            label="Description"
-            autoFocus
-            inputRef={subjectRef}
-          />
-        </Margin>
-
-        <Margin>
-          <DatePicker
-            autoOk
-            keyboardIcon={<KeyboardIcon />}
-            leftArrowIcon={<LeftArrowIcon />}
-            rightArrowIcon={<RightArrowIcon />}
-            label="Due"
-            clearable
-            value={todoItem.dueDate()}
-            onChange={setTodoDate}
-          />
-        </Margin>
-
-        <Margin>
-          <FormControlLabel
-            control={
-              <Switch onChange={toggleCompleted} checked={todoItem.completed} />
-            }
-            label="Completed"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={toggleIsPriority}
-                checked={todoItem.isPriority}
-              />
-            }
-            label="Priority"
-          />
-          <FormControlLabel
-            control={
-              <Switch onChange={toggleArchived} checked={todoItem.archived} />
-            }
-            label="Archived"
-          />
-        </Margin>
+  const renderDelete = () => {
+    if (props.showDelete === false) return
+    return (
+      <React.Fragment>
         <Button className={classes.red} onClick={onShowDeleteDialog}>
           Delete this todo
         </Button>
@@ -179,6 +133,28 @@ const TodoForm = (props: Props) => {
             <Button onClick={onCloseDeleteDialog}>Cancel</Button>
           </DialogActions>
         </Dialog>
+      </React.Fragment>
+    )
+  }
+
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        <Margin>
+          <TextField error={!isValid()} className={classes.text} defaultValue={todoItem.subject} label="Description" autoFocus inputRef={subjectRef} />
+        </Margin>
+
+        <Margin>
+          <DatePicker autoOk keyboardIcon={<KeyboardIcon />} leftArrowIcon={<LeftArrowIcon />} rightArrowIcon={<RightArrowIcon />} label="Due" clearable value={todoItem.dueDate()} onChange={setTodoDate} />
+        </Margin>
+
+        <Margin>
+          <FormControlLabel control={<Switch onChange={toggleCompleted} checked={todoItem.completed} />} label="Completed" />
+          <FormControlLabel control={<Switch onChange={toggleIsPriority} checked={todoItem.isPriority} />} label="Priority" />
+          <FormControlLabel control={<Switch onChange={toggleArchived} checked={todoItem.archived} />} label="Archived" />
+        </Margin>
+        {renderDelete()}
       </DialogContent>
 
       <DialogActions>

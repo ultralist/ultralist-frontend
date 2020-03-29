@@ -65,13 +65,8 @@ const AddTodo = (props: Props) => {
           <AddIcon />
         </Tooltip>
       </Fab>
-      <Dialog
-        fullWidth
-        maxWidth="sm"
-        open={modalOpen}
-        onClose={toggleModalOpen}
-      >
-        <TodoForm title="Add todo" todoItem={todoItem} onChange={onChange} />
+      <Dialog fullWidth maxWidth="sm" open={modalOpen} onClose={toggleModalOpen}>
+        <TodoForm title="Add todo" todoItem={todoItem} onChange={onChange} showDelete={false} />
       </Dialog>
     </React.Fragment>
   )
