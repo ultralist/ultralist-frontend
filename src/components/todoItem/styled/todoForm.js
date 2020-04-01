@@ -17,7 +17,7 @@ import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
 import RightArrowIcon from "@material-ui/icons/ArrowRight"
 import red from "@material-ui/core/colors/red"
 
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,

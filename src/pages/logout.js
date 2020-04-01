@@ -1,6 +1,6 @@
 // @flow
 import React from "react"
-import { logoutUser } from "../models/user"
+import { logoutUser } from "../shared/models/user"
 import { Redirect } from "react-router-dom"
 
 const Logout = () => {

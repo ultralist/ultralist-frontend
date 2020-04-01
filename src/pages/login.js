@@ -7,8 +7,8 @@ import { makeStyles } from "@material-ui/styles"
 
 import TopBar from "../components/topBar"
 
-import { backendUrl } from "../backend/backend"
-import { isUserLoggedIn } from "../models/user"
+import { backendUrl } from "../shared/backend/backend"
+import { isUserLoggedIn } from "../shared/models/user"
 
 const useStyles = makeStyles({
   middle: {

@@ -19,7 +19,7 @@ import UnarchiveIcon from "@material-ui/icons/Unarchive"
 import yellow from "@material-ui/core/colors/yellow"
 
 import Storage from "../../../backend/storage"
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 
 import DueDate from "./dueDate"
 import TodoText from "./todoText"

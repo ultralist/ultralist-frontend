@@ -11,7 +11,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import ViewArrayIcon from "@material-ui/icons/ViewArray"
 import { makeStyles } from "@material-ui/styles"
 
-import TodoListModel from "../../models/todoList"
+import TodoListModel from "../../shared/models/todoList"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -56,11 +56,7 @@ const Chooser = (props: Props) => {
         <DialogTitle>Choose Todolist</DialogTitle>
         <List>
           {props.todoLists.map(l => (
-            <TodoListSelection
-              name={l.name}
-              key={l.uuid}
-              onClick={onSelectList.bind(this, l)}
-            />
+            <TodoListSelection name={l.name} key={l.uuid} onClick={onSelectList.bind(this, l)} />
           ))}
         </List>
       </Dialog>

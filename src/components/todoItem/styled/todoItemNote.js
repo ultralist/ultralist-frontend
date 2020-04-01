@@ -8,7 +8,7 @@ import { withStyles } from "@material-ui/core/styles"
 
 import DeleteForever from "@material-ui/icons/DeleteForever"
 
-import TodoItemNoteModel from "../../../models/todoItemNote"
+import TodoItemNoteModel from "../../../shared/models/todoItemNote"
 
 type Props = {
   note: string,

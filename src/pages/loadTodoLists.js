@@ -2,12 +2,12 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import Backend from "../backend/backend"
+import Backend from "../shared/backend/backend"
 import Storage from "../backend/storage"
 import TestBackend from "../backend/testBackend"
-import { createTodoListFromBackend } from "../models/todoList"
+import { createTodoListFromBackend } from "../shared/models/todoList"
 
-import { loadUser } from "../models/user"
+import { loadUser } from "../shared/models/user"
 
 type Props = {
   backend?: TestBackend,
@@ -23,9 +23,7 @@ const LoadTodoLists = (props: Props) => {
   const backend = props.backend || new Backend(user.token)
 
   backend.fetchTodoLists().then(todoLists => {
-    const lists = todoLists.todolists.map(list =>
-      createTodoListFromBackend(list)
-    )
+    const lists = todoLists.todolists.map(list => createTodoListFromBackend(list))
     storage.saveTodoLists(lists)
     props.history.push(`/todolist/${lists[0].uuid}`)
   })

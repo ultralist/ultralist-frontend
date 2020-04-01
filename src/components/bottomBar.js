@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/styles"
 
-import FilterModel from "../models/filter"
+import FilterModel from "../shared/models/filter"
 
 import GroupingMenu from "./bottomBar/groupingMenu"
 import FilterDialog from "./bottomBar/filterDialog"
@@ -39,14 +39,8 @@ const BottomBar = (props: Props) => {
     <div className={classes.root}>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar className={classes.right}>
-          <FilterDialog
-            currentFilter={props.currentFilter}
-            onChangeFilter={props.onChangeFilter}
-          />
-          <GroupingMenu
-            currentFilter={props.currentFilter}
-            onChangeFilter={props.onChangeFilter}
-          />
+          <FilterDialog currentFilter={props.currentFilter} onChangeFilter={props.onChangeFilter} />
+          <GroupingMenu currentFilter={props.currentFilter} onChangeFilter={props.onChangeFilter} />
           <div className={classes.grow} />
           <Button color="inherit">Views</Button>
         </Toolbar>

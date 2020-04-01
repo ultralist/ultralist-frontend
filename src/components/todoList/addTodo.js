@@ -9,7 +9,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 
 import Storage from "../../backend/storage"
 import TodoForm from "../todoItem/styled/todoForm"
-import TodoItemModel from "../../models/todoItem"
+import TodoItemModel from "../../shared/models/todoItem"
 
 type Props = {
   onAddTodoItem: (todoItem: TodoItemModel) => void

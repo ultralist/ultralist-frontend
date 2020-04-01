@@ -4,9 +4,9 @@ import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import Button from "@material-ui/core/Button"
 
-import FilterModel from "../../models/filter"
+import FilterModel from "../../shared/models/filter"
 
-import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
+import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../shared/constants"
 
 type Props = {
   currentFilter: FilterModel,
@@ -36,15 +36,9 @@ const GroupingMenu = (props: Props) => {
         Group
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={onChooseGrouping.bind(this, BY_ALL)}>
-          No grouping
-        </MenuItem>
-        <MenuItem onClick={onChooseGrouping.bind(this, BY_CONTEXT)}>
-          By Context
-        </MenuItem>
-        <MenuItem onClick={onChooseGrouping.bind(this, BY_PROJECT)}>
-          By Project
-        </MenuItem>
+        <MenuItem onClick={onChooseGrouping.bind(this, BY_ALL)}>No grouping</MenuItem>
+        <MenuItem onClick={onChooseGrouping.bind(this, BY_CONTEXT)}>By Context</MenuItem>
+        <MenuItem onClick={onChooseGrouping.bind(this, BY_PROJECT)}>By Project</MenuItem>
       </Menu>
     </React.Fragment>
   )

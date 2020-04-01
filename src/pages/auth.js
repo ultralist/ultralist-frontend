@@ -2,8 +2,8 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import utils from "../utils"
-import UserModel from "../models/user"
+import utils from "../shared/utils"
+import UserModel from "../shared/models/user"
 
 const Auth = () => {
   const name = utils.getUrlParam("name")

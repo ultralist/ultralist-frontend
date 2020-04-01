@@ -1,5 +1,5 @@
 // @flow
-import TodoList, { createTodoListFromJSON } from "../models/todoList"
+import TodoList, { createTodoListFromJSON } from "../shared/models/todoList"
 
 export default class Storage {
   loadTodoLists() {

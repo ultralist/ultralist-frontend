@@ -8,9 +8,9 @@ import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
 import Storage from "../../backend/storage"
-import TodoItemModel from "../../models/todoItem"
-import TodoListModel from "../../models/todoList"
-import FilterModel, { LoadFromStorage } from "../../models/filter"
+import TodoItemModel from "../../shared/models/todoItem"
+import TodoListModel from "../../shared/models/todoList"
+import FilterModel, { LoadFromStorage } from "../../shared/models/filter"
 import FilterChips from "./filterChips"
 
 import AddTodo from "./addTodo"

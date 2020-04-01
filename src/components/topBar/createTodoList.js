@@ -12,7 +12,7 @@ import TextField from "@material-ui/core/TextField"
 
 import { makeStyles } from "@material-ui/styles"
 
-import TodoListModel from "../../models/todoList"
+import TodoListModel from "../../shared/models/todoList"
 import Storage from "../../backend/storage"
 
 type Props = {
@@ -59,14 +59,7 @@ const CreateTodoList = (props: Props) => {
       </Tooltip>
       <Dialog fullWidth maxWidth="sm" onClose={toggleOpen} open={isOpen}>
         <DialogTitle>Create New Todolist</DialogTitle>
-        <TextField
-          label="Name"
-          margin="dense"
-          autoFocus
-          className={classes.margin}
-          autoComplete="off"
-          inputRef={nameRef}
-        />
+        <TextField label="Name" margin="dense" autoFocus className={classes.margin} autoComplete="off" inputRef={nameRef} />
 
         <DialogActions>
           <Button color="primary" onClick={createList}>

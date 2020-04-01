@@ -3,7 +3,7 @@ import React from "react"
 
 import Dialog from "@material-ui/core/Dialog"
 
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 import TodoForm from "../../todoItem/styled/todoForm"
 
 type Props = {

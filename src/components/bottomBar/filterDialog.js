@@ -16,8 +16,8 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
 
-import FilterModel from "../../models/filter"
 import FilterChips from "../todoList/filterChips"
+import FilterModel from "../../shared/models/filter"
 import Storage from "../../backend/storage"
 
 type Props = {
@@ -42,9 +42,7 @@ const FilterDialog = (props: Props) => {
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
 
-  const [currentFilterAttrs, setCurrentFilter] = useState(
-    props.currentFilter.toJSON()
-  )
+  const [currentFilterAttrs, setCurrentFilter] = useState(props.currentFilter.toJSON())
 
   useEffect(() => {
     setCurrentFilter(props.currentFilter.toJSON())
@@ -118,28 +116,13 @@ const FilterDialog = (props: Props) => {
         <div className={classes.searchBoxOuter}>
           <FilterChips currentFilter={currentFilter} onChangeFilter={update} />
 
-          <TextField
-            id="outlined-search"
-            label="Subject"
-            type="search"
-            className={classes.searchBox}
-            margin="dense"
-            autoComplete="off"
-            value={currentFilter.subjectContains || ""}
-            onChange={changeSearchStringEvent}
-          />
+          <TextField id="outlined-search" label="Subject" type="search" className={classes.searchBox} margin="dense" autoComplete="off" value={currentFilter.subjectContains || ""} onChange={changeSearchStringEvent} />
 
           <FormControlLabel
             control={
               <React.Fragment>
-                <Checkbox
-                  checked={currentFilter.completed !== null}
-                  onChange={onToggleUseCompleted}
-                />
-                <Switch
-                  checked={currentFilter.completed === true}
-                  onChange={onChangeCompleted}
-                />
+                <Checkbox checked={currentFilter.completed !== null} onChange={onToggleUseCompleted} />
+                <Switch checked={currentFilter.completed === true} onChange={onChangeCompleted} />
               </React.Fragment>
             }
             label="Is Completed"
@@ -148,14 +131,8 @@ const FilterDialog = (props: Props) => {
           <FormControlLabel
             control={
               <React.Fragment>
-                <Checkbox
-                  checked={currentFilter.isPriority !== null}
-                  onChange={onToggleUseIsPriority}
-                />
-                <Switch
-                  checked={currentFilter.isPriority === true}
-                  onChange={onChangeIsPriority}
-                />
+                <Checkbox checked={currentFilter.isPriority !== null} onChange={onToggleUseIsPriority} />
+                <Switch checked={currentFilter.isPriority === true} onChange={onChangeIsPriority} />
               </React.Fragment>
             }
             label="Is Priority"
@@ -164,14 +141,8 @@ const FilterDialog = (props: Props) => {
           <FormControlLabel
             control={
               <React.Fragment>
-                <Checkbox
-                  checked={currentFilter.archived !== null}
-                  onChange={onToggleUseArchived}
-                />
-                <Switch
-                  checked={currentFilter.archived === true}
-                  onChange={onChangeArchived}
-                />
+                <Checkbox checked={currentFilter.archived !== null} onChange={onToggleUseArchived} />
+                <Switch checked={currentFilter.archived === true} onChange={onChangeArchived} />
               </React.Fragment>
             }
             label="Is Archived"
@@ -183,11 +154,7 @@ const FilterDialog = (props: Props) => {
                 <InputLabel className={classes.dueLabel} htmlFor="due">
                   Due
                 </InputLabel>
-                <Select
-                  value={currentFilter.due || "none"}
-                  onChange={onChangeDue}
-                  input={<Input name="due" id="due" />}
-                >
+                <Select value={currentFilter.due || "none"} onChange={onChangeDue} input={<Input name="due" id="due" />}>
                   <MenuItem value="none">No due filter</MenuItem>
                   <MenuItem value="nodue">No date set</MenuItem>
                   <Divider />

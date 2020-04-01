@@ -1,8 +1,8 @@
 // @flow
 
 import { todoData } from "../test/test_helper"
-import EventCache from "./eventCache"
-import utils from "../utils"
+import EventCache from "../shared/backend/eventCache"
+import utils from "../shared/utils"
 
 const todoList = {
   name: "test list",

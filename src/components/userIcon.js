@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
 import { Redirect } from "react-router-dom"
 
-import { loadUser, logoutUser, isUserLoggedIn } from "../models/user"
+import { loadUser, logoutUser, isUserLoggedIn } from "../shared/models/user"
 
 const useStyles = makeStyles(theme => {
   return {

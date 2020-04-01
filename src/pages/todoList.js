@@ -5,22 +5,23 @@ import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 import grey from "@material-ui/core/colors/grey"
 
-import Backend from "../backend/backend"
+import Backend from "../shared/backend/backend"
 import Storage from "../backend/storage"
 import TestBackend from "../backend/testBackend"
-import EventCache from "../backend/eventCache"
+import EventCache from "../shared/backend/eventCache"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
 import CreateTodoList from "../components/topBar/createTodoList"
-import { createAddEvent, createUpdateEvent, createDeleteEvent } from "../models/todoEvent"
-import TodoItemModel from "../models/todoItem"
-import { loadUser } from "../models/user"
-import { WebsocketProcessor } from "../config/websocket"
 
-import TodoListModel, { createTodoListFromBackend } from "../models/todoList"
+import { createAddEvent, createUpdateEvent, createDeleteEvent } from "../shared/models/todoEvent"
+import TodoItemModel from "../shared/models/todoItem"
+import { loadUser } from "../shared/models/user"
+import TodoListModel, { createTodoListFromBackend } from "../shared/models/todoList"
+
+import { WebsocketProcessor } from "../config/websocket"
 
 type Props = {
   backend?: TestBackend
