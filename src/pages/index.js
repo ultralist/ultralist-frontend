@@ -1,7 +1,7 @@
 // @flow
+
 import React from "react"
 import CssBaseline from "@material-ui/core/CssBaseline"
-import indigo from "@material-ui/core/colors/indigo"
 import blueGrey from "@material-ui/core/colors/blueGrey"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles"
 import { SnackbarProvider } from "notistack"
