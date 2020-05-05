@@ -68,6 +68,7 @@ const styles = theme => ({
     [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
       maxWidth: 1200
     },
+    color: "#444",
     backgroundColor: "#fff",
     borderTop: "1px solid #eee"
   },
@@ -76,6 +77,7 @@ const styles = theme => ({
     [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
       maxWidth: 1200
     },
+    color: "#444",
     backgroundColor: "#fff"
   },
   starIcon: {
@@ -186,58 +188,20 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <ListItem
-      key={todoItem.id}
-      className={props.isFirst ? props.classes.firstTodo : props.classes.todo}
-    >
-      <Checkbox
-        tabIndex={-1}
-        checked={todoItem.completed}
-        onChange={toggleComplete}
-      />
+    <ListItem key={todoItem.id} className={props.isFirst ? props.classes.firstTodo : props.classes.todo}>
+      <Checkbox tabIndex={-1} checked={todoItem.completed} onChange={toggleComplete} />
 
-      <IconButton
-        onClick={togglePriority}
-        className={props.classes.shortWidthHide}
-        aria-label="Prioritize"
-      >
-        {todoItem.isPriority ? (
-          <Star className={props.classes.starIcon} />
-        ) : (
-          <StarBorder />
-        )}
+      <IconButton onClick={togglePriority} className={props.classes.shortWidthHide} aria-label="Prioritize">
+        {todoItem.isPriority ? <Star className={props.classes.starIcon} /> : <StarBorder />}
       </IconButton>
 
-      <ListItemText
-        onClick={toggleShowEditTodo}
-        primary={
-          <TodoText
-            bold={todoItem.isPriority}
-            strike={todoItem.completed}
-            grey={todoItem.archived}
-            val={todoItem.subject}
-            onClick={props.onSubjectClick}
-          />
-        }
-        secondary={
-          <DueDate
-            grey={todoItem.archived || todoItem.completed}
-            date={todoItem.dueDate()}
-          />
-        }
-      />
+      <ListItemText onClick={toggleShowEditTodo} primary={<TodoText bold={todoItem.isPriority} strike={todoItem.completed} grey={todoItem.archived} val={todoItem.subject} onClick={props.onSubjectClick} />} secondary={<DueDate grey={todoItem.archived || todoItem.completed} date={todoItem.dueDate()} />} />
 
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
       </Collapse>
 
-      <EditTodo
-        show={showEditTodo}
-        onClose={toggleShowEditTodo}
-        todoItem={todoItem}
-        onEditTodo={onChangeTodo}
-        onDeleteTodo={props.onDelete}
-      />
+      <EditTodo show={showEditTodo} onClose={toggleShowEditTodo} todoItem={todoItem} onEditTodo={onChangeTodo} onDeleteTodo={props.onDelete} />
       <ListItemSecondaryAction>
         <div className={props.classes.shortWidthHide}>
           {firstButton()}

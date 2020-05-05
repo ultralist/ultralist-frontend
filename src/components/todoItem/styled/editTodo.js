@@ -27,12 +27,7 @@ const EditTodo = (props: Props) => {
 
   return (
     <Dialog fullWidth maxWidth="sm" open={props.show} onClose={props.onClose}>
-      <TodoForm
-        title="Edit todo"
-        todoItem={props.todoItem}
-        onChange={onChange}
-        onDelete={onDelete}
-      />
+      <TodoForm title="Edit todo" todoItem={props.todoItem} onChange={onChange} onDelete={onDelete} onClose={props.onClose} />
     </Dialog>
   )
 }

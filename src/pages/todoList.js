@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react"
 import { parseISO } from "date-fns"
 import { withSnackbar } from "notistack"
+import { makeStyles } from "@material-ui/styles"
+import grey from "@material-ui/core/colors/grey"
 
 import Backend from "../backend/backend"
 import Storage from "../backend/storage"
@@ -13,11 +15,7 @@ import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
 import CreateTodoList from "../components/topBar/createTodoList"
-import {
-  createAddEvent,
-  createUpdateEvent,
-  createDeleteEvent
-} from "../models/todoEvent"
+import { createAddEvent, createUpdateEvent, createDeleteEvent } from "../models/todoEvent"
 import TodoItemModel from "../models/todoItem"
 import { loadUser } from "../models/user"
 import { WebsocketProcessor } from "../config/websocket"
@@ -32,16 +30,22 @@ const eventCache = new EventCache()
 const storage = new Storage()
 const TODOLIST_MRU_KEY = "todolist-mru-id"
 
+const useStyles = makeStyles({
+  greyBackground: {
+    backgroundColor: grey[200],
+    height: "100vh"
+  }
+})
+
 const TodoListApp = (props: Props) => {
+  const classes = useStyles()
   const todoLists = storage.loadTodoLists()
   let mostRecentTodoList
   if (props.match.params.id) {
     mostRecentTodoList = todoLists.find(t => t.uuid === props.match.params.id)
     window.localStorage.setItem(TODOLIST_MRU_KEY, mostRecentTodoList.uuid)
   } else {
-    mostRecentTodoList = todoLists.find(
-      tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
-    )
+    mostRecentTodoList = todoLists.find(tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY))
   }
 
   const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
@@ -62,12 +66,8 @@ const TodoListApp = (props: Props) => {
 
   const fetchLists = () => {
     backend.fetchTodoLists().then(todoLists => {
-      const lists = todoLists.todolists.map(list =>
-        createTodoListFromBackend(list)
-      )
-      const currentList = lists.find(
-        l => l.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
-      )
+      const lists = todoLists.todolists.map(list => createTodoListFromBackend(list))
+      const currentList = lists.find(l => l.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY))
       storage.saveTodoLists(lists)
       setTodoList(currentList)
     })
@@ -90,10 +90,7 @@ const TodoListApp = (props: Props) => {
   useEffect(() => {
     fetchLists()
 
-    const socketProcessor = new WebsocketProcessor(
-      "todolist_update",
-      processSocketUpdate
-    )
+    const socketProcessor = new WebsocketProcessor("todolist_update", processSocketUpdate)
     window.socket.registerProcessor(socketProcessor)
 
     return () => {
@@ -146,21 +143,15 @@ const TodoListApp = (props: Props) => {
 
   return (
     <React.Fragment>
-      <TopBar>
-        <CreateTodoList onCreateTodoList={onCreateTodoList} />
-        <TodoListChooser
-          todoLists={todoLists}
-          onSelectTodoList={onChangeTodoList}
-        />
-        <UserIcon />
-      </TopBar>
+      <div className={classes.greyBackground}>
+        <TopBar>
+          <CreateTodoList onCreateTodoList={onCreateTodoList} />
+          <TodoListChooser todoLists={todoLists} onSelectTodoList={onChangeTodoList} />
+          <UserIcon />
+        </TopBar>
 
-      <TodoList
-        todoList={todoList}
-        onAddTodoItem={onAddTodoItem}
-        onChangeTodoItem={onChangeTodoItem}
-        onDeleteTodoItem={onDeleteTodoItem}
-      />
+        <TodoList todoList={todoList} onAddTodoItem={onAddTodoItem} onChangeTodoItem={onChangeTodoItem} onDeleteTodoItem={onDeleteTodoItem} />
+      </div>
     </React.Fragment>
   )
 }

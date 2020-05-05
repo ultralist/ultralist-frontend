@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react"
 
 import Typography from "@material-ui/core/Typography"
+import Container from "@material-ui/core/Container"
+
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
@@ -98,8 +100,7 @@ const TodoList = (props: Props) => {
     if (nextTodoUUID === undefined) nextTodoUUID = todoUUIDs[0]
 
     let prevTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) - 1]
-    if (prevTodoUUID === undefined)
-      prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
+    if (prevTodoUUID === undefined) prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
 
     if (event.keyCode === 106) setSelectedTodoUUID(nextTodoUUID)
     if (event.keyCode === 107) setSelectedTodoUUID(prevTodoUUID)
@@ -115,29 +116,19 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <div className={classes.listContainer}>
+      <Container maxWidth="md">
         <Typography component="h4" variant="h4" className={classes.listName}>
           {props.todoList.name}
         </Typography>
 
         <div className={classes.filterChips}>
-          <FilterChips
-            currentFilter={filterModel}
-            onChangeFilter={onChangeFilter}
-          />
+          <FilterChips currentFilter={filterModel} onChangeFilter={onChangeFilter} />
         </div>
 
         {groups.map(g => (
-          <TodoGroup
-            key={g.uuid}
-            selectedTodoUUID={selectedTodoUUID}
-            onChange={onChangeTodo}
-            onDelete={onDeleteTodo}
-            onSubjectClick={onSubjectClick}
-            group={g}
-          />
+          <TodoGroup key={g.uuid} selectedTodoUUID={selectedTodoUUID} onChange={onChangeTodo} onDelete={onDeleteTodo} onSubjectClick={onSubjectClick} group={g} />
         ))}
-      </div>
+      </Container>
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
