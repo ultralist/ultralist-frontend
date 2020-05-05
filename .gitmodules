@@ -1,0 +1,3 @@
+[submodule "src/shared"]
+	path = src/shared
+	url = git@github.com:ultralist/ultralist-frontend-shared.git
