@@ -7,9 +7,11 @@ import AddIcon from "@material-ui/icons/Add"
 import Dialog from "@material-ui/core/Dialog"
 import Tooltip from "@material-ui/core/Tooltip"
 
-import Storage from "../../backend/storage"
 import TodoForm from "../todoItem/styled/todoForm"
-import TodoItemModel from "../../models/todoItem"
+import TodoItemModel from "../../shared/models/todoItem"
+
+import ModalStorage from "../../shared/storage/modalStorage"
+import StorageContext from "../../shared/storageContext"
 
 type Props = {
   onAddTodoItem: (todoItem: TodoItemModel) => void
@@ -27,12 +29,12 @@ const useStyles = makeStyles({
 })
 
 const AddTodo = (props: Props) => {
-  const storage = new Storage()
   const classes = useStyles()
   const [modalOpen, setModalOpen] = useState(false)
   const todoItem = new TodoItemModel({})
+  const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
-  storage.setModalIsOpen(modalOpen)
+  modalStorage.setModalIsOpen(modalOpen)
 
   const toggleModalOpen = () => {
     setModalOpen(!modalOpen)
@@ -44,7 +46,7 @@ const AddTodo = (props: Props) => {
   }
 
   const onKeypress = event => {
-    if (event.keyCode === 97 && !storage.isModalOpen()) {
+    if (event.keyCode === 97 && !modalStorage.isModalOpen()) {
       setTimeout(() => setModalOpen(true), 10)
     }
     return false
@@ -65,8 +67,19 @@ const AddTodo = (props: Props) => {
           <AddIcon />
         </Tooltip>
       </Fab>
-      <Dialog fullWidth maxWidth="sm" open={modalOpen} onClose={toggleModalOpen}>
-        <TodoForm title="Add todo" todoItem={todoItem} onChange={onChange} onClose={toggleModalOpen} showDelete={false} />
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={modalOpen}
+        onClose={toggleModalOpen}
+      >
+        <TodoForm
+          title="Add todo"
+          todoItem={todoItem}
+          onChange={onChange}
+          onClose={toggleModalOpen}
+          showDelete={false}
+        />
       </Dialog>
     </React.Fragment>
   )

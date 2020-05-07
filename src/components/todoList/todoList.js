@@ -7,11 +7,14 @@ import Container from "@material-ui/core/Container"
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
-import Storage from "../../backend/storage"
-import TodoItemModel from "../../models/todoItem"
-import TodoListModel from "../../models/todoList"
-import FilterModel, { LoadFromStorage } from "../../models/filter"
+import TodoItemModel from "../../shared/models/todoItem"
+import TodoListModel from "../../shared/models/todoList"
+import FilterModel from "../../shared/models/filter"
 import FilterChips from "./filterChips"
+
+import StorageContext from "../../shared/storageContext"
+import FilterStorage from "../../shared/storage/filterStorage"
+import ModalStorage from "../../shared/storage/modalStorage"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
@@ -57,8 +60,12 @@ const useStyles = makeStyles({
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const storage = new Storage()
-  const [filterModelAttrs, setFilterModelAttrs] = useState(LoadFromStorage())
+  const filterStorage = new FilterStorage(React.useContext(StorageContext))
+  const modalStorage = new ModalStorage(React.useContext(StorageContext))
+
+  const [filterModelAttrs, setFilterModelAttrs] = useState(
+    filterStorage.loadFilter().toJSON()
+  )
   const filterModel = new FilterModel(filterModelAttrs)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
@@ -94,13 +101,14 @@ const TodoList = (props: Props) => {
 
   const todoUUIDs = groups.map(g => g.todos.map(t => t.uuid)).flat()
   const onKeypress = event => {
-    if (storage.isModalOpen()) return
+    if (modalStorage.isModalOpen()) return
 
     let nextTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) + 1]
     if (nextTodoUUID === undefined) nextTodoUUID = todoUUIDs[0]
 
     let prevTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) - 1]
-    if (prevTodoUUID === undefined) prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
+    if (prevTodoUUID === undefined)
+      prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
 
     if (event.keyCode === 106) setSelectedTodoUUID(nextTodoUUID)
     if (event.keyCode === 107) setSelectedTodoUUID(prevTodoUUID)
@@ -122,11 +130,21 @@ const TodoList = (props: Props) => {
         </Typography>
 
         <div className={classes.filterChips}>
-          <FilterChips currentFilter={filterModel} onChangeFilter={onChangeFilter} />
+          <FilterChips
+            currentFilter={filterModel}
+            onChangeFilter={onChangeFilter}
+          />
         </div>
 
         {groups.map(g => (
-          <TodoGroup key={g.uuid} selectedTodoUUID={selectedTodoUUID} onChange={onChangeTodo} onDelete={onDeleteTodo} onSubjectClick={onSubjectClick} group={g} />
+          <TodoGroup
+            key={g.uuid}
+            selectedTodoUUID={selectedTodoUUID}
+            onChange={onChangeTodo}
+            onDelete={onDeleteTodo}
+            onSubjectClick={onSubjectClick}
+            group={g}
+          />
         ))}
       </Container>
 

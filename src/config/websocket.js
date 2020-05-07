@@ -1,5 +1,5 @@
 // @flow
-import UserModel from "../models/user"
+import UserModel from "../shared/models/user"
 
 export class WebsocketProcessor {
   name: string

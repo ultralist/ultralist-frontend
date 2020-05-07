@@ -11,7 +11,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import ViewArrayIcon from "@material-ui/icons/ViewArray"
 import { makeStyles } from "@material-ui/styles"
 
-import TodoListModel from "../../models/todoList"
+import TodoListModel from "../../shared/models/todoList"
 
 const useStyles = makeStyles(theme => {
   return {

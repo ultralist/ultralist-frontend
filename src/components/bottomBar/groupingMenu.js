@@ -4,7 +4,7 @@ import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import Button from "@material-ui/core/Button"
 
-import FilterModel from "../../models/filter"
+import FilterModel from "../../shared/models/filter"
 
 import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
 

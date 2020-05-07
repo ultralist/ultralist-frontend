@@ -5,7 +5,7 @@ import TodayIcon from "@material-ui/icons/Today"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,

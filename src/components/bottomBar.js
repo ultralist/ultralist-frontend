@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/styles"
 
-import FilterModel from "../models/filter"
+import FilterModel from "../shared/models/filter"
 
 import GroupingMenu from "./bottomBar/groupingMenu"
 import FilterDialog from "./bottomBar/filterDialog"

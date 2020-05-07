@@ -1,10 +1,13 @@
 // @flow
 import React from "react"
-import { logoutUser } from "../models/user"
 import { Redirect } from "react-router-dom"
 
+import StorageContext from "../shared/storageContext"
+import UserStorage from "../shared/storage/userStorage"
+
 const Logout = () => {
-  logoutUser()
+  const userStorage = new UserStorage(React.useContext(StorageContext))
+  userStorage.logoutUser()
   return <Redirect to="/login" />
 }
 

@@ -12,8 +12,10 @@ import TextField from "@material-ui/core/TextField"
 
 import { makeStyles } from "@material-ui/styles"
 
-import TodoListModel from "../../models/todoList"
-import Storage from "../../backend/storage"
+import TodoListModel from "../../shared/models/todoList"
+
+import ModalStorage from "../../shared/storage/modalStorage"
+import StorageContext from "../../shared/storageContext"
 
 type Props = {
   onCreateTodoList: (newList: TodoListModel) => void
@@ -36,13 +38,13 @@ const nameRef = React.createRef()
 const CreateTodoList = (props: Props) => {
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
+  const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
   }
 
-  const storage = new Storage()
-  storage.setModalIsOpen(isOpen)
+  modalStorage.setModalIsOpen(isOpen)
 
   const createList = () => {
     const newList = new TodoListModel({ name: nameRef.current.value })

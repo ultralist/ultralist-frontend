@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/styles"
 
 import Chip from "@material-ui/core/Chip"
 
-import FilterModel from "../../models/filter"
+import FilterModel from "../../shared/models/filter"
 
 type Props = {
   currentFilter: FilterModel,

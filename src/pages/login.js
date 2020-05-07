@@ -8,7 +8,9 @@ import { makeStyles } from "@material-ui/styles"
 import TopBar from "../components/topBar"
 
 import { backendUrl } from "../backend/backend"
-import { isUserLoggedIn } from "../models/user"
+
+import StorageContext from "../shared/storageContext"
+import UserStorage from "../shared/storage/userStorage"
 
 const useStyles = makeStyles({
   middle: {
@@ -30,8 +32,9 @@ const useStyles = makeStyles({
 
 const Login = props => {
   const classes = useStyles()
+  const userStorage = new UserStorage(React.useContext(StorageContext))
 
-  if (isUserLoggedIn()) {
+  if (userStorage.isUserLoggedIn()) {
     props.history.push("/todolist")
     return null
   }
@@ -44,10 +47,20 @@ const Login = props => {
           <Typography variant="h4" marked="center" align="center">
             Sign In
           </Typography>
-          <Button variant="contained" color="default" href={`${backendUrl()}/users/auth/google_oauth2`} className={classes.paperItem}>
+          <Button
+            variant="contained"
+            color="default"
+            href={`${backendUrl()}/users/auth/google_oauth2`}
+            className={classes.paperItem}
+          >
             Login with Google
           </Button>
-          <Button variant="contained" color="default" href={`${backendUrl()}/users/auth/github`} className={classes.paperItem}>
+          <Button
+            variant="contained"
+            color="default"
+            href={`${backendUrl()}/users/auth/github`}
+            className={classes.paperItem}
+          >
             Login with Github
           </Button>
         </Paper>

@@ -1,6 +1,6 @@
 import { format, addDays } from "date-fns"
 import utils from "../utils"
-import TodoItemModel from "../models/todoItem"
+import TodoItemModel from "../shared/models/todoItem"
 
 export const todoData = [
   {

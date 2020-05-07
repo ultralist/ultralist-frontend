@@ -3,7 +3,7 @@ import React from "react"
 
 import Dialog from "@material-ui/core/Dialog"
 
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 import TodoForm from "../../todoItem/styled/todoForm"
 
 type Props = {
@@ -27,7 +27,13 @@ const EditTodo = (props: Props) => {
 
   return (
     <Dialog fullWidth maxWidth="sm" open={props.show} onClose={props.onClose}>
-      <TodoForm title="Edit todo" todoItem={props.todoItem} onChange={onChange} onDelete={onDelete} onClose={props.onClose} />
+      <TodoForm
+        title="Edit todo"
+        todoItem={props.todoItem}
+        onChange={onChange}
+        onDelete={onDelete}
+        onClose={props.onClose}
+      />
     </Dialog>
   )
 }

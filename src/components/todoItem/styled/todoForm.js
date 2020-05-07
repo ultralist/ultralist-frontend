@@ -17,7 +17,7 @@ import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
 import RightArrowIcon from "@material-ui/icons/ArrowRight"
 import red from "@material-ui/core/colors/red"
 
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,
@@ -143,17 +143,51 @@ const TodoForm = (props: Props) => {
       <DialogTitle>{props.title}</DialogTitle>
       <DialogContent>
         <Margin>
-          <TextField error={!isValid()} className={classes.text} defaultValue={todoItem.subject} label="Description" autoFocus inputRef={subjectRef} />
+          <TextField
+            error={!isValid()}
+            className={classes.text}
+            defaultValue={todoItem.subject}
+            label="Description"
+            autoFocus
+            inputRef={subjectRef}
+          />
         </Margin>
 
         <Margin>
-          <DatePicker autoOk keyboardIcon={<KeyboardIcon />} leftArrowIcon={<LeftArrowIcon />} rightArrowIcon={<RightArrowIcon />} label="Due" clearable value={todoItem.dueDate()} onChange={setTodoDate} />
+          <DatePicker
+            autoOk
+            keyboardIcon={<KeyboardIcon />}
+            leftArrowIcon={<LeftArrowIcon />}
+            rightArrowIcon={<RightArrowIcon />}
+            label="Due"
+            clearable
+            value={todoItem.dueDate()}
+            onChange={setTodoDate}
+          />
         </Margin>
 
         <Margin>
-          <FormControlLabel control={<Switch onChange={toggleCompleted} checked={todoItem.completed} />} label="Completed" />
-          <FormControlLabel control={<Switch onChange={toggleIsPriority} checked={todoItem.isPriority} />} label="Priority" />
-          <FormControlLabel control={<Switch onChange={toggleArchived} checked={todoItem.archived} />} label="Archived" />
+          <FormControlLabel
+            control={
+              <Switch onChange={toggleCompleted} checked={todoItem.completed} />
+            }
+            label="Completed"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={toggleIsPriority}
+                checked={todoItem.isPriority}
+              />
+            }
+            label="Priority"
+          />
+          <FormControlLabel
+            control={
+              <Switch onChange={toggleArchived} checked={todoItem.archived} />
+            }
+            label="Archived"
+          />
         </Margin>
         {renderDelete()}
       </DialogContent>

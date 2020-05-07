@@ -9,7 +9,10 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
 import { Redirect, Link } from "react-router-dom"
 
-import { loadUser, logoutUser, isUserLoggedIn } from "../models/user"
+import StorageContext from "../shared/storageContext"
+import UserStorage from "../shared/storage/userStorage"
+
+//import { loadUser, logoutUser, isUserLoggedIn } from "../shared/models/user"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -27,7 +30,9 @@ const UserIcon = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
 
-  const user = loadUser()
+  const userStorage = new UserStorage(React.useContext(StorageContext))
+
+  const user = userStorage.loadUser()
   const classes = useStyles()
 
   const toggleOpen = event => {
@@ -37,10 +42,10 @@ const UserIcon = () => {
 
   const onLogout = () => {
     setIsOpen(!isOpen)
-    logoutUser()
+    userStorage.logoutUser()
   }
 
-  if (!isUserLoggedIn()) {
+  if (!userStorage.isUserLoggedIn()) {
     return <Redirect to="/login" />
   }
 

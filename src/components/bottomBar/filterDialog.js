@@ -16,9 +16,9 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
 
-import FilterModel from "../../models/filter"
+import FilterModel from "../../shared/models/filter"
 import FilterChips from "../todoList/filterChips"
-import Storage from "../../backend/storage"
+//import Storage from "../../shared/backend/storage"
 
 type Props = {
   currentFilter: FilterModel,

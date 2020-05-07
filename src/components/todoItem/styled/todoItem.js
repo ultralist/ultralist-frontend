@@ -18,8 +18,10 @@ import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
 import yellow from "@material-ui/core/colors/yellow"
 
-import Storage from "../../../backend/storage"
-import TodoItemModel from "../../../models/todoItem"
+import TodoItemModel from "../../../shared/models/todoItem"
+
+import ModalStorage from "../../../shared/storage/modalStorage"
+import StorageContext from "../../../shared/storageContext"
 
 import DueDate from "./dueDate"
 import TodoText from "./todoText"
@@ -91,7 +93,7 @@ const styles = theme => ({
 })
 
 const TodoItem = (props: Props) => {
-  const storage = new Storage()
+  const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
   const [todoItemAttrs, setTodoItemAttrs] = useState(props.todoItem.toJSON())
   const todoItem = new TodoItemModel(todoItemAttrs)
@@ -99,7 +101,7 @@ const TodoItem = (props: Props) => {
   const [showNotes, setShowNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
-  storage.setModalIsOpen(showEditTodo)
+  modalStorage.setModalIsOpen(showEditTodo)
 
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
@@ -171,7 +173,7 @@ const TodoItem = (props: Props) => {
   }
 
   const onKeypress = event => {
-    if (!props.isSelected || storage.isModalOpen()) return
+    if (!props.isSelected || modalStorage.isModalOpen()) return
 
     if (event.keyCode === 13) setShowEditTodo(true)
     if (event.keyCode === 99) toggleComplete()
@@ -188,20 +190,58 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <ListItem key={todoItem.id} className={props.isFirst ? props.classes.firstTodo : props.classes.todo}>
-      <Checkbox tabIndex={-1} checked={todoItem.completed} onChange={toggleComplete} />
+    <ListItem
+      key={todoItem.id}
+      className={props.isFirst ? props.classes.firstTodo : props.classes.todo}
+    >
+      <Checkbox
+        tabIndex={-1}
+        checked={todoItem.completed}
+        onChange={toggleComplete}
+      />
 
-      <IconButton onClick={togglePriority} className={props.classes.shortWidthHide} aria-label="Prioritize">
-        {todoItem.isPriority ? <Star className={props.classes.starIcon} /> : <StarBorder />}
+      <IconButton
+        onClick={togglePriority}
+        className={props.classes.shortWidthHide}
+        aria-label="Prioritize"
+      >
+        {todoItem.isPriority ? (
+          <Star className={props.classes.starIcon} />
+        ) : (
+          <StarBorder />
+        )}
       </IconButton>
 
-      <ListItemText onClick={toggleShowEditTodo} primary={<TodoText bold={todoItem.isPriority} strike={todoItem.completed} grey={todoItem.archived} val={todoItem.subject} onClick={props.onSubjectClick} />} secondary={<DueDate grey={todoItem.archived || todoItem.completed} date={todoItem.dueDate()} />} />
+      <ListItemText
+        onClick={toggleShowEditTodo}
+        primary={
+          <TodoText
+            bold={todoItem.isPriority}
+            strike={todoItem.completed}
+            grey={todoItem.archived}
+            val={todoItem.subject}
+            onClick={props.onSubjectClick}
+          />
+        }
+        secondary={
+          <DueDate
+            grey={todoItem.archived || todoItem.completed}
+            date={todoItem.dueDate()}
+          />
+        }
+      />
 
       <Collapse in={showNotes} timeout="auto" unmountOnExit>
         <ul className={props.classes.notesArea}> {notes()} </ul>
       </Collapse>
 
-      <EditTodo show={showEditTodo} onClose={toggleShowEditTodo} todoItem={todoItem} onEditTodo={onChangeTodo} onDeleteTodo={props.onDelete} />
+      <EditTodo
+        show={showEditTodo}
+        onClose={toggleShowEditTodo}
+        todoItem={todoItem}
+        onEditTodo={onChangeTodo}
+        onDeleteTodo={props.onDelete}
+      />
       <ListItemSecondaryAction>
         <div className={props.classes.shortWidthHide}>
           {firstButton()}

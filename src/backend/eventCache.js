@@ -1,5 +1,5 @@
 // @flow
-import TodoEvent from "../models/todoEvent"
+import TodoEvent from "../shared/models/todoEvent"
 
 export default class EventCache {
   cache: Array<TodoEvent>
