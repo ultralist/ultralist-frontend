@@ -90,7 +90,7 @@ const TodoList = (props: Props) => {
   }
 
   const onChangeFilter = (filter: FilterModel) => {
-    filter.save()
+    filterStorage.saveFilter(filter)
     setFilterModelAttrs(filter.toJSON())
   }
 

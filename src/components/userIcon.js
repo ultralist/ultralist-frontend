@@ -11,8 +11,8 @@ import { Redirect, Link } from "react-router-dom"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
-
-//import { loadUser, logoutUser, isUserLoggedIn } from "../shared/models/user"
+import FeatureStorage from "../shared/storage/featureStorage"
+import utils from "../utils"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -31,6 +31,11 @@ const UserIcon = () => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
+  const featureStorage = new FeatureStorage(React.useContext(StorageContext))
+
+  if (utils.getUrlParam("beta") === "true") {
+    featureStorage.enableFeature("settings")
+  }
 
   const user = userStorage.loadUser()
   const classes = useStyles()
@@ -58,11 +63,13 @@ const UserIcon = () => {
         </Typography>
       </IconButton>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={toggleOpen}>
-        <MenuItem>
-          <Link to="/profile" className={classes.link}>
-            Settings
-          </Link>
-        </MenuItem>
+        {featureStorage.isFeatureEnabled("settings") && (
+          <MenuItem>
+            <Link to="/profile" className={classes.link}>
+              Settings
+            </Link>
+          </MenuItem>
+        )}
         <MenuItem>
           <a
             className={classes.link}
