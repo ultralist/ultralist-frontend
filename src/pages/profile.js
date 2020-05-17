@@ -78,7 +78,7 @@ const Plan = (props: Props) => {
 
     const resp = await userBackend.updateUser(
       user,
-      "plan_HGSBu1gixZg45K",
+      "plan_HIRnWv1qQXJQw6",
       result.paymentMethod.id
     )
 
