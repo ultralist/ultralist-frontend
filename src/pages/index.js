@@ -26,7 +26,7 @@ const theme = createMuiTheme({
   }
 })
 
-const stripePromise = loadStripe("pk_test_fVIfLmG59tZ59sEKYuLqCCFM")
+const stripePromise = loadStripe(process.env.STRIPE_KEY)
 
 window.socket = new WebsocketHandler()
 
