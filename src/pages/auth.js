@@ -3,30 +3,35 @@ import React from "react"
 import { Redirect } from "react-router-dom"
 
 import utils from "../utils"
-import UserModel from "../shared/models/user"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
 
+import BackendContext from "../shared/backendContext"
+import UserBackend from "../shared/backend/userBackend"
+
 const Auth = () => {
-  const name = utils.getUrlParam("name")
-  const uuid = utils.getUrlParam("uuid")
   const token = utils.getUrlParam("token")
-  const email = utils.getUrlParam("email")
-  const imageUrl = utils.getUrlParam("image_url")
+
+  const userBackend = new UserBackend(token, React.useContext(BackendContext))
+
   const userStorage = new UserStorage(React.useContext(StorageContext))
+  const [user, setUser] = React.useState(null)
 
-  const user = new UserModel({
-    name,
-    uuid,
-    token,
-    email,
-    imageUrl
-  })
+  React.useEffect(() => {
+    userBackend.getUser().then(userData => {
+      userStorage.loginUser(userData)
+      setUser(userData)
+    })
+  }, [])
 
-  userStorage.loginUser(user)
+  if (!user) return null
 
-  return <Redirect to="/loading" />
+  return user.status === "cancelled" ? (
+    <Redirect to="/profile" />
+  ) : (
+    <Redirect to="/loading" />
+  )
 }
 
 export default Auth

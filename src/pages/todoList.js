@@ -5,9 +5,10 @@ import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 import grey from "@material-ui/core/colors/grey"
 
-import Backend from "../backend/backend"
-import TestBackend from "../backend/testBackend"
-import EventCache from "../backend/eventCache"
+import BackendContext from "../shared/backendContext"
+import TodoListBackend from "../shared/backend/todoListBackend"
+
+import EventCache from "../shared/backend/eventCache"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
@@ -29,10 +30,6 @@ import UserStorage from "../shared/storage/userStorage"
 import TodoListModel, {
   createTodoListFromBackend
 } from "../shared/models/todoList"
-
-type Props = {
-  backend?: TestBackend
-}
 
 const eventCache = new EventCache()
 const TODOLIST_MRU_KEY = "todolist-mru-id"
@@ -65,14 +62,18 @@ const TodoListApp = (props: Props) => {
 
   const user = userStorage.loadUser()
   window.socket.registerSocket(user)
-  const backend = props.backend || new Backend(user.token)
+
+  const backend = new TodoListBackend(
+    user.token,
+    React.useContext(BackendContext)
+  )
 
   const fetchList = (list: TodoListModel, cb) => {
     if (!navigator.onLine) return
 
     backend.fetchTodoList(list.uuid).then(l => {
       l = createTodoListFromBackend(l)
-      todoListStorage.updateTodoList(l)
+      todoListStorage.saveTodoList(l)
       if (cb) cb(l)
     })
   }
@@ -123,7 +124,7 @@ const TodoListApp = (props: Props) => {
 
     backend.updateTodoList(todoList.uuid, eventCache).then(list => {
       const newTodoList = createTodoListFromBackend(list)
-      todoListStorage.updateTodoList(newTodoList)
+      todoListStorage.saveTodoList(newTodoList)
       setTodoList(newTodoList)
       eventCache.clear()
     })

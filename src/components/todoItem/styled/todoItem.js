@@ -50,24 +50,24 @@ type Props = {
 
 const styles = theme => ({
   shortWidthHide: {
-    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {
       display: "none"
     },
-    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
       display: "block"
     }
   },
   shortWidthShow: {
-    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {
       display: "block"
     },
-    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
       display: "none"
     }
   },
   todo: {
-    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {},
-    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {},
+    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
       maxWidth: 1200
     },
     color: "#444",
@@ -75,8 +75,8 @@ const styles = theme => ({
     borderTop: "1px solid #eee"
   },
   firstTodo: {
-    [theme.breakpoints.down(700 + theme.spacing.unit * 3 * 2)]: {},
-    [theme.breakpoints.up(700 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {},
+    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
       maxWidth: 1200
     },
     color: "#444",

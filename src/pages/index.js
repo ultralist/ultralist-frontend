@@ -14,6 +14,9 @@ import { WebsocketHandler } from "../config/websocket"
 import StorageContext from "../shared/storageContext"
 import BrowserStorage from "../shared/storage/browserStorage"
 
+import BackendContext from "../shared/backendContext"
+import ApiBackend from "../shared/backend/backends/apiBackend"
+
 const theme = createMuiTheme({
   palette: {
     primary: blueGrey,
@@ -28,23 +31,26 @@ const stripePromise = loadStripe("pk_test_fVIfLmG59tZ59sEKYuLqCCFM")
 window.socket = new WebsocketHandler()
 
 const storage = new BrowserStorage()
+const backend = new ApiBackend()
 
 const Index = () => {
   return (
-    <StorageContext.Provider value={storage}>
-      <Elements stripe={stripePromise}>
-        <CssBaseline />
-        <SnackbarProvider
-          maxSnack={1}
-          preventDuplicate
-          anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        >
-          <MuiThemeProvider theme={theme}>
-            <Router />
-          </MuiThemeProvider>
-        </SnackbarProvider>
-      </Elements>
-    </StorageContext.Provider>
+    <BackendContext.Provider value={backend}>
+      <StorageContext.Provider value={storage}>
+        <Elements stripe={stripePromise}>
+          <CssBaseline />
+          <SnackbarProvider
+            maxSnack={1}
+            preventDuplicate
+            anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          >
+            <MuiThemeProvider theme={theme}>
+              <Router />
+            </MuiThemeProvider>
+          </SnackbarProvider>
+        </Elements>
+      </StorageContext.Provider>
+    </BackendContext.Provider>
   )
 }
 

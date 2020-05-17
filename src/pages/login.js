@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/styles"
 
 import TopBar from "../components/topBar"
 
-import { backendUrl } from "../backend/backend"
+import { backendUrl } from "../constants"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
@@ -35,6 +35,8 @@ const Login = props => {
   const userStorage = new UserStorage(React.useContext(StorageContext))
 
   if (userStorage.isUserLoggedIn()) {
+    const user = userStorage.loadUser()
+
     props.history.push("/todolist")
     return null
   }

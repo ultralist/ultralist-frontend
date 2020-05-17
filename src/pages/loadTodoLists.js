@@ -2,8 +2,9 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import Backend from "../backend/backend"
-import TestBackend from "../backend/testBackend"
+import BackendContext from "../shared/backendContext"
+import TodoListBackend from "../shared/backend/todoListBackend"
+
 import { createTodoListFromBackend } from "../shared/models/todoList"
 
 import StorageContext from "../shared/storageContext"
@@ -11,7 +12,6 @@ import TodoListStorage from "../shared/storage/todoListStorage"
 import UserStorage from "../shared/storage/userStorage"
 
 type Props = {
-  backend?: TestBackend,
   history: any
 }
 
@@ -21,9 +21,12 @@ const LoadTodoLists = (props: Props) => {
 
   const user = userStorage.loadUser()
 
-  if (user.token === null) return <Redirect to="/login" />
+  const backend = new TodoListBackend(
+    user.token,
+    React.useContext(BackendContext)
+  )
 
-  const backend = props.backend || new Backend(user.token)
+  if (user.token === null) return <Redirect to="/login" />
 
   backend.fetchTodoLists().then(todoLists => {
     const lists = todoLists.todolists.map(list =>
