@@ -6,6 +6,7 @@ import { withSnackbar } from "notistack"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
+import ApiKeys from "../components/apiKeys/apiKeys"
 
 import {
   Dialog,
@@ -217,6 +218,8 @@ const Plan = (props: Props) => {
             <Typography variant="h4">Your Profile</Typography>
           </div>
         </Paper>
+
+        <ApiKeys />
 
         <Paper elevation={2} className={classes.section}>
           <div className={classes.margined}>
