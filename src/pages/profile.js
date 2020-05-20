@@ -6,7 +6,7 @@ import { withSnackbar } from "notistack"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
-import ApiKeys from "../components/apiKeys/apiKeys"
+import ApiKeys from "../components/profile/apiKeys"
 
 import {
   Dialog,
