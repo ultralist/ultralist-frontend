@@ -25,9 +25,11 @@ export class WebsocketHandler {
 
     if (!user) return
 
+    this.user = user
+
     const msg = {
       client_id: "frontend",
-      channel: this.user.uuid,
+      channel: user.uuid,
       request: "register_listener"
     }
 
