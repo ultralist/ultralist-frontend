@@ -1,5 +1,6 @@
 // @flow
 import React from "react"
+import { Redirect } from "react-router-dom"
 
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js"
 import { withSnackbar } from "notistack"
@@ -49,12 +50,17 @@ const Plan = (props: Props) => {
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const user = userStorage.loadUser()
+
   const userBackend = new UserBackend(
-    user.token,
+    user ? user.token : "",
     React.useContext(BackendContext)
   )
 
   const fullNameRef = React.useRef(null)
+
+  if (!user) {
+    return <Redirect to="/login" />
+  }
 
   const onShowPaymentDialog = () => {
     setShowPaymentDialog(true)

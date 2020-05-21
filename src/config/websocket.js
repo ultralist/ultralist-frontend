@@ -23,7 +23,7 @@ export class WebsocketHandler {
   registerSocket(user?: UserModel) {
     if (this.socket && this.socket.readyState === this.socket.OPEN) return
 
-    if (user) this.user = user
+    if (!user) return
 
     const msg = {
       client_id: "frontend",

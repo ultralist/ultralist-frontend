@@ -1,5 +1,7 @@
 // @flow
 import React, { useState, useEffect } from "react"
+import { Redirect } from "react-router-dom"
+
 import { parseISO } from "date-fns"
 import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
@@ -43,33 +45,31 @@ const useStyles = makeStyles({
 
 const TodoListApp = (props: Props) => {
   const classes = useStyles()
-  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
+
   const userStorage = new UserStorage(React.useContext(StorageContext))
-
-  const todoLists = todoListStorage.loadTodoLists()
-
-  let mostRecentTodoList
-  if (props.match.params.id) {
-    mostRecentTodoList = todoLists.find(t => t.uuid === props.match.params.id)
-    window.localStorage.setItem(TODOLIST_MRU_KEY, mostRecentTodoList.uuid)
-  } else {
-    mostRecentTodoList = todoLists.find(
-      tl => tl.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
-    )
-  }
-
-  const [todoList, setTodoList] = useState(mostRecentTodoList || todoLists[0])
-
   const user = userStorage.loadUser()
-  window.socket.registerSocket(user)
 
   const backend = new TodoListBackend(
-    user.token,
+    user ? user.token : "",
     React.useContext(BackendContext)
   )
 
+  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
+
+  if (props.match.params.id) {
+    todoListStorage.setMostRecentTodoList(props.match.params.id)
+  }
+
+  const todoLists = todoListStorage.loadTodoLists()
+  const [todoList, setTodoList] = useState(
+    todoListStorage.loadMostRecentTodoList()
+  )
+
+  window.socket.registerSocket(user)
+
   const fetchList = (list: TodoListModel, cb) => {
     if (!navigator.onLine) return
+    if (!user) return
 
     backend.fetchTodoList(list.uuid).then(l => {
       l = createTodoListFromBackend(l)
@@ -79,6 +79,8 @@ const TodoListApp = (props: Props) => {
   }
 
   const fetchLists = () => {
+    if (!user) return
+
     backend.fetchTodoLists().then(todoLists => {
       const lists = todoLists.todolists.map(list =>
         createTodoListFromBackend(list)
@@ -160,6 +162,10 @@ const TodoListApp = (props: Props) => {
       props.enqueueSnackbar("Todolist created.")
       setTodoList(todoList)
     })
+  }
+
+  if (!user) {
+    return <Redirect to="/login" />
   }
 
   return (
