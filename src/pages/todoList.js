@@ -49,12 +49,13 @@ const TodoListApp = (props: Props) => {
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const user = userStorage.loadUser()
 
+  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
+
   const backend = new TodoListBackend(
     user ? user.token : "",
-    React.useContext(BackendContext)
+    React.useContext(BackendContext),
+    todoListStorage
   )
-
-  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
 
   if (props.match.params.id) {
     todoListStorage.setMostRecentTodoList(props.match.params.id)
@@ -71,26 +72,7 @@ const TodoListApp = (props: Props) => {
     if (!navigator.onLine) return
     if (!user) return
 
-    backend.fetchTodoList(list.uuid).then(l => {
-      l = createTodoListFromBackend(l)
-      todoListStorage.saveTodoList(l)
-      if (cb) cb(l)
-    })
-  }
-
-  const fetchLists = () => {
-    if (!user) return
-
-    backend.fetchTodoLists().then(todoLists => {
-      const lists = todoLists.todolists.map(list =>
-        createTodoListFromBackend(list)
-      )
-      const currentList = lists.find(
-        l => l.uuid === window.localStorage.getItem(TODOLIST_MRU_KEY)
-      )
-      todoListStorage.saveTodoLists(lists)
-      setTodoList(currentList)
-    })
+    backend.fetchTodoList(list.uuid).then(cb)
   }
 
   const processSocketUpdate = data => {
@@ -108,7 +90,7 @@ const TodoListApp = (props: Props) => {
   }
 
   useEffect(() => {
-    fetchLists()
+    backend.fetchTodoLists()
 
     const socketProcessor = new WebsocketProcessor(
       "todolist_update",
