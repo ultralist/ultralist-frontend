@@ -8,6 +8,8 @@ import { SnackbarProvider } from "notistack"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 
+import ReactGA from "react-ga"
+
 import Router from "../config/router"
 import { WebsocketHandler } from "../config/websocket"
 
@@ -25,6 +27,8 @@ const theme = createMuiTheme({
     }
   }
 })
+
+ReactGA.initialize("UA-37191428-7", { debug: false })
 
 const key =
   process.env.NODE_ENV === "production"

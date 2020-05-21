@@ -20,6 +20,7 @@ const Routes = () => (
       <Route exact={true} path="/todolist/:id" component={TodoList} />
 
       <Route path="/login" component={Login} />
+      <Route path="/signup" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/auth" component={Auth} />
       <Route path="/profile" component={Profile} />
