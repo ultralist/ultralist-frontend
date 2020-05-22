@@ -5,12 +5,14 @@ import { formatRelative, parseJSON } from "date-fns"
 import { withSnackbar } from "notistack"
 
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
   TableHead,
   TableRow,
   TableCell,
+  Tooltip,
   Typography,
   Button
 } from "@material-ui/core"
@@ -23,6 +25,8 @@ import UserStorage from "../../shared/storage/userStorage"
 
 import BackendContext from "../../shared/backendContext"
 import ApiKeysBackend from "../../shared/backend/apiKeysBackend"
+import ApiKeyModel from "../../shared/models/apiKey"
+import AlertDialog from "../alertDialog"
 
 import NewApiKey from "./newApiKey"
 
@@ -59,7 +63,9 @@ const ApiKeys = props => {
   )
 
   const [keys, setKeys] = React.useState([])
-  console.log("keys = ", keys)
+
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
+  const [keyToDelete, setKeyToDelete] = React.useState(null)
 
   const [showNewApiKeyModal, setShowNewApiKeyModal] = React.useState(false)
 
@@ -69,7 +75,7 @@ const ApiKeys = props => {
     })
   }, [])
 
-  const onAddNewApiKey = (key: ApiKey) => {
+  const onAddNewApiKey = (key: ApiKeyModel) => {
     backend.createKey(key).then(data => {
       props.enqueueSnackbar("Api key created.")
       keys.push(data)
@@ -84,6 +90,24 @@ const ApiKeys = props => {
 
   const onCloseNewApiKeyModal = () => {
     setShowNewApiKeyModal(false)
+  }
+
+  const onStartDeleteApiKey = (key: ApiKeyModel) => {
+    setKeyToDelete(key)
+    setShowDeleteAlert(true)
+  }
+
+  const onDeleteApiKey = () => {
+    backend.deleteKey(keyToDelete).then(() => {
+      props.enqueueSnackbar("Api key deleted.")
+      setKeys(keys.filter(k => k.name !== keyToDelete.name))
+      onCloseDeleteAlert()
+    })
+  }
+
+  const onCloseDeleteAlert = () => {
+    setKeyToDelete(null)
+    setShowDeleteAlert(false)
   }
 
   const ApiKey = props => {
@@ -107,7 +131,15 @@ const ApiKeys = props => {
         <TableCell>{props.api_key.active ? "True" : "False"}</TableCell>
         <TableCell>{lastUsedDate}</TableCell>
         <TableCell>
-          <DeleteIcon />
+          <Tooltip title="Delete this api key">
+            <IconButton
+              onClick={() =>
+                onStartDeleteApiKey(new ApiKeyModel(props.api_key))
+              }
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </TableCell>
       </TableRow>
     )
@@ -140,6 +172,14 @@ const ApiKeys = props => {
           show={showNewApiKeyModal}
           onAdd={onAddNewApiKey}
           onClose={onCloseNewApiKeyModal}
+        />
+
+        <AlertDialog
+          title="Delete API key"
+          content="Are you sure you want to delete this API key?"
+          show={showDeleteAlert}
+          onOK={onDeleteApiKey}
+          onClose={onCloseDeleteAlert}
         />
 
         <Button
