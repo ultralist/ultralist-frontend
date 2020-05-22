@@ -22,6 +22,14 @@ const useStyles = makeStyles(theme => {
     link: {
       color: "rgba(0, 0, 0, 0.87)",
       textDecoration: "none"
+    },
+    userName: {
+      [theme.breakpoints.down("xs")]: {
+        display: "none"
+      },
+      [theme.breakpoints.up("sm")]: {
+        display: "block"
+      }
     }
   }
 })
@@ -59,7 +67,7 @@ const UserIcon = () => {
       <IconButton className={classes.icon} onClick={toggleOpen}>
         <PersonIcon />
         <Typography className={classes.icon} variant="body1">
-          {user.name}
+          <span className={classes.userName}>{user.name}</span>
         </Typography>
       </IconButton>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={toggleOpen}>
