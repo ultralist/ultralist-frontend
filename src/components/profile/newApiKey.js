@@ -33,7 +33,13 @@ const NewApiKey = (props: Props) => {
       <DialogTitle>Add a new API key</DialogTitle>
 
       <DialogContent>
-        <TextField label="Name" required value={name} onChange={onChangeName} />
+        <TextField
+          autoFocus
+          label="Name"
+          required
+          value={name}
+          onChange={onChangeName}
+        />
       </DialogContent>
 
       <DialogActions>
