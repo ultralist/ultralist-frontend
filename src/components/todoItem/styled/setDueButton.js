@@ -1,15 +1,14 @@
 // @flow
 import React from "react"
-import IconButton from "@material-ui/core/IconButton"
+import { IconButton, Menu, MenuItem, Tooltip } from "@material-ui/core"
 import TodayIcon from "@material-ui/icons/Today"
-import Menu from "@material-ui/core/Menu"
-import MenuItem from "@material-ui/core/MenuItem"
 
 import TodoItemModel from "../../../shared/models/todoItem"
 
 type Props = {
   todoItem: TodoItemModel,
-  onChange: (todoItem: TodoItemModel) => void
+  onChange: (todoItem: TodoItemModel) => void,
+  onShowEditModal: () => void
 }
 
 const SetDueButton = (props: Props) => {
@@ -44,15 +43,23 @@ const SetDueButton = (props: Props) => {
     props.onChange(props.todoItem)
   }
 
+  const onShowEditModal = () => {
+    onCloseMenu()
+    props.onShowEditModal()
+  }
+
   return (
     <React.Fragment>
-      <IconButton onClick={onOpenMenu} aria-label="Due Today">
-        <TodayIcon />
-      </IconButton>
+      <Tooltip title="Set due date">
+        <IconButton onClick={onOpenMenu} aria-label="Due Today">
+          <TodayIcon />
+        </IconButton>
+      </Tooltip>
       <Menu anchorEl={anchorEl} open={isOpen} onClose={onCloseMenu}>
         <MenuItem onClick={setDueToday}>Due Today</MenuItem>
         <MenuItem onClick={setDueTomorrow}>Due Tomorrow</MenuItem>
         <MenuItem onClick={setDueMonday}>Due Monday</MenuItem>
+        <MenuItem onClick={onShowEditModal}>More...</MenuItem>
       </Menu>
     </React.Fragment>
   )
