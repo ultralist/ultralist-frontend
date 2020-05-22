@@ -1,5 +1,8 @@
 // @flow
 import React from "react"
+import { formatRelative, parseJSON } from "date-fns"
+
+import { withSnackbar } from "notistack"
 
 import {
   Paper,
@@ -13,7 +16,6 @@ import {
 } from "@material-ui/core"
 
 import { Delete as DeleteIcon } from "@material-ui/icons"
-
 import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../shared/storageContext"
@@ -22,7 +24,7 @@ import UserStorage from "../../shared/storage/userStorage"
 import BackendContext from "../../shared/backendContext"
 import ApiKeysBackend from "../../shared/backend/apiKeysBackend"
 
-import { formatRelative, parseJSON } from "date-fns"
+import NewApiKey from "./newApiKey"
 
 const useStyles = makeStyles({
   section: {
@@ -45,7 +47,7 @@ const useStyles = makeStyles({
   }
 })
 
-const ApiKeys = () => {
+const ApiKeys = props => {
   const classes = useStyles()
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
@@ -57,12 +59,32 @@ const ApiKeys = () => {
   )
 
   const [keys, setKeys] = React.useState([])
+  console.log("keys = ", keys)
+
+  const [showNewApiKeyModal, setShowNewApiKeyModal] = React.useState(false)
 
   React.useEffect(() => {
     backend.getKeys().then(keys => {
       setKeys(keys.api_keys)
     })
   }, [])
+
+  const onAddNewApiKey = (key: ApiKey) => {
+    backend.createKey(key).then(data => {
+      props.enqueueSnackbar("Api key created.")
+      keys.push(data)
+      setKeys(keys)
+      setShowNewApiKeyModal(false)
+    })
+  }
+
+  const onShowNewApiKeyModal = () => {
+    setShowNewApiKeyModal(true)
+  }
+
+  const onCloseNewApiKeyModal = () => {
+    setShowNewApiKeyModal(false)
+  }
 
   const ApiKey = props => {
     let lastUsedDate = "Never"
@@ -98,21 +120,33 @@ const ApiKeys = () => {
 
         <Table>
           <TableHead>
-            <TableCell>Name</TableCell>
-            <TableCell>Key</TableCell>
-            <TableCell>Active?</TableCell>
-            <TableCell>Last used</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Key</TableCell>
+              <TableCell>Active?</TableCell>
+              <TableCell>Last used</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
           </TableHead>
 
           <TableBody>
-            {keys.map(key => (
-              <ApiKey api_key={key} />
+            {keys.map((key, idx) => (
+              <ApiKey key={idx} api_key={key} />
             ))}
           </TableBody>
         </Table>
 
-        <Button color="primary" variant="contained">
+        <NewApiKey
+          show={showNewApiKeyModal}
+          onAdd={onAddNewApiKey}
+          onClose={onCloseNewApiKeyModal}
+        />
+
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={onShowNewApiKeyModal}
+        >
           New API Key
         </Button>
       </div>
@@ -120,4 +154,4 @@ const ApiKeys = () => {
   )
 }
 
-export default ApiKeys
+export default withSnackbar(ApiKeys)
