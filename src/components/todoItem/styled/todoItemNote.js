@@ -1,14 +1,10 @@
 // @flow
 import React from "react"
 
-import Collapse from "@material-ui/core/Collapse"
-import IconButton from "@material-ui/core/IconButton"
-import Typography from "@material-ui/core/Typography"
+import { ListItem, IconButton, Typography } from "@material-ui/core"
 import { withStyles } from "@material-ui/core/styles"
 
 import DeleteForever from "@material-ui/icons/DeleteForever"
-
-import TodoItemNoteModel from "../../../shared/models/todoItemNote"
 
 type Props = {
   note: string,
@@ -20,37 +16,27 @@ type Props = {
 }
 
 const styles = theme => ({
-  notesAreaItem: {
-    borderTop: "1px solid #ddd",
-    listStyleType: "none",
-    display: "flex",
-    "&:first-child": {
-      borderTop: "none"
-    }
-  },
   noteText: {
+    fontSize: 14,
     display: "inline",
-    flex: 1,
-    paddingTop: 15
+    flex: 1
   }
 })
 
 const TodoItemNote = (props: Props) => {
   const onDelete = () => {
-    // if (confirm("Are you sure you wish to delete this note?")) {
-    //   props.onDeleteNote(props.note)
-    // }
+    props.onDeleteNote(props.note)
   }
 
   return (
-    <li className={props.classes.notesAreaItem}>
+    <ListItem key={props.key}>
       <Typography variant="body1" className={props.classes.noteText}>
         <span>{props.note}</span>
       </Typography>
       <IconButton onClick={onDelete} aria-label="Show notes">
         <DeleteForever />
       </IconButton>
-    </li>
+    </ListItem>
   )
 }
 

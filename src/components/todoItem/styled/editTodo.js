@@ -6,6 +6,9 @@ import Dialog from "@material-ui/core/Dialog"
 import TodoItemModel from "../../../shared/models/todoItem"
 import TodoForm from "../../todoItem/styled/todoForm"
 
+import ModalStorage from "../../../shared/storage/modalStorage"
+import StorageContext from "../../../shared/storageContext"
+
 type Props = {
   todoItem: TodoItemModel,
   show: boolean,
@@ -15,6 +18,10 @@ type Props = {
 }
 
 const EditTodo = (props: Props) => {
+  const modalStorage = new ModalStorage(React.useContext(StorageContext))
+
+  modalStorage.setModalIsOpen(props.show, "editTodoItemModal")
+
   const onChange = (todoItem: TodoItemModel) => {
     props.onClose()
     props.onEditTodo(todoItem)

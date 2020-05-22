@@ -1,18 +1,19 @@
 // @flow
 import React, { useState, useEffect } from "react"
 
-import { withStyles } from "@material-ui/core/styles"
-import IconButton from "@material-ui/core/IconButton"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
-import Checkbox from "@material-ui/core/Checkbox"
-import StarBorder from "@material-ui/icons/StarBorder"
-import ListItemText from "@material-ui/core/ListItemText"
-import Star from "@material-ui/icons/Star"
-import Collapse from "@material-ui/core/Collapse"
+import { makeStyles, createStyles } from "@material-ui/styles"
+import {
+  IconButton,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Checkbox,
+  Tooltip
+} from "@material-ui/core"
 
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
-import ExpandLessIcon from "@material-ui/icons/ExpandLess"
+import StarBorder from "@material-ui/icons/StarBorder"
+import Star from "@material-ui/icons/Star"
+import NotesIcon from "@material-ui/icons/Notes"
 import ArchiveIcon from "@material-ui/icons/Archive"
 import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
@@ -26,7 +27,7 @@ import StorageContext from "../../../shared/storageContext"
 import DueDate from "./dueDate"
 import TodoText from "./todoText"
 import SetDueButton from "./setDueButton"
-import TodoItemNote from "./todoItemNote"
+import TodoItemNotes from "./todoItemNotes"
 import EditTodo from "./editTodo"
 
 type Props = {
@@ -36,72 +37,68 @@ type Props = {
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
-  showEditTodo: boolean,
-  classes: {
-    shortWidthHide: string,
-    shortWidthShow: string,
-    starIcon: string,
-    notesArea: string,
-    paper: string,
-    listItem: string,
-    selectedListItem: string
-  }
+  showEditTodo: boolean
 }
 
-const styles = theme => ({
-  shortWidthHide: {
-    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {
-      display: "none"
+const useStyles = makeStyles(theme =>
+  createStyles({
+    shortWidthHide: {
+      [theme.breakpoints.down("xs")]: {
+        display: "none"
+      },
+      [theme.breakpoints.up("sm")]: {
+        display: "block"
+      }
     },
-    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
-      display: "block"
+    shortWidthShow: {
+      [theme.breakpoints.down("xs")]: {
+        display: "block"
+      },
+      [theme.breakpoints.up("sm")]: {
+        display: "none"
+      }
+    },
+    todo: {
+      [theme.breakpoints.down("xs")]: {},
+      [theme.breakpoints.up("sm")]: {
+        maxWidth: 1200
+      },
+      color: "#444",
+      backgroundColor: "#fff",
+      borderTop: "1px solid #eee"
+    },
+    firstTodo: {
+      [theme.breakpoints.down("xs")]: {},
+      [theme.breakpoints.up("sm")]: {
+        maxWidth: 1200
+      },
+      color: "#444",
+      backgroundColor: "#fff"
+    },
+    starIcon: {
+      color: yellow[800]
+    },
+    notesArea: {
+      backgroundColor: "#fff",
+      paddingLeft: 90
+    },
+    buttonRow: {
+      display: "flex",
+      flexDirection: "row"
     }
-  },
-  shortWidthShow: {
-    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {
-      display: "block"
-    },
-    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
-      display: "none"
-    }
-  },
-  todo: {
-    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {},
-    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
-      maxWidth: 1200
-    },
-    color: "#444",
-    backgroundColor: "#fff",
-    borderTop: "1px solid #eee"
-  },
-  firstTodo: {
-    [theme.breakpoints.down(700 + theme.spacing * 3 * 2)]: {},
-    [theme.breakpoints.up(700 + theme.spacing * 3 * 2)]: {
-      maxWidth: 1200
-    },
-    color: "#444",
-    backgroundColor: "#fff"
-  },
-  starIcon: {
-    color: yellow[800]
-  },
-  notesArea: {
-    backgroundColor: "#efefef",
-    marginLeft: 40,
-    marginBottom: 20
-  }
-})
+  })
+)
 
 const TodoItem = (props: Props) => {
+  const classes = useStyles()
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
   const [todoItemAttrs, setTodoItemAttrs] = useState(props.todoItem.toJSON())
   const todoItem = new TodoItemModel(todoItemAttrs)
 
-  const [showNotes, setShowNotes] = useState(false)
+  const [showTodoNotes, setShowTodoNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
-
-  modalStorage.setModalIsOpen(showEditTodo)
+  console.log(`for todoItem ${todoItem.id}, showTodoNotes = `, showTodoNotes)
 
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
@@ -117,18 +114,13 @@ const TodoItem = (props: Props) => {
     onChangeTodo(todoItem)
   }
 
-  const deleteNote = note => {
-    todoItem.deleteNote(note)
-    onChangeTodo(todoItem)
-  }
-
   const toggleArchived = () => {
     todoItem.toggleArchived()
     onChangeTodo(todoItem)
   }
 
-  const toggleShowNotes = () => {
-    setShowNotes(!showNotes)
+  const toggleShowTodoNotes = () => {
+    setShowTodoNotes(!showTodoNotes)
   }
 
   const onChangeTodo = todoItem => {
@@ -136,24 +128,20 @@ const TodoItem = (props: Props) => {
     props.onChange(todoItem)
   }
 
-  const notes = () => {
-    return todoItem.notes.map(n => (
-      <React.Fragment key={n}>
-        <TodoItemNote note={n} onDeleteNote={deleteNote} />
-      </React.Fragment>
-    ))
-  }
-
   const ArchiveButton = props => (
-    <IconButton onClick={props.onClick}>
-      <ArchiveIcon />
-    </IconButton>
+    <Tooltip title="Archive todo">
+      <IconButton onClick={props.onClick}>
+        <ArchiveIcon />
+      </IconButton>
+    </Tooltip>
   )
 
   const UnarchiveButton = props => (
-    <IconButton onClick={props.onClick}>
-      <UnarchiveIcon />
-    </IconButton>
+    <Tooltip title="Unarchive todo">
+      <IconButton onClick={props.onClick}>
+        <UnarchiveIcon />
+      </IconButton>
+    </Tooltip>
   )
 
   const firstButton = () => {
@@ -167,7 +155,13 @@ const TodoItem = (props: Props) => {
       if (todoItem.archived) {
         return <UnarchiveButton onClick={toggleArchived} />
       } else {
-        return <SetDueButton todoItem={todoItem} onChange={onChangeTodo} />
+        return (
+          <SetDueButton
+            todoItem={todoItem}
+            onChange={onChangeTodo}
+            onShowEditModal={toggleShowEditTodo}
+          />
+        )
       }
     }
   }
@@ -190,69 +184,78 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <ListItem
-      key={todoItem.id}
-      className={props.isFirst ? props.classes.firstTodo : props.classes.todo}
-    >
-      <Checkbox
-        tabIndex={-1}
-        checked={todoItem.completed}
-        onChange={toggleComplete}
-      />
-
-      <IconButton
-        onClick={togglePriority}
-        className={props.classes.shortWidthHide}
-        aria-label="Prioritize"
-      >
-        {todoItem.isPriority ? (
-          <Star className={props.classes.starIcon} />
-        ) : (
-          <StarBorder />
-        )}
-      </IconButton>
-
-      <ListItemText
-        onClick={toggleShowEditTodo}
-        primary={
-          <TodoText
-            bold={todoItem.isPriority}
-            strike={todoItem.completed}
-            grey={todoItem.archived}
-            val={todoItem.subject}
-            onClick={props.onSubjectClick}
+    <React.Fragment key={todoItem.id}>
+      <ListItem className={props.isFirst ? classes.firstTodo : classes.todo}>
+        <Tooltip title="Set completed">
+          <Checkbox
+            tabIndex={-1}
+            checked={todoItem.completed}
+            onChange={toggleComplete}
           />
-        }
-        secondary={
-          <DueDate
-            grey={todoItem.archived || todoItem.completed}
-            date={todoItem.dueDate()}
-          />
-        }
-      />
+        </Tooltip>
 
-      <Collapse in={showNotes} timeout="auto" unmountOnExit>
-        <ul className={props.classes.notesArea}> {notes()} </ul>
-      </Collapse>
-
-      <EditTodo
-        show={showEditTodo}
-        onClose={toggleShowEditTodo}
-        todoItem={todoItem}
-        onEditTodo={onChangeTodo}
-        onDeleteTodo={props.onDelete}
-      />
-      <ListItemSecondaryAction>
-        <div className={props.classes.shortWidthHide}>
-          {firstButton()}
-
-          <IconButton onClick={toggleShowNotes} aria-label="Show Notes">
-            {showNotes ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+        <Tooltip title="Prioritize">
+          <IconButton
+            onClick={togglePriority}
+            className={classes.shortWidthHide}
+            aria-label="Prioritize"
+          >
+            {todoItem.isPriority ? (
+              <Star className={classes.starIcon} />
+            ) : (
+              <StarBorder />
+            )}
           </IconButton>
-        </div>
-      </ListItemSecondaryAction>
-    </ListItem>
+        </Tooltip>
+
+        <ListItemText
+          onClick={toggleShowEditTodo}
+          primary={
+            <TodoText
+              bold={todoItem.isPriority}
+              strike={todoItem.completed}
+              grey={todoItem.archived}
+              val={todoItem.subject}
+              onClick={props.onSubjectClick}
+            />
+          }
+          secondary={
+            <DueDate
+              grey={todoItem.archived || todoItem.completed}
+              date={todoItem.dueDate()}
+            />
+          }
+        />
+
+        <EditTodo
+          show={showEditTodo}
+          onClose={toggleShowEditTodo}
+          todoItem={todoItem}
+          onEditTodo={onChangeTodo}
+          onDeleteTodo={props.onDelete}
+        />
+
+        <TodoItemNotes
+          show={showTodoNotes}
+          onClose={toggleShowTodoNotes}
+          todoItem={todoItem}
+          onChange={onChangeTodo}
+        />
+
+        <ListItemSecondaryAction>
+          <div className={classes.buttonRow}>
+            <span className={classes.shortWidthHide}>{firstButton()}</span>
+
+            <Tooltip title="Show/hide notes">
+              <IconButton onClick={toggleShowTodoNotes} aria-label="Show Notes">
+                <NotesIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </React.Fragment>
   )
 }
 
-export default withStyles(styles)(TodoItem)
+export default TodoItem
