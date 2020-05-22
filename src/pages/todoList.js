@@ -34,11 +34,10 @@ import TodoListModel, {
 } from "../shared/models/todoList"
 
 const eventCache = new EventCache()
-const TODOLIST_MRU_KEY = "todolist-mru-id"
 
 const useStyles = makeStyles({
   greyBackground: {
-    backgroundColor: grey[200],
+    backgroundColor: grey[100],
     height: "100vh"
   }
 })
