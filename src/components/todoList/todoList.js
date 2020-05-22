@@ -28,24 +28,8 @@ type Props = {
 }
 
 const useStyles = makeStyles({
-  hidden: {
-    display: "none"
-  },
-  toggleContainer: {
-    height: 56,
-    padding: "8px 16px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    margin: "8px 0",
-    minWidth: 300
-  },
-  controls: {
-    marginLeft: 20,
-    minWidth: 300
-  },
-  listContainer: {
-    paddingBottom: 70
+  mainContainer: {
+    paddingBottom: 100
   },
   listName: {
     textAlign: "center",
@@ -124,7 +108,7 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Container maxWidth="md">
+      <Container maxWidth="md" className={classes.mainContainer}>
         <Typography component="h4" variant="h4" className={classes.listName}>
           {props.todoList.name}
         </Typography>
