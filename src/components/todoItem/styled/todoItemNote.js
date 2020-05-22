@@ -1,5 +1,6 @@
 // @flow
 import React from "react"
+import * as MarkdownIt from "markdown-it"
 
 import { ListItem, IconButton, Typography } from "@material-ui/core"
 import { withStyles } from "@material-ui/core/styles"
@@ -15,6 +16,8 @@ type Props = {
   }
 }
 
+const markdownIt = new MarkdownIt()
+
 const styles = theme => ({
   noteText: {
     fontSize: 14,
@@ -24,6 +27,7 @@ const styles = theme => ({
 })
 
 const TodoItemNote = (props: Props) => {
+  const processed = markdownIt.render(props.note)
   const onDelete = () => {
     props.onDeleteNote(props.note)
   }
@@ -31,7 +35,7 @@ const TodoItemNote = (props: Props) => {
   return (
     <ListItem key={props.key}>
       <Typography variant="body1" className={props.classes.noteText}>
-        <span>{props.note}</span>
+        <span dangerouslySetInnerHTML={{ __html: processed }} />
       </Typography>
       <IconButton onClick={onDelete} aria-label="Show notes">
         <DeleteForever />

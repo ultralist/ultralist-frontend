@@ -98,7 +98,6 @@ const TodoItem = (props: Props) => {
 
   const [showTodoNotes, setShowTodoNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
-  console.log(`for todoItem ${todoItem.id}, showTodoNotes = `, showTodoNotes)
 
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
