@@ -10,7 +10,7 @@ import { Link } from "react-router-dom"
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    paddingBottom: 70
+    paddingTop: 70
   },
   grow: {
     flexGrow: 1
@@ -26,7 +26,7 @@ const TopBar = props => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h4" color="inherit">
             <Link to="/" className={classes.link}>
