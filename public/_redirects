@@ -1,5 +1,1 @@
-/login    /index.html   200
-/logout    /index.html   200
-/todolist/*    /index.html   200
-/auth    /index.html   200
-/loading    /index.html   200
+/*    /index.html    200
