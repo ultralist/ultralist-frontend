@@ -15,7 +15,9 @@ const useStyles = makeStyles({
   grow: {
     flexGrow: 1
   },
-  link: {
+  logo: {
+    fontFamily: "Oxanium",
+    fontSize: 36,
     color: "#fff",
     textDecoration: "none"
   }
@@ -29,7 +31,7 @@ const TopBar = props => {
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h4" color="inherit">
-            <Link to="/" className={classes.link}>
+            <Link to="/" className={classes.logo}>
               Ultralist
             </Link>
           </Typography>
