@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
 import {
+  Badge,
   IconButton,
   ListItem,
   ListItemSecondaryAction,
@@ -143,6 +144,18 @@ const TodoItem = (props: Props) => {
     </Tooltip>
   )
 
+  const NoteIcon = props => {
+    if (props.count > 0) {
+      return (
+        <Badge badgeContent={props.count} color="primary">
+          <NotesIcon />
+        </Badge>
+      )
+    } else {
+      return <NotesIcon />
+    }
+  }
+
   const firstButton = () => {
     if (todoItem.completed) {
       if (todoItem.archived) {
@@ -247,7 +260,7 @@ const TodoItem = (props: Props) => {
 
             <Tooltip title="Show/hide notes">
               <IconButton onClick={toggleShowTodoNotes} aria-label="Show Notes">
-                <NotesIcon />
+                <NoteIcon count={todoItem.notes.length} />
               </IconButton>
             </Tooltip>
           </div>
