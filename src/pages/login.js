@@ -16,6 +16,7 @@ import UserStorage from "../shared/storage/userStorage"
 
 const useStyles = makeStyles({
   middle: {
+    paddingTop: 100,
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
@@ -47,8 +48,8 @@ const Login = props => {
 
   const SignupText = () => (
     <Typography className={classes.margined} marked="center" align="center">
-      Ultralist includes a full 14 day free trial.
-      <br />
+      {/* Ultralist includes a full 14 day free trial. */}
+      {/* <br /> */}
       Already have an account? <Link to="/login">Login here.</Link>
     </Typography>
   )
