@@ -13,10 +13,7 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
-  DialogContent,
-  List,
-  ListItem,
-  Switch
+  DialogContent
 } from "@material-ui/core"
 import Typography from "@material-ui/core/Typography"
 import Paper from "@material-ui/core/Paper"
@@ -28,7 +25,8 @@ import { makeStyles } from "@material-ui/styles"
 import StorageContext from "../shared/storageContext"
 import BackendContext from "../shared/backendContext"
 import UserStorage from "../shared/storage/userStorage"
-import UserBackend from "../shared/backend/userBackend"
+
+import AccountBackend from "../shared/backend/accountBackend"
 
 const useStyles = makeStyles({
   section: {
@@ -40,6 +38,11 @@ const useStyles = makeStyles({
   }
 })
 
+const StripePlan =
+  process.env.NODE_ENV === "production"
+    ? "plan_HIRnWv1qQXJQw6"
+    : "plan_HGSBu1gixZg45K"
+
 const Plan = (props: Props) => {
   const [showPaymentDialog, setShowPaymentDialog] = React.useState(false)
   const [errors, setErrors] = React.useState([])
@@ -50,8 +53,9 @@ const Plan = (props: Props) => {
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const user = userStorage.loadUser()
+  console.log("user = ", user)
 
-  const userBackend = new UserBackend(
+  const accountBackend = new AccountBackend(
     user ? user.token : "",
     React.useContext(BackendContext)
   )
@@ -83,9 +87,9 @@ const Plan = (props: Props) => {
       return
     }
 
-    const resp = await userBackend.updateUser(
-      user,
-      "plan_HIRnWv1qQXJQw6",
+    const resp = await accountBackend.updateAccount(
+      user.account,
+      StripePlan,
       result.paymentMethod.id
     )
 
@@ -120,7 +124,7 @@ const Plan = (props: Props) => {
         <DialogTitle>Add card info</DialogTitle>
         <DialogContent>
           <p>
-            Payments are handled by{" "}
+            Payments are handled by
             <a target="_blank" href="https://stripe.com">
               Stripe
             </a>
@@ -231,10 +235,10 @@ const Plan = (props: Props) => {
           <div className={classes.margined}>
             <Typography variant="h4">Your plan</Typography>
 
-            {user.status === "trialing" && <TrialingText />}
-            {user.status === "paid" && <PaidText />}
-            {user.status === "unpaid" && <UnpaidText />}
-            {user.status === "cancelled" && <CancelledText />}
+            {user.account.status === "trialing" && <TrialingText />}
+            {user.account.status === "paid" && <PaidText />}
+            {user.account.status === "unpaid" && <UnpaidText />}
+            {user.account.status === "cancelled" && <CancelledText />}
 
             <PaymentDialog />
           </div>
