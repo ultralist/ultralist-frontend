@@ -28,7 +28,7 @@ const theme = createMuiTheme({
   }
 })
 
-ReactGA.initialize("UA-37191428-7", { debug: false })
+ReactGA.initialize("UA-37191428-7", { debug: true })
 
 const key =
   process.env.NODE_ENV === "production"
