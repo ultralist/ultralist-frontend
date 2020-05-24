@@ -53,7 +53,6 @@ const Plan = (props: Props) => {
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const user = userStorage.loadUser()
-  console.log("user = ", user)
 
   const accountBackend = new AccountBackend(
     user ? user.token : "",
