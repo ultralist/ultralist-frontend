@@ -6,7 +6,7 @@ import ReactGA from "react-ga"
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
 
-ReactGA.initialize("UA-37191428-7", { debug: true })
+ReactGA.initialize("UA-37191428-7", { debug: false })
 
 const Analytics = () => {
   const userStorage = new UserStorage(React.useContext(StorageContext))
