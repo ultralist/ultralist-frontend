@@ -14,6 +14,8 @@ import { backendUrl } from "../constants"
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
 
+import Utils from "../utils"
+
 const useStyles = makeStyles({
   middle: {
     paddingTop: 100,
@@ -60,6 +62,16 @@ const Login = props => {
     </Typography>
   )
 
+  const inviteCode = () => {
+    return Utils.getUrlParam("invite_code")
+  }
+
+  const fullBackendUrl = path => {
+    let url = `${backendUrl()}${path}`
+    if (inviteCode()) url += `?invite_code=${inviteCode()}`
+    return url
+  }
+
   return (
     <React.Fragment>
       <TopBar />
@@ -75,7 +87,7 @@ const Login = props => {
           <Button
             variant="contained"
             color="default"
-            href={`${backendUrl()}/users/auth/google_oauth2`}
+            href={fullBackendUrl("/users/auth/google_oauth2")}
             className={classes.paperItem}
           >
             {isSignup ? "Sign up" : "Login"} with Google
@@ -83,7 +95,7 @@ const Login = props => {
           <Button
             variant="contained"
             color="default"
-            href={`${backendUrl()}/users/auth/github`}
+            href={fullBackendUrl("/users/auth/github")}
             className={classes.paperItem}
           >
             {isSignup ? "Sign up" : "Login"} with Github
