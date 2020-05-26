@@ -17,8 +17,6 @@ import BrowserStorage from "../shared/storage/browserStorage"
 import BackendContext from "../shared/backendContext"
 import ApiBackend from "../shared/backend/backends/apiBackend"
 
-import Analytics from "../components/analytics"
-
 const theme = createMuiTheme({
   palette: {
     primary: blueGrey,
@@ -52,7 +50,6 @@ const Index = () => {
             anchorOrigin={{ vertical: "top", horizontal: "left" }}
           >
             <MuiThemeProvider theme={theme}>
-              <Analytics />
               <Router />
             </MuiThemeProvider>
           </SnackbarProvider>

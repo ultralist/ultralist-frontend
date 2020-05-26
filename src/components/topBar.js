@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
 import { Link } from "react-router-dom"
 
+import Analytics from "./analytics"
+
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -28,6 +30,7 @@ const TopBar = props => {
 
   return (
     <div className={classes.root}>
+      <Analytics />
       <AppBar position="fixed">
         <Toolbar>
           <Typography variant="h4" color="inherit">
