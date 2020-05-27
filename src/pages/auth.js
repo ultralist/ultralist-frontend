@@ -13,14 +13,17 @@ import UserBackend from "../shared/backend/userBackend"
 const Auth = () => {
   const token = utils.getUrlParam("token")
 
-  const userBackend = new UserBackend(token, React.useContext(BackendContext))
-
   const userStorage = new UserStorage(React.useContext(StorageContext))
+  const userBackend = new UserBackend(
+    token,
+    React.useContext(BackendContext),
+    userStorage
+  )
+
   const [user, setUser] = React.useState(null)
 
   React.useEffect(() => {
     userBackend.getUser().then(userData => {
-      userStorage.loginUser(userData)
       setUser(userData)
     })
   }, [])

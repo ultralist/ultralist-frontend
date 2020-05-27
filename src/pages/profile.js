@@ -215,6 +215,33 @@ const Plan = (props: Props) => {
     </React.Fragment>
   )
 
+  const ProfileSection = () => {
+    return (
+      <Paper elevation={2} className={classes.section}>
+        <div className={classes.margined}>
+          <Typography variant="h4">Your Profile</Typography>
+        </div>
+      </Paper>
+    )
+  }
+
+  const PlanSection = () => {
+    return (
+      <Paper elevation={2} className={classes.section}>
+        <div className={classes.margined}>
+          <Typography variant="h4">Your plan</Typography>
+
+          {user.account.status === "trialing" && <TrialingText />}
+          {user.account.status === "paid" && <PaidText />}
+          {user.account.status === "unpaid" && <UnpaidText />}
+          {user.account.status === "cancelled" && <CancelledText />}
+
+          <PaymentDialog />
+        </div>
+      </Paper>
+    )
+  }
+
   return (
     <React.Fragment>
       <TopBar>
@@ -222,26 +249,11 @@ const Plan = (props: Props) => {
       </TopBar>
 
       <Container maxWidth="lg">
-        <Paper elevation={2} className={classes.section}>
-          <div className={classes.margined}>
-            <Typography variant="h4">Your Profile</Typography>
-          </div>
-        </Paper>
+        <ProfileSection />
 
         <ApiKeys />
 
-        <Paper elevation={2} className={classes.section}>
-          <div className={classes.margined}>
-            <Typography variant="h4">Your plan</Typography>
-
-            {user.account.status === "trialing" && <TrialingText />}
-            {user.account.status === "paid" && <PaidText />}
-            {user.account.status === "unpaid" && <UnpaidText />}
-            {user.account.status === "cancelled" && <CancelledText />}
-
-            <PaymentDialog />
-          </div>
-        </Paper>
+        <PlanSection />
       </Container>
     </React.Fragment>
   )
