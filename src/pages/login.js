@@ -47,14 +47,28 @@ const Login = props => {
   }
 
   const isSignup = props.location.pathname === "/signup"
+  const inviteAccountName = Utils.getUrlParam("account_name")
+  const inviteCode = Utils.getUrlParam("invite_code")
 
-  const SignupText = () => (
-    <Typography className={classes.margined} marked="center" align="center">
-      {/* Ultralist includes a full 14 day free trial. */}
-      {/* <br /> */}
-      Already have an account? <Link to="/login">Login here.</Link>
-    </Typography>
-  )
+  const SignupText = () => {
+    if (inviteAccountName) {
+      return (
+        <Typography className={classes.margined} marked="center" align="center">
+          {/* Ultralist includes a full 14 day free trial. */}
+          {/* <br /> */}
+          You'll be added to the {inviteAccountName} account.
+        </Typography>
+      )
+    } else {
+      return (
+        <Typography className={classes.margined} marked="center" align="center">
+          {/* Ultralist includes a full 14 day free trial. */}
+          {/* <br /> */}
+          Already have an account? <Link to="/login">Login here.</Link>
+        </Typography>
+      )
+    }
+  }
 
   const LoginText = () => (
     <Typography className={classes.margined} marked="center" align="center">
@@ -62,13 +76,9 @@ const Login = props => {
     </Typography>
   )
 
-  const inviteCode = () => {
-    return Utils.getUrlParam("invite_code")
-  }
-
   const fullBackendUrl = path => {
     let url = `${backendUrl()}${path}`
-    if (inviteCode()) url += `?invite_code=${inviteCode()}`
+    if (inviteCode) url += `?invite_code=${inviteCode}`
     return url
   }
 

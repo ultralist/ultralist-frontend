@@ -8,6 +8,7 @@ import { withSnackbar } from "notistack"
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import ApiKeys from "../components/profile/apiKeys"
+import Users from "../components/profile/users"
 
 import {
   Dialog,
@@ -250,6 +251,8 @@ const Plan = (props: Props) => {
 
       <Container maxWidth="lg">
         <ProfileSection />
+
+        <Users />
 
         <ApiKeys />
 
