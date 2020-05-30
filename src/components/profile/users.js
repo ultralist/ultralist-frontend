@@ -2,15 +2,19 @@
 import React from "react"
 import { formatRelative, parseJSON } from "date-fns"
 import { Link } from "react-router-dom"
-
+import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
 import UserModel from "../../shared/models/user"
 
+import BackendContext from "../../shared/backendContext"
+import UserBackend from "../../shared/backend/userBackend"
+
+import AlertDialog from "../alertDialog"
+
 import {
-  Divider,
   IconButton,
   Paper,
   Table,
@@ -19,8 +23,7 @@ import {
   TableRow,
   TableCell,
   Tooltip,
-  Typography,
-  Button
+  Typography
 } from "@material-ui/core"
 
 import { Delete as DeleteIcon } from "@material-ui/icons"
@@ -39,9 +42,39 @@ const Users = props => {
   const classes = useStyles()
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const [user, setUser] = React.useState(userStorage.loadUser())
+  const [accountUsers, setAccountUsers] = React.useState(user.account.users)
 
-  const onStartDeleteUser = (userToDelete: UserModel) => {}
+  const userBackend = new UserBackend(
+    user.token,
+    React.useContext(BackendContext),
+    userStorage
+  )
+
+  const [userToDelete, setUserToDelete] = React.useState(null)
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
+
+  const onCloseDeleteAlert = () => {
+    setUserToDelete(null)
+    setShowDeleteAlert(false)
+  }
+
+  const onStartDeleteUser = (userToDelete: UserModel) => {
+    setUserToDelete(userToDelete)
+    setShowDeleteAlert(true)
+  }
+
+  const onDeleteUser = () => {
+    userBackend.deleteUser(userToDelete).then(() => {
+      props.enqueueSnackbar("User deleted.")
+      onCloseDeleteAlert()
+
+      userBackend.getUser().then(userData => {
+        setUser(userData)
+        setAccountUsers(userData.account.users)
+      })
+    })
+  }
 
   const User = userProps => {
     let lastLoginAt = "Never"
@@ -53,6 +86,8 @@ const Users = props => {
       )
     }
 
+    const allowDelete = userProps.user.uuid !== user.uuid
+
     return (
       <TableRow>
         <TableCell>{userProps.user.name}</TableCell>
@@ -60,13 +95,15 @@ const Users = props => {
         <TableCell>{userProps.user.isAccountAdmin ? "Yes" : "No"}</TableCell>
         <TableCell>{lastLoginAt}</TableCell>
         <TableCell>
-          <Tooltip title="Delete this user">
-            <IconButton
-              onClick={() => onStartDeleteUser(new UserModel(userProps.user))}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          {allowDelete && (
+            <Tooltip title="Delete this user">
+              <IconButton
+                onClick={() => onStartDeleteUser(new UserModel(userProps.user))}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </TableCell>
       </TableRow>
     )
@@ -89,7 +126,7 @@ const Users = props => {
           </TableHead>
 
           <TableBody>
-            {user.account.users.map((user, idx) => (
+            {accountUsers.map((user, idx) => (
               <User key={idx} user={user} />
             ))}
           </TableBody>
@@ -106,9 +143,17 @@ const Users = props => {
           </Link>{" "}
           and send it to them.
         </Typography>
+
+        <AlertDialog
+          title="Delete user from account"
+          content="Are you sure you want to delete this user? Their synced lists will also be deleted!"
+          show={showDeleteAlert}
+          onOK={onDeleteUser}
+          onClose={onCloseDeleteAlert}
+        />
       </div>
     </Paper>
   )
 }
 
-export default Users
+export default withSnackbar(Users)
