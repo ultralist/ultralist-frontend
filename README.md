@@ -1,6 +1,10 @@
 # Ultralist frontend
 
-testing
+This is the web frontend for Ultralist pro.
 
-follow instructions here: https://stripe.com/docs/stripe-js/react#setup
+It is based upon `create-react-app`.
 
+### Running it
+
+1. `yarn`
+2. `yarn start`
