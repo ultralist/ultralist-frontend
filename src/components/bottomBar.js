@@ -48,7 +48,6 @@ const BottomBar = (props: Props) => {
             onChangeFilter={props.onChangeFilter}
           />
           <div className={classes.grow} />
-          <Button color="inherit">Views</Button>
         </Toolbar>
       </AppBar>
     </div>
