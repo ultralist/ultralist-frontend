@@ -40,12 +40,11 @@ const useStyles = makeStyles({
   },
   outerApiKey: {
     border: "1px solid #aaa",
-    borderRadius: "3px",
-    overflowX: "scroll"
+    borderRadius: "3px"
   },
   apiKey: {
     padding: "5px",
-    maxWidth: "250px",
+    width: "100%",
     fontFamily: "monospace",
     whiteSpace: "nowrap"
   }
@@ -133,7 +132,11 @@ const ApiKeys = props => {
         <TableCell>{props.api_key.name}</TableCell>
         <TableCell>
           <div className={classes.outerApiKey}>
-            <div className={classes.apiKey}>{props.api_key.token}</div>
+            <input
+              className={classes.apiKey}
+              value={props.api_key.token}
+              onFocus={event => event.target.select()}
+            />
           </div>
         </TableCell>
 
