@@ -17,7 +17,7 @@ import {
   Button
 } from "@material-ui/core"
 
-import { Delete as DeleteIcon } from "@material-ui/icons"
+import { DeleteOutlined as DeleteIcon } from "@material-ui/icons"
 import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../shared/storageContext"
@@ -104,6 +104,20 @@ const ApiKeys = props => {
     setShowDeleteAlert(false)
   }
 
+  const DeleteApiKey = props => {
+    if (props.api_key.token === user.token) return null
+
+    return (
+      <Tooltip title="Delete this api key">
+        <IconButton
+          onClick={() => onStartDeleteApiKey(new ApiKeyModel(props.api_key))}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
+    )
+  }
+
   const ApiKey = props => {
     let lastUsedDate = "Never"
 
@@ -122,18 +136,11 @@ const ApiKeys = props => {
             <div className={classes.apiKey}>{props.api_key.token}</div>
           </div>
         </TableCell>
+
         <TableCell>{props.api_key.active ? "True" : "False"}</TableCell>
         <TableCell>{lastUsedDate}</TableCell>
         <TableCell>
-          <Tooltip title="Delete this api key">
-            <IconButton
-              onClick={() =>
-                onStartDeleteApiKey(new ApiKeyModel(props.api_key))
-              }
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          <DeleteApiKey {...props} />
         </TableCell>
       </TableRow>
     )
