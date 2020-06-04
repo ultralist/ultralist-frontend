@@ -62,18 +62,12 @@ const ApiKeys = props => {
     React.useContext(BackendContext)
   )
 
-  const [keys, setKeys] = React.useState([])
+  const [keys, setKeys] = React.useState(user.apiKeys)
 
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
   const [keyToDelete, setKeyToDelete] = React.useState(null)
 
   const [showNewApiKeyModal, setShowNewApiKeyModal] = React.useState(false)
-
-  React.useEffect(() => {
-    backend.getKeys().then(keys => {
-      setKeys(keys.api_keys)
-    })
-  }, [])
 
   const onAddNewApiKey = (key: ApiKeyModel) => {
     backend.createKey(key).then(data => {
