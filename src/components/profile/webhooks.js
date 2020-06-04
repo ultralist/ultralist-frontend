@@ -114,7 +114,6 @@ const Webhooks = props => {
   }
 
   const onStartDisableWebhook = (webhook: WebhookModel) => {
-    console.log("disable webhook")
     setWebhookToDisable(webhook)
     setShowDisableAlert(true)
   }
@@ -135,6 +134,7 @@ const Webhooks = props => {
   }
 
   const onDisableWebhook = () => {
+    webhookToDisable.enabled = false
     backend.updateWebhook(webhookToDisable).then(() => {
       const hook = webhooks.find(h => h.id === webhookToDisable.id)
       hook.enabled = false
@@ -145,6 +145,7 @@ const Webhooks = props => {
   }
 
   const onEnableWebhook = () => {
+    webhookToEnable.enabled = true
     backend.updateWebhook(webhookToEnable).then(() => {
       const hook = webhooks.find(h => h.id === webhookToEnable.id)
       hook.enabled = true
