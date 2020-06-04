@@ -17,7 +17,11 @@ import {
   Button
 } from "@material-ui/core"
 
-import { DeleteOutlined as DeleteIcon } from "@material-ui/icons"
+import {
+  DeleteOutlined as DeleteIcon,
+  PowerOutlined as EnableIcon,
+  PowerOffOutlined as DisableIcon
+} from "@material-ui/icons"
 import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../shared/storageContext"
@@ -64,7 +68,12 @@ const ApiKeys = props => {
   const [keys, setKeys] = React.useState(user.apiKeys)
 
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
+  const [showDisableAlert, setShowDisableAlert] = React.useState(false)
+  const [showEnableAlert, setShowEnableAlert] = React.useState(false)
+
   const [keyToDelete, setKeyToDelete] = React.useState(null)
+  const [keyToDisable, setKeyToDisable] = React.useState(null)
+  const [keyToEnable, setKeyToEnable] = React.useState(null)
 
   const [showNewApiKeyModal, setShowNewApiKeyModal] = React.useState(false)
 
@@ -88,6 +97,38 @@ const ApiKeys = props => {
   const onStartDeleteApiKey = (key: ApiKeyModel) => {
     setKeyToDelete(key)
     setShowDeleteAlert(true)
+  }
+
+  const onStartDisableApiKey = (key: ApiKeyModel) => {
+    setKeyToDisable(key)
+    setShowDisableAlert(true)
+  }
+
+  const onStartEnableApiKey = (key: ApiKeyModel) => {
+    setKeyToEnable(key)
+    setShowEnableAlert(true)
+  }
+
+  const onDisableApiKey = () => {
+    keyToDisable.active = false
+    backend.updateKey(keyToDisable).then(() => {
+      const key = keys.find(h => h.id === keyToDisable.id)
+      key.active = false
+      setKeys(keys)
+      props.enqueueSnackbar("API key disabled!")
+      setShowDisableAlert(false)
+    })
+  }
+
+  const onEnableApiKey = () => {
+    keyToEnable.active = true
+    backend.updateKey(keyToEnable).then(() => {
+      const key = keys.find(h => h.id === keyToEnable.id)
+      key.active = true
+      setKeys(keys)
+      props.enqueueSnackbar("API key enabled!")
+      setShowEnableAlert(false)
+    })
   }
 
   const onDeleteApiKey = () => {
@@ -117,6 +158,30 @@ const ApiKeys = props => {
     )
   }
 
+  const DisableApiKey = props => {
+    if (props.api_key.token === user.token) return null
+
+    return (
+      <Tooltip title="Disable this API key">
+        <IconButton
+          onClick={() => onStartDisableApiKey(new ApiKeyModel(props.api_key))}
+        >
+          <DisableIcon />
+        </IconButton>
+      </Tooltip>
+    )
+  }
+
+  const EnableApiKey = props => (
+    <Tooltip title="Disable this API key">
+      <IconButton
+        onClick={() => onStartEnableApiKey(new ApiKeyModel(props.api_key))}
+      >
+        <EnableIcon />
+      </IconButton>
+    </Tooltip>
+  )
+
   const ApiKey = props => {
     let lastUsedDate = "Never"
 
@@ -143,6 +208,11 @@ const ApiKeys = props => {
         <TableCell>{props.api_key.active ? "True" : "False"}</TableCell>
         <TableCell>{lastUsedDate}</TableCell>
         <TableCell>
+          {props.api_key.active ? (
+            <DisableApiKey {...props} />
+          ) : (
+            <EnableApiKey {...props} />
+          )}
           <DeleteApiKey {...props} />
         </TableCell>
       </TableRow>
@@ -191,6 +261,26 @@ const ApiKeys = props => {
           show={showDeleteAlert}
           onOK={onDeleteApiKey}
           onClose={onCloseDeleteAlert}
+        />
+
+        <AlertDialog
+          title="Disable Api Key"
+          content="Are you sure you wish to disable this API key?"
+          show={showDisableAlert}
+          onOK={onDisableApiKey}
+          onClose={() => {
+            setShowDisableAlert(false)
+          }}
+        />
+
+        <AlertDialog
+          title="Enable API Key"
+          content="Are you sure you wish to enable this API key?"
+          show={showEnableAlert}
+          onOK={onEnableApiKey}
+          onClose={() => {
+            setShowEnableAlert(false)
+          }}
         />
 
         <Button

@@ -26,7 +26,7 @@ import {
   Typography
 } from "@material-ui/core"
 
-import { Delete as DeleteIcon } from "@material-ui/icons"
+import { DeleteOutlined as DeleteIcon } from "@material-ui/icons"
 
 const useStyles = makeStyles({
   section: {
