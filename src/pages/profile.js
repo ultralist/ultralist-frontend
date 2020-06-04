@@ -8,6 +8,7 @@ import { withSnackbar } from "notistack"
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import ApiKeys from "../components/profile/apiKeys"
+import Webhooks from "../components/profile/webhooks"
 import Users from "../components/profile/users"
 
 import {
@@ -255,6 +256,8 @@ const Plan = (props: Props) => {
         <Users />
 
         <ApiKeys />
+
+        <Webhooks />
 
         <PlanSection />
       </Container>

@@ -143,6 +143,13 @@ const ApiKeys = props => {
     <Paper elevation={2} className={classes.section}>
       <div className={classes.margined}>
         <Typography variant="h4">Your Api Keys</Typography>
+        <Typography className={classes.section}>
+          Check out our sweet{" "}
+          <a target="_blank" href="https://api-docs.ultralist.io">
+            API docs
+          </a>{" "}
+          to get started using our API.
+        </Typography>
 
         <Table className={classes.section}>
           <TableHead>
