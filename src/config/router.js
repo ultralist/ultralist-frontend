@@ -8,6 +8,7 @@ import TodoList from "../pages/todoList"
 import Login from "../pages/login"
 import Logout from "../pages/logout"
 import Auth from "../pages/auth"
+import CLIAuth from "../pages/cliAuth"
 import Profile from "../pages/profile"
 import LoadTodoLists from "../pages/loadTodoLists"
 
@@ -23,6 +24,7 @@ const Routes = () => (
       <Route path="/signup" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/auth" component={Auth} />
+      <Route path="/cli_auth" component={CLIAuth} />
       <Route path="/profile" component={Profile} />
       <Route path="/loading" component={LoadTodoLists} />
 

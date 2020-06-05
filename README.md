@@ -17,27 +17,32 @@ It is based upon `create-react-app`.
 1. head to https://api.ultralist.io/cli_auth
 1. set `cli_auth=true` in backend session
 2. redirect to `/signup?cli_auth=true` page
-3. oauth flow to backend, create CLI and web keys
-4. from backend, redirect to CLI.  need to pass both CLI + web tokens
-5. CLI app stores CLI token
-6. from CLI - redirects back to web view, passing web token along with it.  user is then signed into both places
+3. oauth flow to backend, web keys
+4. from backend, redirect to frontend (`/auth`).  pass web token, `cli_auth`, and `signup` codes.
+5. frontend requests `cli_token` via an authenticated request to api.
+6. frontend redirects to CLI, passing `cli_token`.
+7. CLI redirects back to frontend (`/todolist?cli_auth_completed=true`). 
+8. frontend displays message saying auth is complete, and they are signed up.
 
 **If you have an account but are not logged in**
 
 1. head to https://api.ultralist.io/cli_auth
 1. set `cli_auth=true` in backend session
 2. redirect to `/signup?cli_auth=true` page
-3. oauth flow to backend, creates CLI key. web key is already created.
-4. from backend, redirect to CLI.  need to pass both CLI + web tokens
-5. CLI app stores CLI token
-6. from CLI - redirects back to web view, passing web token along with it.  user is then signed into both places
+3. oauth flow to backend, web keys
+4. from backend, redirect to frontend (`/auth`).  pass web token, `cli_auth`, and `signup` codes.
+5. frontend responds to `cli_auth` param and requests `cli_token` via an authenticated request to api.
+6. frontend redirects to CLI, passing `cli_token`.
+7. CLI redirects back to frontend (`todolist?cli_auth_completed=true`). 
+8. frontend displays message saying auth is complete.
 
 **If you are logged in**
 
-1. head to https://api.ultralist.io/cli_auth
+1. head to https://api.ultralist.io/cli_auth to set `cli_auth` session flag (to be used later)
 1. set `cli_auth=true` in backend session
 2. redirect to `/signup?cli_auth=true` page
-3. from webapp - redirect to backend - backend creates or re-uses CLI key.  web key is already created.
-4. from backend - redirect to CLI web server that ultralist CLI pops up.  need to pass both CLI + web tokens
-5. CLI stores CLI token
-6. from CLI - redirects back to web view, passing web token along with it.  user is then signed into both places
+5. frontend responds to `cli_auth` param and requests `cli_token` via an authenticated request to api.
+6. frontend redirects to CLI, passing `cli_token`.
+7. CLI redirects back to frontend (`todolist?cli_auth_completed=true`). 
+frontend displays message saying auth is complete.
+
