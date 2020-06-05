@@ -18,6 +18,7 @@ import Utils from "../utils"
 
 const useStyles = makeStyles({
   middle: {
+    backgroundColor: "#f5f5f5",
     paddingTop: 100,
     display: "flex",
     alignItems: "center",
