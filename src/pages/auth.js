@@ -20,6 +20,9 @@ const Auth = () => {
     userStorage
   )
 
+  userStorage.setCLIAuth(utils.getUrlParam("cli_auth") === "true")
+  userStorage.setSignup(utils.getUrlParam("signup") === "true")
+
   const [user, setUser] = React.useState(null)
 
   React.useEffect(() => {
