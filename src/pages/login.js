@@ -10,7 +10,6 @@ import { makeStyles } from "@material-ui/styles"
 import TopBar from "../components/topBar"
 
 import { backendUrl } from "../constants"
-import utils from "../utils"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
@@ -43,8 +42,7 @@ const Login = props => {
   const classes = useStyles()
   const userStorage = new UserStorage(React.useContext(StorageContext))
 
-  userStorage.setCLIAuth(utils.getUrlParam("cli_auth") === "true")
-  userStorage.setSignup(utils.getUrlParam("signup") === "true")
+  userStorage.setCLIAuth(Utils.getUrlParam("cli_auth") === "true")
 
   if (userStorage.isUserLoggedIn()) {
     if (userStorage.getCLIAuth()) {
@@ -55,12 +53,22 @@ const Login = props => {
     return null
   }
 
-  const isSignup = props.location.pathname === "/signup"
+  const isSignup = props.location.pathname.startsWith("/signup")
+  userStorage.setSignup(isSignup)
+
   const inviteAccountName = Utils.getUrlParam("account_name")
   const inviteCode = Utils.getUrlParam("invite_code")
-  const params = `cli_auth=${utils.getUrlParam(
-    "cli_auth"
-  )}&signup=${utils.getUrlParam("signup")}`
+
+  const params = () => {
+    const ret = []
+    if (Utils.getUrlParam("cli_auth")) {
+      ret.push(`cli_auth=${Utils.getUrlParam("cli_auth")}`)
+    }
+    if (Utils.getUrlParam("signup")) {
+      ret.push(`signup=${Utils.getUrlParam("signup")}`)
+    }
+    return ret.join("&")
+  }
 
   const SignupText = () => {
     if (inviteAccountName) {
@@ -77,7 +85,7 @@ const Login = props => {
           {/* Ultralist includes a full 14 day free trial. */}
           {/* <br /> */}
           Already have an account?
-          <Link to={`/login?${params}`}>Login here.</Link>
+          <Link to={`/login?${params()}`}>Login here.</Link>
         </Typography>
       )
     }
@@ -86,7 +94,7 @@ const Login = props => {
   const LoginText = () => (
     <Typography className={classes.margined} marked="center" align="center">
       Don't have an account yet?
-      <Link to={`/signup/${params}`}>Signup here!</Link>
+      <Link to={`/signup?${params()}`}>Signup here!</Link>
     </Typography>
   )
 

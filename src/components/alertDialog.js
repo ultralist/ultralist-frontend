@@ -13,8 +13,9 @@ type Props = {
   show: boolean,
   title: string,
   content: string,
+  showCancel?: boolean,
   onOK: () => void,
-  onClose: () => void
+  onClose?: () => void
 }
 
 const AlertDialog = (props: Props) => {
@@ -24,7 +25,7 @@ const AlertDialog = (props: Props) => {
       <DialogContent>{props.content}</DialogContent>
 
       <DialogActions>
-        <Button onClick={props.onClose}>Cancel</Button>
+        {props.showCancel && <Button onClick={props.onClose}>Cancel</Button>}
         <Button onClick={props.onOK}>OK</Button>
       </DialogActions>
     </Dialog>

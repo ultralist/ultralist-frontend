@@ -13,6 +13,8 @@ import StorageContext from "../shared/storageContext"
 import TodoListStorage from "../shared/storage/todoListStorage"
 import UserStorage from "../shared/storage/userStorage"
 
+import Utils from "../utils"
+
 type Props = {
   history: any
 }
@@ -29,6 +31,9 @@ const LoadTodoLists = (props: Props) => {
   const classes = useStyles()
   const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
   const userStorage = new UserStorage(React.useContext(StorageContext))
+  userStorage.setCLIAuthCompleted(
+    Utils.getUrlParam("cli_auth_completed") === "true"
+  )
 
   const user = userStorage.loadUser()
 

@@ -20,6 +20,9 @@ import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
 import BottomBar from "../bottomBar"
 
+import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
+import WelcomeDialog from "../initialDialogs/welcomeDialog"
+
 type Props = {
   todoList: TodoListModel,
   onAddTodoItem: (todoItem: TodoItemModel) => void,
@@ -131,6 +134,9 @@ const TodoList = (props: Props) => {
           />
         ))}
       </Container>
+
+      <CLIAuthCompletedDialog />
+      <WelcomeDialog />
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
