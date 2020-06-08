@@ -44,6 +44,14 @@ const Login = props => {
 
   userStorage.setCLIAuth(Utils.getUrlParam("cli_auth") === "true")
 
+  userStorage.setSlackAppInstalled(
+    Utils.getUrlParam("slack_app_installed") === "true"
+  )
+
+  if (userStorage.getSlackAppInstalled()) {
+    userStorage.setSlackCode(Utils.getUrlParam("code"))
+  }
+
   if (userStorage.isUserLoggedIn()) {
     if (userStorage.getCLIAuth()) {
       props.history.push("/cli_auth")
