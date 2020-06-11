@@ -22,6 +22,8 @@ import BottomBar from "../bottomBar"
 
 import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
+import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
+import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
 
 type Props = {
   todoList: TodoListModel,
@@ -137,6 +139,8 @@ const TodoList = (props: Props) => {
 
       <CLIAuthCompletedDialog />
       <WelcomeDialog />
+      <SlackAppInstalledDialog />
+      <SlackAddUserDialog />
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />

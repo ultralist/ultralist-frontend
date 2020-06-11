@@ -13,8 +13,9 @@ import { backendUrl } from "../constants"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
+import SlackStorage from "../shared/storage/slackStorage"
 
-import Utils from "../utils"
+import utils from "../utils"
 
 const useStyles = makeStyles({
   middle: {
@@ -40,9 +41,27 @@ const useStyles = makeStyles({
 
 const Login = props => {
   const classes = useStyles()
-  const userStorage = new UserStorage(React.useContext(StorageContext))
+  const storageContext = React.useContext(StorageContext)
+  const userStorage = new UserStorage(storageContext)
 
-  userStorage.setCLIAuth(Utils.getUrlParam("cli_auth") === "true")
+  userStorage.setCLIAuth(utils.getUrlParam("cli_auth") === "true")
+
+  userStorage.setSlackAppInstalled(
+    utils.getUrlParam("slack_app_installed") === "true"
+  )
+
+  if (utils.getUrlParam("slack_user_auth") === "true") {
+    const slackStorage = new SlackStorage(storageContext)
+    slackStorage.setSlackAuthParams()
+  }
+
+  userStorage.setSlackAppInstalled(
+    utils.getUrlParam("slack_app_installed") === "true"
+  )
+
+  if (userStorage.getSlackAppInstalled()) {
+    userStorage.setSlackCode(utils.getUrlParam("code"))
+  }
 
   if (userStorage.isUserLoggedIn()) {
     if (userStorage.getCLIAuth()) {
@@ -56,16 +75,16 @@ const Login = props => {
   const isSignup = props.location.pathname.startsWith("/signup")
   userStorage.setSignup(isSignup)
 
-  const inviteAccountName = Utils.getUrlParam("account_name")
-  const inviteCode = Utils.getUrlParam("invite_code")
+  const inviteAccountName = utils.getUrlParam("account_name")
+  const inviteCode = utils.getUrlParam("invite_code")
 
   const params = () => {
     const ret = []
-    if (Utils.getUrlParam("cli_auth")) {
-      ret.push(`cli_auth=${Utils.getUrlParam("cli_auth")}`)
+    if (utils.getUrlParam("cli_auth")) {
+      ret.push(`cli_auth=${utils.getUrlParam("cli_auth")}`)
     }
-    if (Utils.getUrlParam("signup")) {
-      ret.push(`signup=${Utils.getUrlParam("signup")}`)
+    if (utils.getUrlParam("signup")) {
+      ret.push(`signup=${utils.getUrlParam("signup")}`)
     }
     return ret.join("&")
   }
