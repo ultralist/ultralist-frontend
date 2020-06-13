@@ -1,6 +1,7 @@
 // @flow
 import React from "react"
 import * as MarkdownIt from "markdown-it"
+import * as mila from "markdown-it-link-attributes"
 
 import { ListItem, IconButton, Typography } from "@material-ui/core"
 import { withStyles } from "@material-ui/core/styles"
@@ -16,7 +17,8 @@ type Props = {
   }
 }
 
-const markdownIt = new MarkdownIt()
+const markdownIt = new MarkdownIt({ linkify: true })
+markdownIt.use(mila, { attrs: { target: "_blank" } })
 
 const styles = theme => ({
   noteText: {
