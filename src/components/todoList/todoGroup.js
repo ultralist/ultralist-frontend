@@ -21,6 +21,9 @@ type Props = {
 const useStyles = makeStyles({
   cursor: {
     cursor: "pointer"
+  },
+  subheader: {
+    position: "static"
   }
 })
 
