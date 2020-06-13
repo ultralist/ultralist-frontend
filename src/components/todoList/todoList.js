@@ -114,7 +114,7 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Container maxWidth="md" className={classes.mainContainer}>
+      <Container className={classes.mainContainer}>
         <Typography component="h4" variant="h4" className={classes.listName}>
           {props.todoList.name}
         </Typography>
@@ -126,16 +126,18 @@ const TodoList = (props: Props) => {
           />
         </div>
 
-        {groups.map(g => (
-          <TodoGroup
-            key={g.uuid}
-            selectedTodoUUID={selectedTodoUUID}
-            onChange={onChangeTodo}
-            onDelete={onDeleteTodo}
-            onSubjectClick={onSubjectClick}
-            group={g}
-          />
-        ))}
+        <Container maxWidth="md">
+          {groups.map(g => (
+            <TodoGroup
+              key={g.uuid}
+              selectedTodoUUID={selectedTodoUUID}
+              onChange={onChangeTodo}
+              onDelete={onDeleteTodo}
+              onSubjectClick={onSubjectClick}
+              group={g}
+            />
+          ))}
+        </Container>
       </Container>
 
       <CLIAuthCompletedDialog />
