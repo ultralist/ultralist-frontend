@@ -114,7 +114,7 @@ const TodoList = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Container className={classes.mainContainer}>
+      <div className={classes.mainContainer}>
         <Typography component="h4" variant="h4" className={classes.listName}>
           {props.todoList.name}
         </Typography>
@@ -138,7 +138,7 @@ const TodoList = (props: Props) => {
             />
           ))}
         </Container>
-      </Container>
+      </div>
 
       <CLIAuthCompletedDialog />
       <WelcomeDialog />
