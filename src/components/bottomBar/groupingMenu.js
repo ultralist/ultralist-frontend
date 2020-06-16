@@ -6,7 +6,9 @@ import Button from "@material-ui/core/Button"
 
 import FilterModel from "../../shared/models/filter"
 
-import { BY_ALL, BY_CONTEXT, BY_PROJECT } from "../../constants"
+const BY_ALL = "all"
+const BY_CONTEXT = "context"
+const BY_PROJECT = "project"
 
 type Props = {
   currentFilter: FilterModel,
