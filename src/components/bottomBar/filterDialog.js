@@ -16,6 +16,8 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
 import { makeStyles } from "@material-ui/styles"
 
+import { debounce } from "debounce"
+
 import FilterModel from "../../shared/models/filter"
 import FilterChips from "../todoList/filterChips"
 
@@ -43,6 +45,9 @@ const FilterDialog = (props: Props) => {
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
+  const debouncedOnChangeFilter = React.useRef(
+    debounce(props.onChangeFilter, 250)
+  )
 
   const [currentFilterAttrs, setCurrentFilter] = useState(
     props.currentFilter.toJSON()
@@ -64,13 +69,11 @@ const FilterDialog = (props: Props) => {
     ev.preventDefault()
     currentFilter.subjectContains = ev.target.value
     update()
-    setCurrentFilter(currentFilter.toJSON())
-    props.onChangeFilter(currentFilter)
   }
 
   const update = () => {
     setCurrentFilter(currentFilter.toJSON())
-    props.onChangeFilter(currentFilter)
+    debouncedOnChangeFilter.current(currentFilter)
   }
 
   const onChangeCompleted = () => {
