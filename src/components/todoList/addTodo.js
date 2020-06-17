@@ -34,7 +34,7 @@ const AddTodo = (props: Props) => {
   const todoItem = new TodoItemModel({})
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
-  modalStorage.setModalIsOpen(modalOpen)
+  modalStorage.setModalIsOpen(modalOpen, "addTodo")
 
   const toggleModalOpen = () => {
     setModalOpen(!modalOpen)

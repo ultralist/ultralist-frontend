@@ -44,7 +44,7 @@ const CreateTodoList = (props: Props) => {
     setIsOpen(!isOpen)
   }
 
-  modalStorage.setModalIsOpen(isOpen)
+  modalStorage.setModalIsOpen(isOpen, "manageViews")
 
   const createList = () => {
     const newList = new TodoListModel({ name: nameRef.current.value })

@@ -20,6 +20,7 @@ type Props = {
 const EditTodo = (props: Props) => {
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
+  console.log("setting modal is open to ", props.show)
   modalStorage.setModalIsOpen(props.show, "editTodoItemModal")
 
   const onChange = (todoItem: TodoItemModel) => {

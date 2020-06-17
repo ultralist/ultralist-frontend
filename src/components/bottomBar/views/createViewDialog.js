@@ -58,7 +58,7 @@ const CreateView = (props: Props) => {
     new UserStorage(React.useContext(StorageContext))
   )
 
-  modalStorage.setModalIsOpen(props.show)
+  modalStorage.setModalIsOpen(props.show, "createViewDialog")
 
   const onCreateView = () => {
     viewsBackend

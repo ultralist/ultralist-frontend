@@ -68,7 +68,7 @@ const FilterDialog = (props: Props) => {
 
   const currentFilter = new FilterModel(currentFilterAttrs)
 
-  modalStorage.setModalIsOpen(isOpen)
+  modalStorage.setModalIsOpen(isOpen, "filterDialog")
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
