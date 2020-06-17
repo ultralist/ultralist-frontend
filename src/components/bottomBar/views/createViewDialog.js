@@ -14,12 +14,15 @@ import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../../shared/storageContext"
 import ModalStorage from "../../../shared/storage/modalStorage"
+import UserStorage from "../../../shared/storage/userStorage"
+
 import UserModel from "../../../shared/models/user"
 import ViewModel from "../../../shared/models/view"
 import FilterModel from "../../../shared/models/filter"
 
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
+import UserBackend from "../../../shared/backend/userBackend"
 
 type Props = {
   filter: FilterModel,
@@ -49,6 +52,11 @@ const CreateView = (props: Props) => {
     props.user.token,
     React.useContext(BackendContext)
   )
+  const userBackend = new UserBackend(
+    props.user.token,
+    React.useContext(BackendContext),
+    new UserStorage(React.useContext(StorageContext))
+  )
 
   modalStorage.setModalIsOpen(props.show)
 
@@ -67,6 +75,8 @@ const CreateView = (props: Props) => {
       )
       .then(() => {
         props.enqueueSnackbar("View created!")
+        setViewName("")
+        userBackend.getUser()
         props.onClose()
       })
   }
