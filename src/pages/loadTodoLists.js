@@ -59,8 +59,6 @@ const LoadTodoLists = (props: Props) => {
       </div>
     </React.Fragment>
   )
-
-  return <h1>Loading...</h1>
 }
 
 export default LoadTodoLists
