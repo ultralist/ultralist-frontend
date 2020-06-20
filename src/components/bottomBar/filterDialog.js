@@ -13,7 +13,7 @@ import Checkbox from "@material-ui/core/Checkbox"
 import Switch from "@material-ui/core/Switch"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
-import { Divider, Typography } from "@material-ui/core"
+import { Divider } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 
@@ -222,15 +222,6 @@ const FilterDialog = (props: Props) => {
               </React.Fragment>
             }
           />
-
-          <Divider />
-          <Typography>Save this as a view</Typography>
-
-          <div className={classes.saveView}>
-            <TextField placeholder="View name" />
-            <FormControlLabel control={<Checkbox />} label="Make default" />
-            <Button>Save view</Button>
-          </div>
         </div>
 
         <DialogActions>
