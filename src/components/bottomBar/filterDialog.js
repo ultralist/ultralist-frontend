@@ -7,13 +7,14 @@ import DialogActions from "@material-ui/core/DialogActions"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Input from "@material-ui/core/Input"
 import InputLabel from "@material-ui/core/InputLabel"
-import Divider from "@material-ui/core/Divider"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import Checkbox from "@material-ui/core/Checkbox"
 import Switch from "@material-ui/core/Switch"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import TextField from "@material-ui/core/TextField"
+import { Divider, Typography } from "@material-ui/core"
+
 import { makeStyles } from "@material-ui/styles"
 
 import { debounce } from "debounce"
@@ -23,6 +24,7 @@ import FilterChips from "../todoList/filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import ModalStorage from "../../shared/storage/modalStorage"
+import UserStorage from "../../shared/storage/userStorage"
 
 type Props = {
   currentFilter: FilterModel,
@@ -34,10 +36,14 @@ const useStyles = makeStyles({
     margin: 20
   },
   searchBox: {
-    width: "90%"
+    width: "100%"
   },
   dueLabel: {
     margin: 15
+  },
+  saveView: {
+    display: "flex",
+    flexDirection: "row"
   }
 })
 
@@ -49,6 +55,9 @@ const FilterDialog = (props: Props) => {
     debounce(props.onChangeFilter, 250)
   )
 
+  const userStorage = new UserStorage(React.useContext(StorageContext))
+  const user = userStorage.loadUser()
+
   const [currentFilterAttrs, setCurrentFilter] = useState(
     props.currentFilter.toJSON()
   )
@@ -59,7 +68,7 @@ const FilterDialog = (props: Props) => {
 
   const currentFilter = new FilterModel(currentFilterAttrs)
 
-  modalStorage.setModalIsOpen(isOpen)
+  modalStorage.setModalIsOpen(isOpen, "filterDialog")
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
@@ -213,6 +222,15 @@ const FilterDialog = (props: Props) => {
               </React.Fragment>
             }
           />
+
+          <Divider />
+          <Typography>Save this as a view</Typography>
+
+          <div className={classes.saveView}>
+            <TextField placeholder="View name" />
+            <FormControlLabel control={<Checkbox />} label="Make default" />
+            <Button>Save view</Button>
+          </div>
         </div>
 
         <DialogActions>

@@ -3,13 +3,13 @@ import React from "react"
 
 import AppBar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
-import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/styles"
 
 import FilterModel from "../shared/models/filter"
 
 import GroupingMenu from "./bottomBar/groupingMenu"
 import FilterDialog from "./bottomBar/filterDialog"
+import ViewsMenu from "./bottomBar/viewsMenu"
 
 const useStyles = makeStyles({
   root: {
@@ -48,6 +48,11 @@ const BottomBar = (props: Props) => {
             onChangeFilter={props.onChangeFilter}
           />
           <div className={classes.grow} />
+
+          <ViewsMenu
+            currentFilter={props.currentFilter}
+            onChangeFilter={props.onChangeFilter}
+          />
         </Toolbar>
       </AppBar>
     </div>
