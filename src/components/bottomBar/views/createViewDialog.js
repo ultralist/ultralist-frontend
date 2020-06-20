@@ -17,7 +17,6 @@ import ModalStorage from "../../../shared/storage/modalStorage"
 import UserStorage from "../../../shared/storage/userStorage"
 
 import UserModel from "../../../shared/models/user"
-import ViewModel from "../../../shared/models/view"
 import FilterModel from "../../../shared/models/filter"
 
 import BackendContext from "../../../shared/backendContext"
@@ -63,7 +62,7 @@ const CreateView = (props: Props) => {
   const onCreateView = () => {
     viewsBackend
       .createView(
-        new ViewModel({
+        new FilterModel({
           name: viewName,
           subjectContains: props.filter.subjectContains,
           archived: props.filter.archived,

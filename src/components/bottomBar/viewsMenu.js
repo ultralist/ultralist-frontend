@@ -6,9 +6,9 @@ import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
 
 import FilterModel from "../../shared/models/filter"
-import ViewModel from "../../shared/models/view"
 
 import CreateViewDialog from "./views/createViewDialog"
+import ManageViewsDialog from "./views/manageViewsDialog"
 
 type Props = {
   currentFilter: FilterModel,
@@ -18,6 +18,9 @@ type Props = {
 const ViewsMenu = (props: Props) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [showCreateViewDialog, setShowCreateViewDialog] = React.useState(false)
+  const [showManageViewsDialog, setShowManageViewsDialog] = React.useState(
+    false
+  )
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const user = userStorage.loadUser()
@@ -30,19 +33,28 @@ const ViewsMenu = (props: Props) => {
     setAnchorEl(null)
   }
 
-  const onChooseView = (view: ViewModel) => {
-    const vm = new ViewModel(view)
+  const onChooseView = (view: FilterModel) => {
+    const vm = new FilterModel(view)
     handleClose()
     props.onChangeFilter(vm)
   }
 
   const onShowCreateViewDialog = () => {
     setShowCreateViewDialog(true)
+    handleClose()
+  }
+
+  const onShowManageViewsDIalog = () => {
+    setShowManageViewsDialog(true)
+    handleClose()
   }
 
   const onCloseCreateViewDialog = () => {
     setShowCreateViewDialog(false)
-    handleClose()
+  }
+
+  const onCloseManageViewsDialog = () => {
+    setShowManageViewsDialog(false)
   }
 
   return (
@@ -52,17 +64,24 @@ const ViewsMenu = (props: Props) => {
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={onShowCreateViewDialog}>Save current view</MenuItem>
-        <MenuItem>Manage views...</MenuItem>
-        <Divider />
-        {user.views.map(v => (
-          <MenuItem onClick={() => onChooseView(v)}>{v.name}</MenuItem>
-        ))}
+        <MenuItem onClick={onShowManageViewsDIalog}>Manage views...</MenuItem>
+        {user.views.length > 0 && <Divider />}
+        {user.views.length > 0 &&
+          user.views.map(v => (
+            <MenuItem onClick={() => onChooseView(v)}>{v.name}</MenuItem>
+          ))}
       </Menu>
       <CreateViewDialog
         filter={props.currentFilter}
         user={user}
         show={showCreateViewDialog}
         onClose={onCloseCreateViewDialog}
+      />
+      <ManageViewsDialog
+        user={user}
+        views={user.views}
+        show={showManageViewsDialog}
+        onClose={onCloseManageViewsDialog}
       />
     </React.Fragment>
   )
