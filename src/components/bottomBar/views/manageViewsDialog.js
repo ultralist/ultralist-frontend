@@ -18,7 +18,11 @@ import {
   Typography
 } from "@material-ui/core"
 
-import { DeleteOutlined as DeleteIcon } from "@material-ui/icons"
+import {
+  DeleteOutlined as DeleteIcon,
+  StarBorder as SetDefaultIcon,
+  Star as IsDefaultIcon
+} from "@material-ui/icons"
 
 import UserModel from "../../../shared/models/user"
 
@@ -52,6 +56,11 @@ const ManageViewsDialog = (props: Props) => {
     props.views.map(v => new FilterModel(v))
   )
 
+  // ridiculous hack to get new views to show up
+  React.useEffect(() => {
+    setViews(props.views.map(v => new FilterModel(v)))
+  }, [props.views.length])
+
   const userBackend = new UserBackend(
     props.user.token,
     React.useContext(BackendContext),
@@ -76,6 +85,17 @@ const ManageViewsDialog = (props: Props) => {
     })
   }
 
+  const onSetDefault = (view: FilterModel) => {
+    views.forEach(v => (v.isDefault = false))
+    const arrayView = views.find(v => v.id === view.id)
+    arrayView.isDefault = true
+    setViews([...views])
+    viewsBackend.updateView(arrayView).then(() => {
+      props.enqueueSnackbar("Default view updated.")
+      userBackend.getUser()
+    })
+  }
+
   return (
     <React.Fragment>
       <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.show}>
@@ -86,6 +106,12 @@ const ManageViewsDialog = (props: Props) => {
             <React.Fragment>
               <ListItem key={idx}>
                 <ListItemIcon>
+                  <Tooltip title="Set as default">
+                    <IconButton onClick={() => onSetDefault(view)}>
+                      {view.isDefault ? <IsDefaultIcon /> : <SetDefaultIcon />}
+                    </IconButton>
+                  </Tooltip>
+
                   <Tooltip title="Delete this view">
                     <IconButton onClick={() => onStartDeleteView(view)}>
                       <DeleteIcon />
