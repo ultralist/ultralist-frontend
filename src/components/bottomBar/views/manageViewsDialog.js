@@ -105,19 +105,17 @@ const ManageViewsDialog = (props: Props) => {
           {views.map((view, idx) => (
             <React.Fragment>
               <ListItem key={idx}>
-                <ListItemIcon>
-                  <Tooltip title="Set as default">
-                    <IconButton onClick={() => onSetDefault(view)}>
-                      {view.isDefault ? <IsDefaultIcon /> : <SetDefaultIcon />}
-                    </IconButton>
-                  </Tooltip>
+                <Tooltip title="Set as default">
+                  <IconButton onClick={() => onSetDefault(view)}>
+                    {view.isDefault ? <IsDefaultIcon /> : <SetDefaultIcon />}
+                  </IconButton>
+                </Tooltip>
 
-                  <Tooltip title="Delete this view">
-                    <IconButton onClick={() => onStartDeleteView(view)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </ListItemIcon>
+                <Tooltip title="Delete this view">
+                  <IconButton onClick={() => onStartDeleteView(view)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
 
                 <ListItemText>
                   <Typography>{view.name}</Typography>

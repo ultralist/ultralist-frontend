@@ -162,6 +162,7 @@ const TodoListApp = (props: Props) => {
         </TopBar>
 
         <TodoList
+          user={user}
           todoList={todoList}
           onAddTodoItem={onAddTodoItem}
           onChangeTodoItem={onChangeTodoItem}

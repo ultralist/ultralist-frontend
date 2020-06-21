@@ -10,6 +10,7 @@ import { withSnackbar } from "notistack"
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
 import FilterModel from "../../shared/models/filter"
+import UserModel from "../../shared/models/user"
 import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
@@ -27,6 +28,7 @@ import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
 
 type Props = {
   todoList: TodoListModel,
+  user: UserModel,
   onAddTodoItem: (todoItem: TodoItemModel) => void,
   onChangeTodoItem: (todoItem: TodoItemModel) => void,
   onDeleteTodoItem: (todoItem: TodoItemModel) => void
@@ -53,9 +55,13 @@ const TodoList = (props: Props) => {
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
 
-  const [filterModelAttrs, setFilterModelAttrs] = useState(
-    filterStorage.loadFilter().toJSON()
-  )
+  const [filterModelAttrs, setFilterModelAttrs] = useState(() => {
+    const filterFromStorage = filterStorage.loadFilter()
+    if (!filterFromStorage.isEmpty()) return filterFromStorage
+
+    return props.user.defaultFilter()
+  })
+
   const filterModel = new FilterModel(filterModelAttrs)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
