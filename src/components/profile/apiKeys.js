@@ -198,6 +198,7 @@ const ApiKeys = props => {
         <TableCell>
           <div className={classes.outerApiKey}>
             <input
+              readOnly
               className={classes.apiKey}
               value={props.api_key.token}
               onFocus={event => event.target.select()}

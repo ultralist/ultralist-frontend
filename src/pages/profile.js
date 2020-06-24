@@ -7,9 +7,11 @@ import { withSnackbar } from "notistack"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
+
 import ApiKeys from "../components/profile/apiKeys"
-import Webhooks from "../components/profile/webhooks"
+import Profile from "../components/profile/profile"
 import Users from "../components/profile/users"
+import Webhooks from "../components/profile/webhooks"
 
 import {
   Dialog,
@@ -217,16 +219,6 @@ const Plan = (props: Props) => {
     </React.Fragment>
   )
 
-  const ProfileSection = () => {
-    return (
-      <Paper elevation={2} className={classes.section}>
-        <div className={classes.margined}>
-          <Typography variant="h4">Your Profile</Typography>
-        </div>
-      </Paper>
-    )
-  }
-
   const PlanSection = () => {
     return (
       <Paper elevation={2} className={classes.section}>
@@ -251,14 +243,10 @@ const Plan = (props: Props) => {
       </TopBar>
 
       <Container maxWidth="lg">
-        <ProfileSection />
-
+        <Profile user={user} />
         <Users />
-
         <ApiKeys />
-
         <Webhooks />
-
         <PlanSection />
       </Container>
     </React.Fragment>
