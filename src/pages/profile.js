@@ -128,7 +128,11 @@ const Plan = (props: Props) => {
         <DialogContent>
           <p>
             Payments are handled by
-            <a target="_blank" href="https://stripe.com">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://stripe.com"
+            >
               Stripe
             </a>
             .

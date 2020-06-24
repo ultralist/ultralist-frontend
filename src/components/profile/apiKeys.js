@@ -226,7 +226,11 @@ const ApiKeys = props => {
         <Typography variant="h4">Your Api Keys</Typography>
         <Typography className={classes.section}>
           Check out our sweet{" "}
-          <a target="_blank" href="https://api-docs.ultralist.io">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://api-docs.ultralist.io"
+          >
             API docs
           </a>{" "}
           to get started using our API.

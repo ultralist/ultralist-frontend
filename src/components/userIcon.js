@@ -11,7 +11,6 @@ import { Redirect, Link } from "react-router-dom"
 
 import StorageContext from "../shared/storageContext"
 import UserStorage from "../shared/storage/userStorage"
-import utils from "../utils"
 
 const useStyles = makeStyles(theme => {
   return {
