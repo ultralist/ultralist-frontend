@@ -112,7 +112,7 @@ const Users = props => {
   return (
     <Paper elevation={2} className={classes.section}>
       <div className={classes.margined}>
-        <Typography variant="h4">Account Users</Typography>
+        <Typography variant="h5">Account Users</Typography>
 
         <Table className={classes.section}>
           <TableHead>

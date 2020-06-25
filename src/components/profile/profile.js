@@ -68,7 +68,7 @@ const Profile = props => {
   return (
     <Paper elevation={2} className={classes.section}>
       <div className={classes.margined}>
-        <Typography variant="h4">Your Profile</Typography>
+        <Typography variant="h5">Your Profile</Typography>
 
         <div className={classes.flexed}>
           <TextField label="Name" value={name} onChange={onChangeName} />

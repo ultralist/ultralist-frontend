@@ -10,6 +10,7 @@ import UserIcon from "../components/userIcon"
 
 import ApiKeys from "../components/profile/apiKeys"
 import Profile from "../components/profile/profile"
+import SlackUsers from "../components/profile/slackUsers"
 import Users from "../components/profile/users"
 import Webhooks from "../components/profile/webhooks"
 
@@ -227,7 +228,7 @@ const Plan = (props: Props) => {
     return (
       <Paper elevation={2} className={classes.section}>
         <div className={classes.margined}>
-          <Typography variant="h4">Your plan</Typography>
+          <Typography variant="h5">Your plan</Typography>
 
           {user.account.status === "trialing" && <TrialingText />}
           {user.account.status === "paid" && <PaidText />}
@@ -249,6 +250,7 @@ const Plan = (props: Props) => {
       <Container maxWidth="lg">
         <Profile user={user} />
         <Users />
+        <SlackUsers user={user} />
         <ApiKeys />
         <Webhooks />
         <PlanSection />

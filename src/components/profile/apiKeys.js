@@ -223,7 +223,7 @@ const ApiKeys = props => {
   return (
     <Paper elevation={2} className={classes.section}>
       <div className={classes.margined}>
-        <Typography variant="h4">Your Api Keys</Typography>
+        <Typography variant="h5">Your Api Keys</Typography>
         <Typography className={classes.section}>
           Check out our sweet{" "}
           <a

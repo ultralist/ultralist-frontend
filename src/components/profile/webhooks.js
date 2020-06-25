@@ -222,7 +222,7 @@ const Webhooks = props => {
   return (
     <Paper elevation={2} className={classes.section}>
       <div className={classes.margined}>
-        <Typography variant="h4">Your Webhooks</Typography>
+        <Typography variant="h5">Your Webhooks</Typography>
         <Typography>
           You can set up webhooks to alert other systems of when something in
           your Ultralist account changes.
