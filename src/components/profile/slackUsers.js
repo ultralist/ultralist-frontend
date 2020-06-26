@@ -1,10 +1,10 @@
 // @flow
 import React from "react"
+import { withSnackbar } from "notistack"
 
 import { makeStyles } from "@material-ui/styles"
 
 import {
-  Button,
   IconButton,
   Paper,
   Table,
@@ -20,6 +20,12 @@ import { Edit as EditIcon } from "@material-ui/icons"
 
 import StorageContext from "../../shared/storageContext"
 import TodoListStorage from "../../shared/storage/todoListStorage"
+import useUserStorage from "../utils/useUserStorage"
+
+import BackendContext from "../../shared/backendContext"
+import SlackUsersBackend from "../../shared/backend/slackUsersBackend"
+
+import EditSlackUserDialog from "./editSlackUserDialog"
 
 const useStyles = makeStyles({
   section: {
@@ -31,14 +37,50 @@ const useStyles = makeStyles({
   },
   margined: {
     padding: 20
+  },
+  editIcon: {
+    padding: 0
   }
 })
 
 const SlackUsers = props => {
   const classes = useStyles()
-  const user = props.user
+  const [user, setUser] = useUserStorage()
   const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
   const todoLists = todoListStorage.loadTodoLists()
+
+  const backend = new SlackUsersBackend(
+    user.token,
+    React.useContext(BackendContext)
+  )
+
+  const [editSlackUser, setEditSlackUser] = React.useState(null)
+  const [showEditSlackUserDialog, setShowEditSlackUserDialog] = React.useState(
+    false
+  )
+
+  const onShowEditSlackUserDialog = (slackUser: SlackUserModel) => {
+    setEditSlackUser(slackUser)
+    setShowEditSlackUserDialog(true)
+  }
+
+  const onCloseEditSlackUserDialog = () => {
+    setEditSlackUser(null)
+    setShowEditSlackUserDialog(false)
+  }
+
+  const onSaveSlackUser = (slackUser: SlackUserModel) => {
+    backend.updateSlackUser(slackUser).then(() => {
+      const filteredSlackUsers = user.slackUsers.filter(
+        su => su.id !== slackUser.id
+      )
+      filteredSlackUsers.push(slackUser)
+      user.slackUsers = filteredSlackUsers
+      setUser(user)
+      props.enqueueSnackbar("Slack settings updated.")
+      onCloseEditSlackUserDialog()
+    })
+  }
 
   const SlackUser = props => {
     const listName = todoLists.find(l => props.slackUser.todoListID === l.uuid)
@@ -51,7 +93,10 @@ const SlackUsers = props => {
         <TableCell>{receivesAgenda}</TableCell>
         <TableCell>
           <Tooltip title="Change this integration">
-            <IconButton>
+            <IconButton
+              onClick={() => onShowEditSlackUserDialog(props.slackUser)}
+              className={classes.editIcon}
+            >
               <EditIcon />
             </IconButton>
           </Tooltip>
@@ -67,7 +112,14 @@ const SlackUsers = props => {
           Slack Integrations
         </Typography>
         <Typography>
-          Manage your integrations with Slack workspaces below.
+          Manage your integrations with Slack workspaces below.{" "}
+          <a
+            href="https://docs.ultralist.io/docs/pro/slack_integration"
+            target="_blank"
+          >
+            Read instructions
+          </a>{" "}
+          on how to connect a Slack workspace with Ultralist.
         </Typography>
 
         <Table className={classes.section}>
@@ -86,16 +138,19 @@ const SlackUsers = props => {
             ))}
           </TableBody>
         </Table>
-        <Button
-          target="_blank"
-          href="https://slack.com/oauth/v2/authorize?client_id=1140265225543.1176926993365&scope=chat:write,commands,im:write&user_scope="
-          variant="contained"
-        >
-          Connect to a new Slack Workspace
-        </Button>
+
+        {editSlackUser && (
+          <EditSlackUserDialog
+            slackUser={editSlackUser}
+            todoLists={todoLists}
+            show={showEditSlackUserDialog}
+            onClose={onCloseEditSlackUserDialog}
+            onSave={onSaveSlackUser}
+          />
+        )}
       </div>
     </Paper>
   )
 }
 
-export default SlackUsers
+export default withSnackbar(SlackUsers)
