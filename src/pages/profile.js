@@ -246,7 +246,7 @@ const Plan = (props: Props) => {
       <Container maxWidth="md">
         <Profile user={user} />
         <Users />
-        <SlackUsers user={user} />
+        <SlackUsers />
         <ApiKeys />
         <Webhooks />
         <PlanSection />
