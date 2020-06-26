@@ -72,7 +72,7 @@ const SlackAddLoginDialog = () => {
       slackUserName: slackAuthParams.user_name,
       slackTeamId: slackAuthParams.team_id,
       slackTeamDomain: slackAuthParams.team_domain,
-      todoListUUID: todoListId
+      todoListID: todoListId
     })
 
     slackUsersBackend.createSlackUser(slackUser).then(() => {
