@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 import "typeface-oxanium"
+import "typeface-roboto"
 
 import Index from "./pages/index"
 // import * as serviceWorker from "./config/serviceWorker"

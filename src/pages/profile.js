@@ -166,7 +166,6 @@ const Plan = (props: Props) => {
       </Typography>
       <Button
         variant="contained"
-        color="primary"
         onClick={onShowPaymentDialog}
         className={classes.section}
       >
@@ -182,7 +181,6 @@ const Plan = (props: Props) => {
       </Typography>
       <Button
         variant="contained"
-        color="primary"
         onClick={onShowPaymentDialog}
         className={classes.section}
       >
@@ -198,7 +196,6 @@ const Plan = (props: Props) => {
       </Typography>
       <Button
         variant="contained"
-        color="primary"
         onClick={onShowPaymentDialog}
         className={classes.section}
       >
@@ -215,7 +212,6 @@ const Plan = (props: Props) => {
       </Typography>
       <Button
         variant="contained"
-        color="primary"
         onClick={onShowPaymentDialog}
         className={classes.section}
       >
@@ -247,7 +243,7 @@ const Plan = (props: Props) => {
         <UserIcon />
       </TopBar>
 
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Profile user={user} />
         <Users />
         <SlackUsers user={user} />

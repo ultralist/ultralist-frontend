@@ -288,11 +288,7 @@ const ApiKeys = props => {
           }}
         />
 
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={onShowNewApiKeyModal}
-        >
+        <Button variant="contained" onClick={onShowNewApiKeyModal}>
           New API Key
         </Button>
       </div>

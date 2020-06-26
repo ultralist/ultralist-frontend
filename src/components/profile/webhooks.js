@@ -289,11 +289,7 @@ const Webhooks = props => {
           }}
         />
 
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={onShowNewWebhookModal}
-        >
+        <Button variant="contained" onClick={onShowNewWebhookModal}>
           New Webhook
         </Button>
       </div>
