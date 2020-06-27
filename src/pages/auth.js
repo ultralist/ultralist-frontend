@@ -10,22 +10,18 @@ import UserStorage from "../shared/storage/userStorage"
 import BackendContext from "../shared/backendContext"
 import UserBackend from "../shared/backend/userBackend"
 
+import useUserStorage from "../components/utils/useUserStorage"
+
 const Auth = props => {
   const token = utils.getUrlParam("token")
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const userBackend = new UserBackend(
-    token,
-    React.useContext(BackendContext),
-    userStorage
-  )
+  const userBackend = new UserBackend(token, React.useContext(BackendContext))
 
-  const [user, setUser] = React.useState(null)
+  const [user, setUser] = useUserStorage()
+  const userStorage = new UserStorage(React.useContext(StorageContext))
 
   React.useEffect(() => {
-    userBackend.getUser().then(userData => {
-      setUser(userData)
-    })
+    userBackend.getUser().then(setUser)
   }, [])
 
   if (!user) return null
@@ -38,7 +34,7 @@ const Auth = props => {
   return user.status === "cancelled" ? (
     <Redirect to="/profile" />
   ) : (
-    <Redirect to="/loading" />
+    <Redirect to="/todolist" />
   )
 }
 

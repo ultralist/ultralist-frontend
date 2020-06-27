@@ -26,6 +26,8 @@ import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
 import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
 
+import useUserStorage from "../utils/useUserStorage"
+
 type Props = {
   todoList: TodoListModel,
   user: UserModel,
@@ -51,6 +53,7 @@ const useStyles = makeStyles({
 })
 
 const TodoList = (props: Props) => {
+  console.log("todolist props = ", props)
   const classes = useStyles()
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
@@ -65,22 +68,22 @@ const TodoList = (props: Props) => {
   const filterModel = new FilterModel(filterModelAttrs)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
 
-  const groups = filterModel.applyFilter(props.todoList.todos)
+  const groups = filterModel.applyFilter(
+    props.todoList.todos.map(t => new TodoItemModel(t))
+  )
+  console.log("groups = ", groups)
 
   const onAddTodo = (todo: TodoItemModel) => {
-    props.todoList.addTodo(todo)
     props.enqueueSnackbar("Todo Added.")
     props.onAddTodoItem(todo)
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
     props.onChangeTodoItem(todo)
-    props.todoList.updateTodo(todo)
     props.enqueueSnackbar("Todo updated.")
   }
 
   const onDeleteTodo = (todo: TodoItemModel) => {
-    props.todoList.deleteTodo(todo)
     props.enqueueSnackbar("Todo deleted.")
     props.onDeleteTodoItem(todo)
   }

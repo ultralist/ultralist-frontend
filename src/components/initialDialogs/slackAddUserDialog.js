@@ -19,14 +19,14 @@ import { makeStyles } from "@material-ui/styles"
 
 import StorageContext from "../../shared/storageContext"
 import SlackStorage from "../../shared/storage/slackStorage"
-import TodoListStorage from "../../shared/storage/todoListStorage"
-import UserStorage from "../../shared/storage/userStorage"
 
 import BackendContext from "../../shared/backendContext"
 import SlackUsersBackend from "../../shared/backend/slackUsersBackend"
 import SlackUserModel from "../../shared/models/slackUser"
 
 import AlertDialog from "../alertDialog"
+
+import useUserStorage from "../../components/utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -40,15 +40,13 @@ const useStyles = makeStyles({
 const SlackAddLoginDialog = () => {
   const storageContext = React.useContext(StorageContext)
   const slackStorage = new SlackStorage(storageContext)
-  const todoListStorage = new TodoListStorage(storageContext)
-  const userStorage = new UserStorage(storageContext)
-  const user = userStorage.loadUser()
+
+  const [user] = useUserStorage()
 
   const backendContext = React.useContext(BackendContext)
   const slackUsersBackend = new SlackUsersBackend(user.token, backendContext)
 
   const slackAuthParams = slackStorage.getSlackAuthParams()
-  const todoLists = todoListStorage.loadTodoLists()
   const classes = useStyles()
 
   const [showDialog, setShowDialog] = React.useState(
@@ -113,7 +111,7 @@ const SlackAddLoginDialog = () => {
               value={todoListId}
               onChange={onChangeTodoListId}
             >
-              {todoLists.map((list, idx) => (
+              {user.todoLists.map((list, idx) => (
                 <MenuItem key={idx} value={list.uuid}>
                   {list.name}
                 </MenuItem>
