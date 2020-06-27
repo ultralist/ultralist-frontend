@@ -33,6 +33,7 @@ import ApiKeyModel from "../../shared/models/apiKey"
 import AlertDialog from "../alertDialog"
 
 import NewApiKey from "./newApiKey"
+import useUserStorage from "../utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -57,15 +58,12 @@ const useStyles = makeStyles({
 const ApiKeys = props => {
   const classes = useStyles()
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const [user, setUser] = useUserStorage()
 
   const backend = new ApiKeysBackend(
     user.token,
     React.useContext(BackendContext)
   )
-
-  const [keys, setKeys] = React.useState(user.apiKeys)
 
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
   const [showDisableAlert, setShowDisableAlert] = React.useState(false)
@@ -80,8 +78,7 @@ const ApiKeys = props => {
   const onAddNewApiKey = (key: ApiKeyModel) => {
     backend.createKey(key).then(data => {
       props.enqueueSnackbar("Api key created.")
-      keys.push(data)
-      setKeys(keys)
+      user.apiKeys.push(new ApiKeyModel(data))
       setShowNewApiKeyModal(false)
     })
   }
@@ -112,9 +109,9 @@ const ApiKeys = props => {
   const onDisableApiKey = () => {
     keyToDisable.active = false
     backend.updateKey(keyToDisable).then(() => {
-      const key = keys.find(h => h.id === keyToDisable.id)
+      const key = user.apiKeys.find(h => h.id === keyToDisable.id)
       key.active = false
-      setKeys(keys)
+      setUser(user)
       props.enqueueSnackbar("API key disabled!")
       setShowDisableAlert(false)
     })
@@ -123,9 +120,9 @@ const ApiKeys = props => {
   const onEnableApiKey = () => {
     keyToEnable.active = true
     backend.updateKey(keyToEnable).then(() => {
-      const key = keys.find(h => h.id === keyToEnable.id)
+      const key = user.apiKeys.find(h => h.id === keyToEnable.id)
       key.active = true
-      setKeys(keys)
+      setUser(user)
       props.enqueueSnackbar("API key enabled!")
       setShowEnableAlert(false)
     })
@@ -134,7 +131,8 @@ const ApiKeys = props => {
   const onDeleteApiKey = () => {
     backend.deleteKey(keyToDelete).then(() => {
       props.enqueueSnackbar("Api key deleted.")
-      setKeys(keys.filter(k => k.name !== keyToDelete.name))
+      user.apiKeys = user.apiKeys.filter(k => k.name !== keyToDelete.name)
+      setUser(user)
       onCloseDeleteAlert()
     })
   }
@@ -248,7 +246,7 @@ const ApiKeys = props => {
           </TableHead>
 
           <TableBody>
-            {keys.map((key, idx) => (
+            {user.apiKeys.map((key, idx) => (
               <ApiKey key={idx} api_key={key} />
             ))}
           </TableBody>

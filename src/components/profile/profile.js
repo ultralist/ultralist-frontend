@@ -20,6 +20,7 @@ import {
 import { makeStyles } from "@material-ui/styles"
 
 import TimeZones from "./timeZones"
+import useUserStorage from "../utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -38,14 +39,12 @@ const useStyles = makeStyles({
 
 const Profile = props => {
   const classes = useStyles()
+  const [user, setUser] = useUserStorage()
 
-  const backend = new UserBackend(
-    props.user.token,
-    React.useContext(BackendContext)
-  )
+  const backend = new UserBackend(user.token, React.useContext(BackendContext))
 
-  const [timeZone, setTimeZone] = React.useState(props.user.timeZone)
-  const [name, setName] = React.useState(props.user.name)
+  const [timeZone, setTimeZone] = React.useState(user.timeZone)
+  const [name, setName] = React.useState(user.name)
 
   const onSetTimeZone = ev => {
     setTimeZone(ev.target.value)
@@ -56,9 +55,9 @@ const Profile = props => {
   }
 
   const onSave = () => {
-    const user = props.user
     user.timeZone = timeZone
     user.name = name
+    setUser(user)
 
     backend.updateUser(user).then(() => {
       props.enqueueSnackbar("Profile info saved.")
