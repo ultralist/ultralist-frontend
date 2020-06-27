@@ -53,7 +53,6 @@ const useStyles = makeStyles({
 })
 
 const TodoList = (props: Props) => {
-  console.log("todolist props = ", props)
   const classes = useStyles()
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
@@ -79,7 +78,7 @@ const TodoList = (props: Props) => {
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
-    props.onChangeTodoItem(todo)
+    setTimeout(() => props.onChangeTodoItem(todo), 500)
     props.enqueueSnackbar("Todo updated.")
   }
 

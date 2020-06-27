@@ -44,7 +44,6 @@ const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
   const [user, setUser] = useUserStorage()
-  console.log("user = ", user)
 
   const backend = new TodoListBackend(
     user ? user.token : "",
@@ -61,24 +60,27 @@ const TodoListApp = (props: Props) => {
 
   window.socket.registerSocket(user)
 
-  const fetchList = (list: TodoListModel) => {
-    if (!navigator.onLine) return
-
-    backend.fetchTodoList(list.uuid).then(list => {
-      const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
-      user.todoLists.splice(idx, 1, list)
-      setUser(user)
-    })
-  }
-
   const processSocketUpdate = data => {
     setTimeout(() => {
-      const updatedAt = parseISO(data.updated_at)
-      const updatedList = user.todoLists.find(list => list.id === data.uuid)
-      if (updatedAt > updatedList.updatedAt) {
+      const updatedAt = parseISO(data.data.updated_at)
+      const updatedList = new TodoListModel(
+        user.todoLists.find(list => list.uuid === data.data.uuid)
+      )
+      if (updatedList && updatedAt > parseISO(updatedList.updatedAt)) {
         fetchList(updatedList)
       }
     }, 500)
+  }
+
+  const fetchList = (updatedList: TodoListModel) => {
+    if (!navigator.onLine) return
+
+    backend.fetchTodoList(updatedList.uuid).then(list => {
+      const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
+      user.todoLists.splice(idx, 1, list)
+      setUser(user)
+      setTodoList(new TodoListModel(list))
+    })
   }
 
   useEffect(() => {
@@ -96,12 +98,10 @@ const TodoListApp = (props: Props) => {
   const updateTodoList = () => {
     if (!navigator.onLine) return
 
-    const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
-    const list = user.todoLists.find(l => l.uuid === todoList.uuid)
-    user.todoLists.splice(idx, 1, list)
-    setUser(user)
-
-    backend.updateTodoList(todoList.uuid, eventCache).then(() => {
+    backend.updateTodoList(todoList.uuid, eventCache).then(list => {
+      const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
+      user.todoLists.splice(idx, 1, list)
+      setUser(user)
       eventCache.clear()
     })
   }
@@ -110,7 +110,6 @@ const TodoListApp = (props: Props) => {
     todoList.addTodo(todoItem)
     eventCache.addItem(createAddEvent(todoItem))
     updateTodoList()
-    console.log("add item todoList = ", todoList)
     setTodoList(new TodoListModel(todoList))
   }
 
