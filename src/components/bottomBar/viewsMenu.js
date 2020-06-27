@@ -67,8 +67,10 @@ const ViewsMenu = (props: Props) => {
         <MenuItem onClick={onShowManageViewsDIalog}>Manage views...</MenuItem>
         {user.views.length > 0 && <Divider />}
         {user.views.length > 0 &&
-          user.views.map(v => (
-            <MenuItem onClick={() => onChooseView(v)}>{v.name}</MenuItem>
+          user.views.map((v, idx) => (
+            <MenuItem key={idx} onClick={() => onChooseView(v)}>
+              {v.name}
+            </MenuItem>
           ))}
       </Menu>
       <CreateViewDialog
