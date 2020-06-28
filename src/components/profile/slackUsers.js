@@ -19,7 +19,6 @@ import {
 import { Edit as EditIcon } from "@material-ui/icons"
 
 import StorageContext from "../../shared/storageContext"
-import TodoListStorage from "../../shared/storage/todoListStorage"
 import useUserStorage from "../utils/useUserStorage"
 
 import BackendContext from "../../shared/backendContext"
@@ -46,8 +45,6 @@ const useStyles = makeStyles({
 const SlackUsers = props => {
   const classes = useStyles()
   const [user, setUser] = useUserStorage()
-  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
-  const todoLists = todoListStorage.loadTodoLists()
 
   const backend = new SlackUsersBackend(
     user.token,
@@ -83,7 +80,9 @@ const SlackUsers = props => {
   }
 
   const SlackUser = props => {
-    const listName = todoLists.find(l => props.slackUser.todoListID === l.uuid)
+    const listName = user.todoLists.find(
+      l => props.slackUser.todoListID === l.uuid
+    )
     const receivesAgenda = props.slackUser.receivesAgenda ? "Yes" : "No"
 
     return (
@@ -142,7 +141,7 @@ const SlackUsers = props => {
         {editSlackUser && (
           <EditSlackUserDialog
             slackUser={editSlackUser}
-            todoLists={todoLists}
+            todoLists={user.todoLists}
             show={showEditSlackUserDialog}
             onClose={onCloseEditSlackUserDialog}
             onSave={onSaveSlackUser}
