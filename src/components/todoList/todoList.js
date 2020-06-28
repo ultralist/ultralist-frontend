@@ -70,7 +70,6 @@ const TodoList = (props: Props) => {
   const groups = filterModel.applyFilter(
     props.todoList.todos.map(t => new TodoItemModel(t))
   )
-  console.log("groups = ", groups)
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.enqueueSnackbar("Todo Added.")
