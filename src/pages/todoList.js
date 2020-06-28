@@ -25,13 +25,11 @@ import {
 import TodoItemModel from "../shared/models/todoItem"
 import { WebsocketProcessor } from "../config/websocket"
 
-import StorageContext from "../shared/storageContext"
-import TodoListStorage from "../shared/storage/todoListStorage"
-import UserStorage from "../shared/storage/userStorage"
-
 import TodoListModel, {
   createTodoListFromBackend
 } from "../shared/models/todoList"
+
+import useUserStorage from "../components/utils/useUserStorage"
 
 const eventCache = new EventCache()
 
@@ -45,52 +43,47 @@ const useStyles = makeStyles({
 const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
-
-  const todoListStorage = new TodoListStorage(React.useContext(StorageContext))
+  const [user, setUser] = useUserStorage()
 
   const backend = new TodoListBackend(
     user ? user.token : "",
-    React.useContext(BackendContext),
-    todoListStorage
+    React.useContext(BackendContext)
   )
 
-  if (props.match.params.id) {
-    todoListStorage.setMostRecentTodoList(props.match.params.id)
-  }
-
-  const todoLists = todoListStorage.loadTodoLists()
-  const [todoList, setTodoList] = useState(
-    todoListStorage.loadMostRecentTodoList()
-  )
+  const [todoList, setTodoList] = React.useState(() => {
+    const byId = user.todoLists.find(
+      list => list.uuid === props.match.params.id
+    )
+    const todoListUUID = byId ? byId.uuid : user.todoLists[0].uuid
+    return new TodoListModel(user.todoLists.find(l => l.uuid === todoListUUID))
+  })
 
   window.socket.registerSocket(user)
-
-  const fetchList = (list: TodoListModel, cb) => {
-    if (!navigator.onLine) return
-    if (!user) return
-
-    backend.fetchTodoList(list.uuid).then(cb)
-  }
 
   const processSocketUpdate = data => {
     setTimeout(() => {
       const updatedAt = parseISO(data.data.updated_at)
-      const updatedList = todoListStorage.loadTodoList(data.data.uuid)
-      if (updatedAt > updatedList.updatedAt) {
-        if (updatedList.uuid === todoList.uuid) {
-          fetchList(updatedList, list => setTodoList(list))
-        } else {
-          fetchList(updatedList)
-        }
+      const updatedList = new TodoListModel(
+        user.todoLists.find(list => list.uuid === data.data.uuid)
+      )
+      if (updatedList && updatedAt > parseISO(updatedList.updatedAt)) {
+        fetchList(updatedList)
       }
     }, 500)
   }
 
-  useEffect(() => {
-    backend.fetchTodoLists()
+  const fetchList = (updatedList: TodoListModel) => {
+    if (!navigator.onLine) return
 
+    backend.fetchTodoList(updatedList.uuid).then(list => {
+      const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
+      user.todoLists.splice(idx, 1, list)
+      setUser(user)
+      if (list.uuid === todoList.uuid) setTodoList(new TodoListModel(list))
+    })
+  }
+
+  useEffect(() => {
     const socketProcessor = new WebsocketProcessor(
       "todolist_update",
       processSocketUpdate
@@ -102,46 +95,50 @@ const TodoListApp = (props: Props) => {
     }
   }, [])
 
-  const update = () => {
+  const updateTodoList = () => {
     if (!navigator.onLine) return
 
     backend.updateTodoList(todoList.uuid, eventCache).then(list => {
-      const newTodoList = createTodoListFromBackend(list)
-      todoListStorage.saveTodoList(newTodoList)
-      setTodoList(newTodoList)
+      const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
+      user.todoLists.splice(idx, 1, list)
+      setUser(user)
       eventCache.clear()
     })
   }
 
   const onAddTodoItem = (todoItem: TodoItemModel) => {
+    todoList.addTodo(todoItem)
     eventCache.addItem(createAddEvent(todoItem))
-    update()
+    updateTodoList()
+    setTodoList(new TodoListModel(todoList))
   }
 
   const onChangeTodoItem = (todoItem: TodoItemModel) => {
+    todoList.updateTodo(todoItem)
+    setTodoList(new TodoListModel(todoList))
     eventCache.addItem(createUpdateEvent(todoItem))
-    update()
+    updateTodoList()
   }
 
   const onDeleteTodoItem = (todoItem: TodoItemModel) => {
     eventCache.addItem(createDeleteEvent(todoItem))
-    update()
+    todoList.deleteTodo(todoItem)
+    updateTodoList()
+    setTodoList(new TodoListModel(todoList))
   }
 
   const onChangeTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
-    setTodoList(newList)
-    fetchList(newList, list => setTodoList(list))
+    setTodoList(new TodoListModel(newList))
   }
 
   const onCreateTodoList = (todoList: TodoListModel) => {
-    backend.createTodoList(todoList.uuid, todoList.name).then(todoList => {
-      todoList = createTodoListFromBackend(todoList)
-      const lists = todoListStorage.loadTodoLists()
-      lists.push(todoList)
-      todoListStorage.saveTodoLists(lists)
+    backend.createTodoList(todoList.uuid, todoList.name).then(newList => {
+      newList = createTodoListFromBackend(newList)
+      user.todoLists.push(newList)
+      setUser(user)
       props.enqueueSnackbar("Todolist created.")
-      setTodoList(todoList)
+      setTodoList(newList)
     })
   }
 
@@ -155,7 +152,7 @@ const TodoListApp = (props: Props) => {
         <TopBar>
           <CreateTodoList onCreateTodoList={onCreateTodoList} />
           <TodoListChooser
-            todoLists={todoLists}
+            todoLists={user.todoLists}
             onSelectTodoList={onChangeTodoList}
           />
           <UserIcon />

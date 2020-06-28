@@ -10,7 +10,6 @@ import Logout from "../pages/logout"
 import Auth from "../pages/auth"
 import CLIAuth from "../pages/cliAuth"
 import Profile from "../pages/profile"
-import LoadTodoLists from "../pages/loadTodoLists"
 
 const history = createBrowserHistory()
 
@@ -26,7 +25,6 @@ const Routes = () => (
       <Route path="/auth" component={Auth} />
       <Route path="/cli_auth" component={CLIAuth} />
       <Route path="/profile" component={Profile} />
-      <Route path="/loading" component={LoadTodoLists} />
 
       <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
     </React.Fragment>

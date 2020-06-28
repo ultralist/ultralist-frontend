@@ -27,11 +27,10 @@ import Container from "@material-ui/core/Container"
 import { TextField } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 
-import StorageContext from "../shared/storageContext"
 import BackendContext from "../shared/backendContext"
-import UserStorage from "../shared/storage/userStorage"
-
 import AccountBackend from "../shared/backend/accountBackend"
+
+import useUserStorage from "../components/utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -56,8 +55,7 @@ const Plan = (props: Props) => {
   const stripe = useStripe()
   const elements = useElements()
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const [user, setUser] = useUserStorage()
 
   const accountBackend = new AccountBackend(
     user ? user.token : "",
@@ -102,7 +100,7 @@ const Plan = (props: Props) => {
     if (errors.length > 0) {
       setErrors(errors)
     } else {
-      userStorage.loginUser(resp)
+      setUser(resp)
       props.enqueueSnackbar(
         "Thank you for supporting Ultralist - a single-person, bootstrapped side project!"
       )
@@ -244,7 +242,7 @@ const Plan = (props: Props) => {
       </TopBar>
 
       <Container maxWidth="md">
-        <Profile user={user} />
+        <Profile />
         <Users />
         <SlackUsers />
         <ApiKeys />

@@ -1,19 +1,5 @@
 // @flow
 import React from "react"
-import { formatRelative, parseJSON } from "date-fns"
-import { Link } from "react-router-dom"
-import { withSnackbar } from "notistack"
-import { makeStyles } from "@material-ui/styles"
-
-import StorageContext from "../../shared/storageContext"
-import UserStorage from "../../shared/storage/userStorage"
-import UserModel from "../../shared/models/user"
-
-import BackendContext from "../../shared/backendContext"
-import UserBackend from "../../shared/backend/userBackend"
-
-import AlertDialog from "../alertDialog"
-
 import {
   IconButton,
   Paper,
@@ -28,6 +14,20 @@ import {
 
 import { DeleteOutlined as DeleteIcon } from "@material-ui/icons"
 
+import { formatRelative, parseJSON } from "date-fns"
+import { Link } from "react-router-dom"
+import { withSnackbar } from "notistack"
+import { makeStyles } from "@material-ui/styles"
+
+import UserModel from "../../shared/models/user"
+
+import BackendContext from "../../shared/backendContext"
+import UserBackend from "../../shared/backend/userBackend"
+
+import AlertDialog from "../alertDialog"
+
+import useUserStorage from "../utils/useUserStorage"
+
 const useStyles = makeStyles({
   section: {
     marginTop: 15,
@@ -41,14 +41,12 @@ const useStyles = makeStyles({
 const Users = props => {
   const classes = useStyles()
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const [user, setUser] = React.useState(userStorage.loadUser())
+  const [user, setUser] = useUserStorage()
   const [accountUsers, setAccountUsers] = React.useState(user.account.users)
 
   const userBackend = new UserBackend(
     user.token,
-    React.useContext(BackendContext),
-    userStorage
+    React.useContext(BackendContext)
   )
 
   const [userToDelete, setUserToDelete] = React.useState(null)
