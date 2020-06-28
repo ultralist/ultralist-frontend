@@ -79,7 +79,7 @@ const TodoListApp = (props: Props) => {
       const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
       user.todoLists.splice(idx, 1, list)
       setUser(user)
-      setTodoList(new TodoListModel(list))
+      if (list.uuid === todoList.uuid) setTodoList(new TodoListModel(list))
     })
   }
 
