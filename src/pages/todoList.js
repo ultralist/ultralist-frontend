@@ -90,7 +90,6 @@ const TodoListApp = (props: Props) => {
   }
 
   const onFocus = () => {
-    console.log("window focus")
     const lastUpdateTime = JSON.parse(
       window.localStorage.getItem("focusUpdate")
     ).time
@@ -98,12 +97,8 @@ const TodoListApp = (props: Props) => {
     if (currentTime - lastUpdateTime > 600000) {
       fetchList(todoList)
     }
-    window.socket.registerProcessor(socketProcessor)
-  }
-
-  const onBlur = () => {
     window.socket.deregisterProcessor("todolist_update")
-    console.log("window blur")
+    window.socket.registerProcessor(socketProcessor)
   }
 
   const socketProcessor = new WebsocketProcessor(
@@ -113,13 +108,11 @@ const TodoListApp = (props: Props) => {
 
   useEffect(() => {
     window.addEventListener("focus", onFocus)
-    window.addEventListener("blur", onBlur)
     window.socket.registerProcessor(socketProcessor)
     fetchList(todoList)
 
     return () => {
       window.removeEventListener("focus", onFocus)
-      window.removeEventListener("blur", onBlur)
     }
   }, [])
 
