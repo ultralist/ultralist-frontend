@@ -79,19 +79,47 @@ const TodoListApp = (props: Props) => {
       const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
       user.todoLists.splice(idx, 1, list)
       setUser(user)
-      if (list.uuid === todoList.uuid) setTodoList(new TodoListModel(list))
+      if (list.uuid === todoList.uuid) {
+        setTodoList(new TodoListModel(list))
+        window.localStorage.setItem(
+          "focusUpdate",
+          JSON.stringify({ time: new Date().getTime() })
+        )
+      }
     })
   }
 
-  useEffect(() => {
-    const socketProcessor = new WebsocketProcessor(
-      "todolist_update",
-      processSocketUpdate
-    )
+  const onFocus = () => {
+    console.log("window focus")
+    const lastUpdateTime = JSON.parse(
+      window.localStorage.getItem("focusUpdate")
+    ).time
+    const currentTime = new Date().getTime()
+    if (currentTime - lastUpdateTime > 600000) {
+      fetchList(todoList)
+    }
     window.socket.registerProcessor(socketProcessor)
+  }
+
+  const onBlur = () => {
+    window.socket.deregisterProcessor("todolist_update")
+    console.log("window blur")
+  }
+
+  const socketProcessor = new WebsocketProcessor(
+    "todolist_update",
+    processSocketUpdate
+  )
+
+  useEffect(() => {
+    window.addEventListener("focus", onFocus)
+    window.addEventListener("blur", onBlur)
+    window.socket.registerProcessor(socketProcessor)
+    fetchList(todoList)
 
     return () => {
-      window.socket.deregisterProcessor("todolist_update")
+      window.removeEventListener("focus", onFocus)
+      window.removeEventListener("blur", onBlur)
     }
   }, [])
 
