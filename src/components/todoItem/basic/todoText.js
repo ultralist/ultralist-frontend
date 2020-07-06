@@ -17,11 +17,11 @@ type Props = {
 }
 
 const isProject = word => {
-  return word.startsWith("+")
+  return word.startsWith("+") && word !== "+"
 }
 
 const isContext = word => {
-  return word.startsWith("@")
+  return word.startsWith("@") && word !== "@"
 }
 
 const TodoText = (props: Props) => {
