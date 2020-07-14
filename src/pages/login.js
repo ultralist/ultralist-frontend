@@ -59,6 +59,10 @@ const Login = props => {
     utils.getUrlParam("slack_app_installed") === "true"
   )
 
+  userStorage.setCLIAuthCompleted(
+    utils.getUrlParam("cli_auth_completed") === "true"
+  )
+
   if (userStorage.getSlackAppInstalled()) {
     userStorage.setSlackCode(utils.getUrlParam("code"))
   }

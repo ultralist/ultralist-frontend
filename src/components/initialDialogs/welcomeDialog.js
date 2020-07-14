@@ -6,7 +6,7 @@ import UserStorage from "../../shared/storage/userStorage"
 
 import AlertDialog from "../alertDialog"
 
-const CLIAuthCompleted = () => {
+const WelcomeDialog = () => {
   const userStorage = new UserStorage(React.useContext(StorageContext))
 
   const [
@@ -30,4 +30,4 @@ const CLIAuthCompleted = () => {
   )
 }
 
-export default CLIAuthCompleted
+export default WelcomeDialog
