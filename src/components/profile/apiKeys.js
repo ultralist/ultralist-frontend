@@ -227,7 +227,7 @@ const ApiKeys = props => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://api-docs.ultralist.io"
+            href="https://ultralist.io/docs/pro/api"
           >
             API docs
           </a>{" "}

@@ -73,7 +73,7 @@ const UserIcon = () => {
           <a
             className={classes.link}
             target="_blank"
-            href="https://docs.ultralist.io"
+            href="https://ultralist.io/docs/cli/quickstart/"
           >
             Docs
           </a>

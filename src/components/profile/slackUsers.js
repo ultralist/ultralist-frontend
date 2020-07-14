@@ -113,7 +113,7 @@ const SlackUsers = props => {
         <Typography>
           Manage your integrations with Slack workspaces below.{" "}
           <a
-            href="https://docs.ultralist.io/docs/pro/slack_integration"
+            href="https://ultralist.io/docs/pro/slack_integration"
             target="_blank"
           >
             Read instructions
