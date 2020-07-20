@@ -15,10 +15,10 @@ import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import FilterStorage from "../../shared/storage/filterStorage"
-import ModalStorage from "../../shared/storage/modalStorage"
 import UserStorage from "../../shared/storage/userStorage"
 
 import AddTodo from "./addTodo"
+import ViewSwitcher from "./viewSwitcher"
 import TodoGroup from "./todoGroup"
 import BottomBar from "../bottomBar"
 
@@ -54,7 +54,6 @@ const useStyles = makeStyles({
 const TodoList = (props: Props) => {
   const classes = useStyles()
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
-  const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const userStorage = new UserStorage(React.useContext(StorageContext))
 
   const [filterModelAttrs, setFilterModelAttrs] = useState(() => {
@@ -64,12 +63,10 @@ const TodoList = (props: Props) => {
     return props.user.defaultFilter()
   })
 
+  const [viewType, setViewType] = React.useState("kanban")
+
   const filterModel = new FilterModel(filterModelAttrs)
   const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
-
-  const groups = filterModel.applyFilter(
-    props.todoList.todos.map(t => new TodoItemModel(t))
-  )
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.enqueueSnackbar("Todo Added.")
@@ -96,28 +93,39 @@ const TodoList = (props: Props) => {
     onChangeFilter(filterModel)
   }
 
-  const todoUUIDs = groups.map(g => g.todos.map(t => t.uuid)).flat()
-  const onKeypress = event => {
-    if (modalStorage.isModalOpen()) return
-
-    let nextTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) + 1]
-    if (nextTodoUUID === undefined) nextTodoUUID = todoUUIDs[0]
-
-    let prevTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) - 1]
-    if (prevTodoUUID === undefined)
-      prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
-
-    if (event.keyCode === 106) setSelectedTodoUUID(nextTodoUUID)
-    if (event.keyCode === 107) setSelectedTodoUUID(prevTodoUUID)
+  const onChangeViewType = () => {
+    if (viewType === "kanban") {
+      setViewType("list")
+    } else {
+      setViewType("kanban")
+    }
   }
 
-  useEffect(() => {
-    document.addEventListener("keypress", onKeypress)
+  const GroupView = () => {
+    const filteredTodos = filterModel.applyFilter(
+      props.todoList.todos.map(t => new TodoItemModel(t))
+    )
+    const groups = filterModel.applyGrouping(filteredTodos)
 
-    return () => {
-      document.removeEventListener("keypress", onKeypress)
-    }
-  })
+    return (
+      <Container maxWidth="md">
+        {groups.map(g => (
+          <TodoGroup
+            key={g.uuid}
+            selectedTodoUUID={selectedTodoUUID}
+            onChange={onChangeTodo}
+            onDelete={onDeleteTodo}
+            onSubjectClick={onSubjectClick}
+            group={g}
+          />
+        ))}
+      </Container>
+    )
+  }
+
+  const KanbanView = () => {
+    return <p>kanban view</p>
+  }
 
   return (
     <React.Fragment>
@@ -127,24 +135,18 @@ const TodoList = (props: Props) => {
         </Typography>
 
         <div className={classes.filterChips}>
+          <ViewSwitcher
+            checked={viewType === "kanban"}
+            onChange={onChangeViewType}
+          />
           <FilterChips
             currentFilter={filterModel}
             onChangeFilter={onChangeFilter}
           />
         </div>
 
-        <Container maxWidth="md">
-          {groups.map(g => (
-            <TodoGroup
-              key={g.uuid}
-              selectedTodoUUID={selectedTodoUUID}
-              onChange={onChangeTodo}
-              onDelete={onDeleteTodo}
-              onSubjectClick={onSubjectClick}
-              group={g}
-            />
-          ))}
-        </Container>
+        {viewType === "list" && <GroupView />}
+        {viewType === "kanban" && <KanbanView />}
       </div>
 
       {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
