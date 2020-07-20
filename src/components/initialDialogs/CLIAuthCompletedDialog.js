@@ -12,9 +12,7 @@ const CLIAuthCompleted = () => {
   const [
     showCLIAuthCompletedDialog,
     setShowCLIAuthCompletedDialog
-  ] = React.useState(
-    userStorage.getCLIAuthCompleted() && !userStorage.getSignup()
-  )
+  ] = React.useState(true)
 
   const onCloseCLIAuthCompleted = () => {
     userStorage.setCLIAuthCompleted(false)
