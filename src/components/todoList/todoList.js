@@ -16,6 +16,7 @@ import FilterChips from "./filterChips"
 import StorageContext from "../../shared/storageContext"
 import FilterStorage from "../../shared/storage/filterStorage"
 import ModalStorage from "../../shared/storage/modalStorage"
+import UserStorage from "../../shared/storage/userStorage"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
@@ -25,8 +26,6 @@ import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
 import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
-
-import useUserStorage from "../utils/useUserStorage"
 
 type Props = {
   todoList: TodoListModel,
@@ -56,6 +55,7 @@ const TodoList = (props: Props) => {
   const classes = useStyles()
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
+  const userStorage = new UserStorage(React.useContext(StorageContext))
 
   const [filterModelAttrs, setFilterModelAttrs] = useState(() => {
     const filterFromStorage = filterStorage.loadFilter()
@@ -147,7 +147,9 @@ const TodoList = (props: Props) => {
         </Container>
       </div>
 
-      <CLIAuthCompletedDialog />
+      {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
+        <CLIAuthCompletedDialog />
+      )}
       <WelcomeDialog />
       <SlackAppInstalledDialog />
       <SlackAddUserDialog />
