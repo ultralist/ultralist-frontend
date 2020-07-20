@@ -239,20 +239,24 @@ const TodoItem = (props: Props) => {
           }
         />
 
-        <EditTodo
-          show={showEditTodo}
-          onClose={toggleShowEditTodo}
-          todoItem={todoItem}
-          onEditTodo={onChangeTodo}
-          onDeleteTodo={props.onDelete}
-        />
+        {toggleShowEditTodo && (
+          <EditTodo
+            show={showEditTodo}
+            onClose={toggleShowEditTodo}
+            todoItem={todoItem}
+            onEditTodo={onChangeTodo}
+            onDeleteTodo={props.onDelete}
+          />
+        )}
 
-        <TodoItemNotes
-          show={showTodoNotes}
-          onClose={toggleShowTodoNotes}
-          todoItem={todoItem}
-          onChange={onChangeTodo}
-        />
+        {toggleShowTodoNotes && (
+          <TodoItemNotes
+            show={showTodoNotes}
+            onClose={toggleShowTodoNotes}
+            todoItem={todoItem}
+            onChange={onChangeTodo}
+          />
+        )}
 
         <ListItemSecondaryAction>
           <div className={classes.buttonRow}>
