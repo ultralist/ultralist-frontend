@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/styles"
 type Props = {
   group: TodoListGroup,
   selectedTodoUUID: string,
+  kanbanView: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void
@@ -47,6 +48,7 @@ const TodoGroup = (props: Props) => {
             onDelete={props.onDelete}
             onSubjectClick={props.onSubjectClick}
             todoItem={todo}
+            kanbanView={props.kanbanView}
           />
         </div>
       ))}

@@ -35,6 +35,7 @@ type Props = {
   todoItem: TodoItemModel,
   isSelected: boolean,
   isFirst: boolean,
+  kanbanView: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
@@ -157,6 +158,8 @@ const TodoItem = (props: Props) => {
   }
 
   const firstButton = () => {
+    if (props.kanbanView) return null
+
     if (todoItem.completed) {
       if (todoItem.archived) {
         return <UnarchiveButton onClick={toggleArchived} />
@@ -198,13 +201,15 @@ const TodoItem = (props: Props) => {
   return (
     <React.Fragment key={todoItem.id}>
       <ListItem className={props.isFirst ? classes.firstTodo : classes.todo}>
-        <Tooltip title="Set completed">
-          <Checkbox
-            tabIndex={-1}
-            checked={todoItem.completed}
-            onChange={toggleComplete}
-          />
-        </Tooltip>
+        {!props.kanbanView && (
+          <Tooltip title="Set completed">
+            <Checkbox
+              tabIndex={-1}
+              checked={todoItem.completed}
+              onChange={toggleComplete}
+            />
+          </Tooltip>
+        )}
 
         <Tooltip title="Prioritize">
           <IconButton

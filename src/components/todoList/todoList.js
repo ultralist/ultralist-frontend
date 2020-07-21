@@ -1,8 +1,7 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React from "react"
 
-import Typography from "@material-ui/core/Typography"
-import Container from "@material-ui/core/Container"
+import { Container, Grid, Typography } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -48,6 +47,15 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     flexWrap: "wrap"
+  },
+  kanbanHolder: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  kanbanColumn: {
+    width: 500,
+    marginLeft: 10,
+    marginRight: 10
   }
 })
 
@@ -56,7 +64,7 @@ const TodoList = (props: Props) => {
   const filterStorage = new FilterStorage(React.useContext(StorageContext))
   const userStorage = new UserStorage(React.useContext(StorageContext))
 
-  const [filterModelAttrs, setFilterModelAttrs] = useState(() => {
+  const [filterModelAttrs, setFilterModelAttrs] = React.useState(() => {
     const filterFromStorage = filterStorage.loadFilter()
     if (!filterFromStorage.isEmpty()) return filterFromStorage
 
@@ -66,7 +74,9 @@ const TodoList = (props: Props) => {
   const [viewType, setViewType] = React.useState("kanban")
 
   const filterModel = new FilterModel(filterModelAttrs)
-  const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
+  const filteredTodos = filterModel.applyFilter(
+    props.todoList.todos.map(t => new TodoItemModel(t))
+  )
 
   const onAddTodo = (todo: TodoItemModel) => {
     props.enqueueSnackbar("Todo Added.")
@@ -102,9 +112,6 @@ const TodoList = (props: Props) => {
   }
 
   const GroupView = () => {
-    const filteredTodos = filterModel.applyFilter(
-      props.todoList.todos.map(t => new TodoItemModel(t))
-    )
     const groups = filterModel.applyGrouping(filteredTodos)
 
     return (
@@ -112,11 +119,12 @@ const TodoList = (props: Props) => {
         {groups.map(g => (
           <TodoGroup
             key={g.uuid}
-            selectedTodoUUID={selectedTodoUUID}
+            selectedTodoUUID={null}
             onChange={onChangeTodo}
             onDelete={onDeleteTodo}
             onSubjectClick={onSubjectClick}
             group={g}
+            kanbanView={false}
           />
         ))}
       </Container>
@@ -124,6 +132,27 @@ const TodoList = (props: Props) => {
   }
 
   const KanbanView = () => {
+    const groups = filterModel.applyGrouping(filteredTodos, "status")
+
+    return (
+      <Container maxWidth="xl">
+        <div className={classes.kanbanHolder}>
+          {groups.map(g => (
+            <div className={classes.kanbanColumn}>
+              <TodoGroup
+                key={g.uuid}
+                selectedTodoUUID={null}
+                onChange={onChangeTodo}
+                onDelete={onDeleteTodo}
+                onSubjectClick={onSubjectClick}
+                group={g}
+                kanbanView={true}
+              />
+            </div>
+          ))}
+        </div>
+      </Container>
+    )
     return <p>kanban view</p>
   }
 
