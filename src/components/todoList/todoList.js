@@ -50,10 +50,12 @@ const useStyles = makeStyles({
   },
   kanbanHolder: {
     display: "flex",
+    overflowX: "auto",
     flexDirection: "row"
   },
   kanbanColumn: {
-    width: 500,
+    width: 400,
+    minWidth: 400,
     marginLeft: 10,
     marginRight: 10
   }
@@ -132,28 +134,26 @@ const TodoList = (props: Props) => {
   }
 
   const KanbanView = () => {
-    const groups = filterModel.applyGrouping(filteredTodos, "status")
+    const groups = filterModel.applyKanbanGrouping(filteredTodos)
+    console.log("groups = ", groups)
 
     return (
-      <Container maxWidth="xl">
-        <div className={classes.kanbanHolder}>
-          {groups.map(g => (
-            <div className={classes.kanbanColumn}>
-              <TodoGroup
-                key={g.uuid}
-                selectedTodoUUID={null}
-                onChange={onChangeTodo}
-                onDelete={onDeleteTodo}
-                onSubjectClick={onSubjectClick}
-                group={g}
-                kanbanView={true}
-              />
-            </div>
-          ))}
-        </div>
-      </Container>
+      <div className={classes.kanbanHolder}>
+        {groups.map(g => (
+          <div className={classes.kanbanColumn}>
+            <TodoGroup
+              key={g.uuid}
+              selectedTodoUUID={null}
+              onChange={onChangeTodo}
+              onDelete={onDeleteTodo}
+              onSubjectClick={onSubjectClick}
+              group={g}
+              kanbanView={true}
+            />
+          </div>
+        ))}
+      </div>
     )
-    return <p>kanban view</p>
   }
 
   return (

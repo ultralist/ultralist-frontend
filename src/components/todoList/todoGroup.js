@@ -24,7 +24,8 @@ const useStyles = makeStyles({
     cursor: "pointer"
   },
   subheader: {
-    position: "static"
+    position: "static",
+    paddingLeft: 0
   }
 })
 
