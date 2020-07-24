@@ -1,5 +1,6 @@
 // @flow
 import React from "react"
+import { useDrop } from "react-dnd"
 
 import List from "@material-ui/core/List"
 import ListSubheader from "@material-ui/core/ListSubheader"
@@ -16,7 +17,8 @@ type Props = {
   kanbanView: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
-  onSubjectClick: (str: string) => void
+  onSubjectClick: (str: string) => void,
+  onSetTodoItemStatus: (uuid: string, status: string) => void
 }
 
 const useStyles = makeStyles({
@@ -32,28 +34,40 @@ const useStyles = makeStyles({
 const TodoGroup = (props: Props) => {
   const classes = useStyles()
   const todos = props.group.sortedTodos()
+
+  const handleDrop = item => {
+    props.onSetTodoItemStatus(item.uuid, props.group.name)
+  }
+
+  const [, drop] = useDrop({
+    accept: "todo_item",
+    drop: handleDrop
+  })
+
   return (
-    <List
-      subheader={
-        <ListSubheader className={classes.subheader} component="div">
-          {props.group.name}
-        </ListSubheader>
-      }
-    >
-      {todos.map(todo => (
-        <div key={todo.uuid} className={classes.cursor}>
-          <TodoItem
-            isFirst={todo.uuid == todos[0].uuid}
-            isSelected={todo.uuid === props.selectedTodoUUID}
-            onChange={props.onChange}
-            onDelete={props.onDelete}
-            onSubjectClick={props.onSubjectClick}
-            todoItem={todo}
-            kanbanView={props.kanbanView}
-          />
-        </div>
-      ))}
-    </List>
+    <div ref={drop}>
+      <List
+        subheader={
+          <ListSubheader className={classes.subheader} component="div">
+            {props.group.name}
+          </ListSubheader>
+        }
+      >
+        {todos.map(todo => (
+          <div key={todo.uuid} className={classes.cursor}>
+            <TodoItem
+              isFirst={todo.uuid == todos[0].uuid}
+              isSelected={todo.uuid === props.selectedTodoUUID}
+              onChange={props.onChange}
+              onDelete={props.onDelete}
+              onSubjectClick={props.onSubjectClick}
+              todoItem={todo}
+              kanbanView={props.kanbanView}
+            />
+          </div>
+        ))}
+      </List>
+    </div>
   )
 }
 

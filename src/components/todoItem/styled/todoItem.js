@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useEffect } from "react"
+import { useDrag } from "react-dnd"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
 import {
@@ -101,6 +102,11 @@ const TodoItem = (props: Props) => {
   const [showTodoNotes, setShowTodoNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
+  const [, drag] = useDrag({
+    item: { type: "todo_item", uuid: todoItem.uuid },
+    canDrag: props.kanbanView
+  })
+
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
   }
@@ -199,7 +205,7 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <React.Fragment key={todoItem.id}>
+    <div ref={drag} key={todoItem.id}>
       <ListItem className={props.isFirst ? classes.firstTodo : classes.todo}>
         {!props.kanbanView && (
           <Tooltip title="Set completed">
@@ -275,7 +281,7 @@ const TodoItem = (props: Props) => {
           </div>
         </ListItemSecondaryAction>
       </ListItem>
-    </React.Fragment>
+    </div>
   )
 }
 

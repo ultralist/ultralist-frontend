@@ -105,6 +105,12 @@ const TodoList = (props: Props) => {
     onChangeFilter(filterModel)
   }
 
+  const onSetTodoItemStatus = (uuid: string, status: string) => {
+    const todo = props.todoList.todos.find(t => t.uuid === uuid)
+    todo.status = status
+    props.onChangeTodoItem(todo)
+  }
+
   const onChangeViewType = () => {
     if (viewType === "kanban") {
       setViewType("list")
@@ -139,14 +145,15 @@ const TodoList = (props: Props) => {
 
     return (
       <div className={classes.kanbanHolder}>
-        {groups.map(g => (
-          <div className={classes.kanbanColumn}>
+        {groups.map((g, idx) => (
+          <div key={idx} className={classes.kanbanColumn}>
             <TodoGroup
               key={g.uuid}
               selectedTodoUUID={null}
               onChange={onChangeTodo}
               onDelete={onDeleteTodo}
               onSubjectClick={onSubjectClick}
+              onSetTodoItemStatus={onSetTodoItemStatus}
               group={g}
               kanbanView={true}
             />
