@@ -107,7 +107,7 @@ const TodoList = (props: Props) => {
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {
     const todo = props.todoList.todos.find(t => t.uuid === uuid)
-    todo.status = status
+    todo.setStatus(status)
     props.onChangeTodoItem(todo)
   }
 
