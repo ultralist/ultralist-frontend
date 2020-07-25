@@ -88,6 +88,9 @@ const useStyles = makeStyles(theme =>
     buttonRow: {
       display: "flex",
       flexDirection: "row"
+    },
+    draggedTodo: {
+      opacity: 0
     }
   })
 )
@@ -102,9 +105,12 @@ const TodoItem = (props: Props) => {
   const [showTodoNotes, setShowTodoNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
 
-  const [, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: { type: "todo_item", uuid: todoItem.uuid },
-    canDrag: props.kanbanView
+    canDrag: props.kanbanView,
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging()
+    })
   })
 
   const toggleShowEditTodo = () => {
@@ -205,7 +211,11 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <div ref={drag} key={todoItem.id}>
+    <div
+      ref={drag}
+      key={todoItem.id}
+      className={isDragging ? classes.draggedTodo : ""}
+    >
       <ListItem className={props.isFirst ? classes.firstTodo : classes.todo}>
         {!props.kanbanView && (
           <Tooltip title="Set completed">
