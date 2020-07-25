@@ -25,9 +25,26 @@ const useStyles = makeStyles({
   cursor: {
     cursor: "pointer"
   },
+  list: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%"
+  },
   subheader: {
     position: "static",
+    flexGrow: 0,
     paddingLeft: 0
+  },
+  dropBorder: {
+    border: "2px dashed #ccc",
+    minHeight: 150,
+    flexGrow: 1,
+    borderRadius: 5
+  },
+  normalBorder: {
+    minHeight: 150,
+    flexGrow: 1,
+    border: "2px solid transparent"
   }
 })
 
@@ -39,33 +56,39 @@ const TodoGroup = (props: Props) => {
     props.onSetTodoItemStatus(item.uuid, props.group.name)
   }
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: "todo_item",
-    drop: handleDrop
+    drop: handleDrop,
+    collect: monitor => ({
+      isOver: !!monitor.isOver()
+    })
   })
 
   return (
-    <div ref={drop}>
+    <div style={{ height: "100%" }} ref={drop}>
       <List
+        className={classes.list}
         subheader={
           <ListSubheader className={classes.subheader} component="div">
             {props.group.name}
           </ListSubheader>
         }
       >
-        {todos.map(todo => (
-          <div key={todo.uuid} className={classes.cursor}>
-            <TodoItem
-              isFirst={todo.uuid == todos[0].uuid}
-              isSelected={todo.uuid === props.selectedTodoUUID}
-              onChange={props.onChange}
-              onDelete={props.onDelete}
-              onSubjectClick={props.onSubjectClick}
-              todoItem={todo}
-              kanbanView={props.kanbanView}
-            />
-          </div>
-        ))}
+        <div className={isOver ? classes.dropBorder : classes.normalBorder}>
+          {todos.map(todo => (
+            <div key={todo.uuid} className={classes.cursor}>
+              <TodoItem
+                isFirst={todo.uuid == todos[0].uuid}
+                isSelected={todo.uuid === props.selectedTodoUUID}
+                onChange={props.onChange}
+                onDelete={props.onDelete}
+                onSubjectClick={props.onSubjectClick}
+                todoItem={todo}
+                kanbanView={props.kanbanView}
+              />
+            </div>
+          ))}
+        </div>
       </List>
     </div>
   )
