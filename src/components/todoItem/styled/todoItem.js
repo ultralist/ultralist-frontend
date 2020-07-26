@@ -20,6 +20,7 @@ import ArchiveIcon from "@material-ui/icons/Archive"
 import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
 import yellow from "@material-ui/core/colors/yellow"
+import green from "@material-ui/core/colors/green"
 
 import TodoItemModel from "../../../shared/models/todoItem"
 
@@ -91,6 +92,16 @@ const useStyles = makeStyles(theme =>
     },
     draggedTodo: {
       opacity: 0
+    },
+    bottomInfo: {
+      display: "flex",
+      flexDirection: "row"
+    },
+    dueDate: {
+      flexGrow: 1
+    },
+    status: {
+      color: green[600]
     }
   })
 )
@@ -253,10 +264,15 @@ const TodoItem = (props: Props) => {
             />
           }
           secondary={
-            <DueDate
-              grey={todoItem.archived || todoItem.completed}
-              date={todoItem.dueDate()}
-            />
+            <div className={classes.bottomInfo}>
+              <div className={classes.dueDate}>
+                <DueDate
+                  grey={todoItem.archived || todoItem.completed}
+                  date={todoItem.dueDate()}
+                />
+              </div>
+              <span className={classes.status}>{todoItem.status}</span>
+            </div>
           }
         />
 
