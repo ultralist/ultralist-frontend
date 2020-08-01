@@ -100,7 +100,11 @@ const useStyles = makeStyles(theme =>
     dueDate: {
       flexGrow: 1
     },
-    status: {
+    kanbanStatus: {
+      color: green[600]
+    },
+    listStatus: {
+      paddingRight: 70,
       color: green[600]
     }
   })
@@ -271,7 +275,13 @@ const TodoItem = (props: Props) => {
                   date={todoItem.dueDate()}
                 />
               </div>
-              <span className={classes.status}>{todoItem.status}</span>
+              <span
+                className={
+                  props.kanbanView ? classes.kanbanStatus : classes.listStatus
+                }
+              >
+                {todoItem.status}
+              </span>
             </div>
           }
         />
