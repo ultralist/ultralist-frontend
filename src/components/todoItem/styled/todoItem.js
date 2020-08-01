@@ -101,6 +101,7 @@ const useStyles = makeStyles(theme =>
       flexGrow: 1
     },
     kanbanStatus: {
+      paddingRight: 10,
       color: green[600]
     },
     listStatus: {
