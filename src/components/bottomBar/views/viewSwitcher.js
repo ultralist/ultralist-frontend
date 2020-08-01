@@ -13,7 +13,11 @@ const ViewSwitcher = (props: Props) => {
     <Grid component="label" container alignItems="center" spacing={0}>
       <Grid item>List</Grid>
       <Grid item>
-        <Switch checked={props.checked} onChange={props.onChange} />
+        <Switch
+          color="default"
+          checked={props.checked}
+          onChange={props.onChange}
+        />
       </Grid>
       <Grid item>Kanban</Grid>
     </Grid>

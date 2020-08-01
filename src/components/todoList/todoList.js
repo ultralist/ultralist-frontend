@@ -1,7 +1,7 @@
 // @flow
 import React from "react"
 
-import { Container, Grid, Typography } from "@material-ui/core"
+import { Container, Typography } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -15,9 +15,9 @@ import FilterChips from "./filterChips"
 import StorageContext from "../../shared/storageContext"
 import FilterStorage from "../../shared/storage/filterStorage"
 import UserStorage from "../../shared/storage/userStorage"
+import SlackStorage from "../../shared/storage/slackStorage"
 
 import AddTodo from "./addTodo"
-import ViewSwitcher from "./viewSwitcher"
 import TodoGroup from "./todoGroup"
 import BottomBar from "../bottomBar"
 
@@ -64,8 +64,10 @@ const useStyles = makeStyles({
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const filterStorage = new FilterStorage(React.useContext(StorageContext))
-  const userStorage = new UserStorage(React.useContext(StorageContext))
+  const storageContext = React.useContext(StorageContext)
+  const filterStorage = new FilterStorage(storageContext)
+  const userStorage = new UserStorage(storageContext)
+  const slackStorage = new SlackStorage(storageContext)
 
   const [filterModelAttrs, setFilterModelAttrs] = React.useState(() => {
     const filterFromStorage = filterStorage.loadFilter()
@@ -73,8 +75,6 @@ const TodoList = (props: Props) => {
 
     return props.user.defaultFilter()
   })
-
-  const [viewType, setViewType] = React.useState("kanban")
 
   const filterModel = new FilterModel(filterModelAttrs)
   const filteredTodos = filterModel.applyFilter(
@@ -96,28 +96,20 @@ const TodoList = (props: Props) => {
     props.onDeleteTodoItem(todo)
   }
 
-  const onChangeFilter = (filter: FilterModel) => {
-    filterStorage.saveFilter(filter)
-    setFilterModelAttrs(filter.toJSON())
-  }
-
   const onSubjectClick = (subject: string) => {
     filterModel.addSubjectContains(subject)
-    onChangeFilter(filterModel)
+    onChangeFilter()
+  }
+
+  const onChangeFilter = () => {
+    filterStorage.saveFilter(filterModel)
+    setFilterModelAttrs(filterModel.toJSON())
   }
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {
     const todo = props.todoList.todos.find(t => t.uuid === uuid)
     todo.setStatus(status)
     props.onChangeTodoItem(todo)
-  }
-
-  const onChangeViewType = () => {
-    if (viewType === "kanban") {
-      setViewType("list")
-    } else {
-      setViewType("kanban")
-    }
   }
 
   const GroupView = () => {
@@ -142,7 +134,6 @@ const TodoList = (props: Props) => {
 
   const KanbanView = () => {
     const groups = filterModel.applyKanbanGrouping(filteredTodos)
-    console.log("groups = ", groups)
 
     return (
       <div className={classes.kanbanHolder}>
@@ -172,26 +163,22 @@ const TodoList = (props: Props) => {
         </Typography>
 
         <div className={classes.filterChips}>
-          <ViewSwitcher
-            checked={viewType === "kanban"}
-            onChange={onChangeViewType}
-          />
           <FilterChips
             currentFilter={filterModel}
             onChangeFilter={onChangeFilter}
           />
         </div>
 
-        {viewType === "list" && <GroupView />}
-        {viewType === "kanban" && <KanbanView />}
+        {filterModel.viewType === "list" && <GroupView />}
+        {filterModel.viewType === "kanban" && <KanbanView />}
       </div>
 
       {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
         <CLIAuthCompletedDialog />
       )}
-      <WelcomeDialog />
-      <SlackAppInstalledDialog />
-      <SlackAddUserDialog />
+      {userStorage.getSignup() && <WelcomeDialog />}
+      {userStorage.getSlackAppInstalled() && <SlackAppInstalledDialog />}
+      {slackStorage.userAuth && <SlackAddUserDialog />}
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
