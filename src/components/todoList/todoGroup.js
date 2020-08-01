@@ -53,7 +53,11 @@ const TodoGroup = (props: Props) => {
   const todos = props.group.sortedTodos()
 
   const handleDrop = item => {
-    props.onSetTodoItemStatus(item.uuid, props.group.name)
+    if (props.group.name === "none") {
+      props.onSetTodoItemStatus(item.uuid, null)
+    } else {
+      props.onSetTodoItemStatus(item.uuid, props.group.name)
+    }
   }
 
   const [{ isOver }, drop] = useDrop({
