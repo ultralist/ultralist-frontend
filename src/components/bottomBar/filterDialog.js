@@ -7,14 +7,12 @@ import {
   DialogActions,
   Divider,
   FormControlLabel,
-  Grid,
   Input,
   InputLabel,
   Select,
   MenuItem,
   Checkbox,
   Switch,
-  DialogTitle,
   TextField,
   Typography
 } from "@material-ui/core"
@@ -29,8 +27,6 @@ import FilterChips from "../todoList/filterChips"
 import StorageContext from "../../shared/storageContext"
 import ModalStorage from "../../shared/storage/modalStorage"
 import UserStorage from "../../shared/storage/userStorage"
-
-import ViewSwitcher from "./views/viewSwitcher"
 
 type Props = {
   currentFilter: FilterModel,

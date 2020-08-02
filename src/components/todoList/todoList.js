@@ -98,12 +98,12 @@ const TodoList = (props: Props) => {
 
   const onSubjectClick = (subject: string) => {
     filterModel.addSubjectContains(subject)
-    onChangeFilter()
+    onChangeFilter(filterModel)
   }
 
-  const onChangeFilter = () => {
-    filterStorage.saveFilter(filterModel)
-    setFilterModelAttrs(filterModel.toJSON())
+  const onChangeFilter = (filter: FilterModel) => {
+    filterStorage.saveFilter(filter)
+    setFilterModelAttrs(filter.toJSON())
   }
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {

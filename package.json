@@ -10,6 +10,7 @@
     "@material-ui/styles": "^4",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.5.0",
+    "array-move": "^3.0.0",
     "date-fns": "^2.0.0-alpha.26",
     "debounce": "^1.2.0",
     "eslint-plugin-flowtype": "^3.2.1",
@@ -26,6 +27,7 @@
     "react-ga": "^2.7.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "react-sortable-hoc": "^1.11.0",
     "source-map-explorer": "^1.6.0",
     "typeface-oxanium": "^1.1.4",
     "typeface-roboto": "^0.0.75"

@@ -1,3 +1,11 @@
 .MuiPaper-root {
   transition: none !important;
 }
+
+.MuiBackdrop-root {
+  transition: none !important;
+}
+
+.MuiDialog-container {
+  transition: none !important;
+}

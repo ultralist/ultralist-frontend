@@ -9,6 +9,7 @@ import FilterModel from "../shared/models/filter"
 
 import GroupingMenu from "./bottomBar/groupingMenu"
 import FilterDialog from "./bottomBar/filterDialog"
+import ColumnsDialog from "./bottomBar/columnsDialog"
 import ViewsMenu from "./bottomBar/viewsMenu"
 import ViewSwitcher from "./bottomBar/views/viewSwitcher"
 
@@ -61,7 +62,10 @@ const BottomBar = (props: Props) => {
           )}
 
           {props.currentFilter.viewType === "kanban" && (
-            <Button color="inherit">Columns</Button>
+            <ColumnsDialog
+              currentFilter={props.currentFilter}
+              onChangeFilter={props.onChangeFilter}
+            />
           )}
 
           <div className={classes.grow} />

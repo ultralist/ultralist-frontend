@@ -36,6 +36,8 @@ import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
 
+import useUserStorage from "../../utils/useUserStorage"
+
 type Props = {
   user: UserModel,
   views: ViewModel[],
@@ -49,6 +51,8 @@ const ManageViewsDialog = (props: Props) => {
     props.user.token,
     React.useContext(BackendContext)
   )
+  const [, setUser] = useUserStorage()
+
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
   const [viewToDelete, setViewToDelete] = React.useState(null)
   const [views, setViews] = React.useState(
@@ -62,8 +66,7 @@ const ManageViewsDialog = (props: Props) => {
 
   const userBackend = new UserBackend(
     props.user.token,
-    React.useContext(BackendContext),
-    new UserStorage(React.useContext(StorageContext))
+    React.useContext(BackendContext)
   )
 
   modalStorage.setModalIsOpen(props.show, "manageViews")
@@ -80,7 +83,7 @@ const ManageViewsDialog = (props: Props) => {
       props.enqueueSnackbar("View deleted.")
       setViews(views.filter(v => v.id !== viewToDelete.id))
       setViewToDelete(null)
-      userBackend.getUser()
+      userBackend.getUser().then(setUser)
     })
   }
 
@@ -91,7 +94,7 @@ const ManageViewsDialog = (props: Props) => {
     setViews([...views])
     viewsBackend.updateView(arrayView).then(() => {
       props.enqueueSnackbar("Default view updated.")
-      userBackend.getUser()
+      userBackend.getUser().then(setUser)
     })
   }
 
