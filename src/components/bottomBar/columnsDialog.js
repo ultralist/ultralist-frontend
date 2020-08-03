@@ -53,7 +53,7 @@ const useStyles = makeStyles({
 const ColumnsDialog = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const [columns, setColumns] = React.useState(
-    props.currentFilter.kanbanColumns
+    props.currentFilter.kanbanColumns()
   )
 
   const [newColumnName, setNewColumnName] = React.useState("")
@@ -70,21 +70,21 @@ const ColumnsDialog = (props: Props) => {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newColumns = arrayMove(columns, oldIndex, newIndex)
     setColumns(newColumns)
-    props.currentFilter.kanbanColumns = newColumns
+    props.currentFilter.setKanbanColumns(newColumns)
     props.onChangeFilter(props.currentFilter)
   }
 
   const onDeleteColumn = name => {
     const newColumns = columns.filter(n => n !== name)
     setColumns(newColumns)
-    props.currentFilter.kanbanColumns = newColumns
+    props.currentFilter.setKanbanColumns(newColumns)
     props.onChangeFilter(props.currentFilter)
   }
 
   const onAddColumn = () => {
     columns.push(newColumnName)
     setColumns(columns)
-    props.currentFilter.kanbanColumns = columns
+    props.currentFilter.setKanbanColumns(columns)
     props.onChangeFilter(props.currentFilter)
     setNewColumnName("")
   }
