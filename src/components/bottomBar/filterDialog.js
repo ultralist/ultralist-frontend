@@ -1,19 +1,21 @@
 // @flow
 import React, { useState, useEffect } from "react"
 
-import Button from "@material-ui/core/Button"
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Input from "@material-ui/core/Input"
-import InputLabel from "@material-ui/core/InputLabel"
-import Select from "@material-ui/core/Select"
-import MenuItem from "@material-ui/core/MenuItem"
-import Checkbox from "@material-ui/core/Checkbox"
-import Switch from "@material-ui/core/Switch"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import TextField from "@material-ui/core/TextField"
-import { Divider } from "@material-ui/core"
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  Divider,
+  FormControlLabel,
+  Input,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  Switch,
+  TextField,
+  Typography
+} from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 
@@ -33,10 +35,17 @@ type Props = {
 
 const useStyles = makeStyles({
   searchBoxOuter: {
-    margin: 20
+    marginLeft: 20,
+    marginRight: 20
   },
   searchBox: {
-    width: "100%"
+    width: "50%",
+    display: "block"
+  },
+  filterChips: {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: 20
   },
   dueLabel: {
     margin: 15
@@ -126,11 +135,16 @@ const FilterDialog = (props: Props) => {
       <Button onClick={toggleOpen} color="inherit">
         Filter
       </Button>
-      <Dialog fullWidth maxWidth="sm" onClose={toggleOpen} open={isOpen}>
-        <DialogTitle>Filter your list</DialogTitle>
-
+      <Dialog fullWidth maxWidth="md" onClose={toggleOpen} open={isOpen}>
         <div className={classes.searchBoxOuter}>
-          <FilterChips currentFilter={currentFilter} onChangeFilter={update} />
+          <Typography variant="h6">Filter your list</Typography>
+
+          <div className={classes.filterChips}>
+            <FilterChips
+              currentFilter={currentFilter}
+              onChangeFilter={update}
+            />
+          </div>
 
           <TextField
             id="outlined-search"

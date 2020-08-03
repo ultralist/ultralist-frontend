@@ -9,6 +9,7 @@ import FilterModel from "../../shared/models/filter"
 const BY_ALL = "all"
 const BY_CONTEXT = "context"
 const BY_PROJECT = "project"
+const BY_STATUS = "status"
 
 type Props = {
   currentFilter: FilterModel,
@@ -46,6 +47,9 @@ const GroupingMenu = (props: Props) => {
         </MenuItem>
         <MenuItem onClick={onChooseGrouping.bind(this, BY_PROJECT)}>
           By Project
+        </MenuItem>
+        <MenuItem onClick={onChooseGrouping.bind(this, BY_STATUS)}>
+          By Status
         </MenuItem>
       </Menu>
     </React.Fragment>

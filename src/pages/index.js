@@ -8,6 +8,9 @@ import { SnackbarProvider } from "notistack"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { DndProvider } from "react-dnd"
+
 import Router from "../config/router"
 import { WebsocketHandler } from "../config/websocket"
 
@@ -43,22 +46,24 @@ const backend = new ApiBackend()
 
 const Index = () => {
   return (
-    <BackendContext.Provider value={backend}>
-      <StorageContext.Provider value={storage}>
-        <Elements stripe={stripePromise}>
-          <CssBaseline />
-          <SnackbarProvider
-            maxSnack={1}
-            preventDuplicate
-            anchorOrigin={{ vertical: "top", horizontal: "left" }}
-          >
-            <MuiThemeProvider theme={theme}>
-              <Router />
-            </MuiThemeProvider>
-          </SnackbarProvider>
-        </Elements>
-      </StorageContext.Provider>
-    </BackendContext.Provider>
+    <DndProvider backend={HTML5Backend}>
+      <BackendContext.Provider value={backend}>
+        <StorageContext.Provider value={storage}>
+          <Elements stripe={stripePromise}>
+            <CssBaseline />
+            <SnackbarProvider
+              maxSnack={1}
+              preventDuplicate
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
+            >
+              <MuiThemeProvider theme={theme}>
+                <Router />
+              </MuiThemeProvider>
+            </SnackbarProvider>
+          </Elements>
+        </StorageContext.Provider>
+      </BackendContext.Provider>
+    </DndProvider>
   )
 }
 

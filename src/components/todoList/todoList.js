@@ -1,8 +1,7 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React from "react"
 
-import Typography from "@material-ui/core/Typography"
-import Container from "@material-ui/core/Container"
+import { Container, Typography } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -15,8 +14,8 @@ import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import FilterStorage from "../../shared/storage/filterStorage"
-import ModalStorage from "../../shared/storage/modalStorage"
 import UserStorage from "../../shared/storage/userStorage"
+import SlackStorage from "../../shared/storage/slackStorage"
 
 import AddTodo from "./addTodo"
 import TodoGroup from "./todoGroup"
@@ -48,16 +47,29 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
     flexWrap: "wrap"
+  },
+  kanbanHolder: {
+    display: "flex",
+    overflowX: "auto",
+    flexDirection: "row",
+    height: "calc(100vh - 272px)"
+  },
+  kanbanColumn: {
+    width: 400,
+    minWidth: 400,
+    marginLeft: 10,
+    marginRight: 10
   }
 })
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
-  const filterStorage = new FilterStorage(React.useContext(StorageContext))
-  const modalStorage = new ModalStorage(React.useContext(StorageContext))
-  const userStorage = new UserStorage(React.useContext(StorageContext))
+  const storageContext = React.useContext(StorageContext)
+  const filterStorage = new FilterStorage(storageContext)
+  const userStorage = new UserStorage(storageContext)
+  const slackStorage = new SlackStorage(storageContext)
 
-  const [filterModelAttrs, setFilterModelAttrs] = useState(() => {
+  const [filterModelAttrs, setFilterModelAttrs] = React.useState(() => {
     const filterFromStorage = filterStorage.loadFilter()
     if (!filterFromStorage.isEmpty()) return filterFromStorage
 
@@ -65,9 +77,7 @@ const TodoList = (props: Props) => {
   })
 
   const filterModel = new FilterModel(filterModelAttrs)
-  const [selectedTodoUUID, setSelectedTodoUUID] = useState(null)
-
-  const groups = filterModel.applyFilter(
+  const filteredTodos = filterModel.applyFilter(
     props.todoList.todos.map(t => new TodoItemModel(t))
   )
 
@@ -86,38 +96,64 @@ const TodoList = (props: Props) => {
     props.onDeleteTodoItem(todo)
   }
 
-  const onChangeFilter = (filter: FilterModel) => {
-    filterStorage.saveFilter(filter)
-    setFilterModelAttrs(filter.toJSON())
-  }
-
   const onSubjectClick = (subject: string) => {
     filterModel.addSubjectContains(subject)
     onChangeFilter(filterModel)
   }
 
-  const todoUUIDs = groups.map(g => g.todos.map(t => t.uuid)).flat()
-  const onKeypress = event => {
-    if (modalStorage.isModalOpen()) return
-
-    let nextTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) + 1]
-    if (nextTodoUUID === undefined) nextTodoUUID = todoUUIDs[0]
-
-    let prevTodoUUID = todoUUIDs[todoUUIDs.indexOf(selectedTodoUUID) - 1]
-    if (prevTodoUUID === undefined)
-      prevTodoUUID = todoUUIDs[todoUUIDs.length - 1]
-
-    if (event.keyCode === 106) setSelectedTodoUUID(nextTodoUUID)
-    if (event.keyCode === 107) setSelectedTodoUUID(prevTodoUUID)
+  const onChangeFilter = (filter: FilterModel) => {
+    filterStorage.saveFilter(filter)
+    setFilterModelAttrs(filter.toJSON())
   }
 
-  useEffect(() => {
-    document.addEventListener("keypress", onKeypress)
+  const onSetTodoItemStatus = (uuid: string, status: string) => {
+    const todo = props.todoList.todos.find(t => t.uuid === uuid)
+    todo.setStatus(status)
+    props.onChangeTodoItem(todo)
+  }
 
-    return () => {
-      document.removeEventListener("keypress", onKeypress)
-    }
-  })
+  const GroupView = () => {
+    const groups = filterModel.applyGrouping(filteredTodos)
+
+    return (
+      <Container maxWidth="md">
+        {groups.map(g => (
+          <TodoGroup
+            key={g.uuid}
+            selectedTodoUUID={null}
+            onChange={onChangeTodo}
+            onDelete={onDeleteTodo}
+            onSubjectClick={onSubjectClick}
+            group={g}
+            kanbanView={false}
+          />
+        ))}
+      </Container>
+    )
+  }
+
+  const KanbanView = () => {
+    const groups = filterModel.applyKanbanGrouping(filteredTodos)
+
+    return (
+      <div className={classes.kanbanHolder}>
+        {groups.map((g, idx) => (
+          <div key={idx} className={classes.kanbanColumn}>
+            <TodoGroup
+              key={g.uuid}
+              selectedTodoUUID={null}
+              onChange={onChangeTodo}
+              onDelete={onDeleteTodo}
+              onSubjectClick={onSubjectClick}
+              onSetTodoItemStatus={onSetTodoItemStatus}
+              group={g}
+              kanbanView={true}
+            />
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -133,26 +169,17 @@ const TodoList = (props: Props) => {
           />
         </div>
 
-        <Container maxWidth="md">
-          {groups.map(g => (
-            <TodoGroup
-              key={g.uuid}
-              selectedTodoUUID={selectedTodoUUID}
-              onChange={onChangeTodo}
-              onDelete={onDeleteTodo}
-              onSubjectClick={onSubjectClick}
-              group={g}
-            />
-          ))}
-        </Container>
+        {filterModel.viewType === "list" && <GroupView />}
+        {filterModel.viewType === "kanban" && <KanbanView />}
       </div>
 
       {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
         <CLIAuthCompletedDialog />
       )}
-      <WelcomeDialog />
-      <SlackAppInstalledDialog />
-      <SlackAddUserDialog />
+
+      {userStorage.getSignup() && <WelcomeDialog />}
+      {userStorage.getSlackAppInstalled() && <SlackAppInstalledDialog />}
+      {slackStorage.userAuth && <SlackAddUserDialog />}
 
       <AddTodo onAddTodoItem={onAddTodo} />
       <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />

@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useEffect } from "react"
+import { useDrag } from "react-dnd"
 
 import { makeStyles, createStyles } from "@material-ui/styles"
 import {
@@ -19,6 +20,7 @@ import ArchiveIcon from "@material-ui/icons/Archive"
 import UnarchiveIcon from "@material-ui/icons/Unarchive"
 
 import yellow from "@material-ui/core/colors/yellow"
+import green from "@material-ui/core/colors/green"
 
 import TodoItemModel from "../../../shared/models/todoItem"
 
@@ -35,6 +37,7 @@ type Props = {
   todoItem: TodoItemModel,
   isSelected: boolean,
   isFirst: boolean,
+  kanbanView: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
@@ -86,6 +89,24 @@ const useStyles = makeStyles(theme =>
     buttonRow: {
       display: "flex",
       flexDirection: "row"
+    },
+    draggedTodo: {
+      opacity: 0
+    },
+    bottomInfo: {
+      display: "flex",
+      flexDirection: "row"
+    },
+    dueDate: {
+      flexGrow: 1
+    },
+    kanbanStatus: {
+      paddingRight: 15,
+      color: green[600]
+    },
+    listStatus: {
+      paddingRight: 70,
+      color: green[600]
     }
   })
 )
@@ -99,6 +120,14 @@ const TodoItem = (props: Props) => {
 
   const [showTodoNotes, setShowTodoNotes] = useState(false)
   const [showEditTodo, setShowEditTodo] = useState(false)
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: "todo_item", uuid: todoItem.uuid },
+    canDrag: props.kanbanView,
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging()
+    })
+  })
 
   const toggleShowEditTodo = () => {
     setShowEditTodo(!showEditTodo)
@@ -157,6 +186,8 @@ const TodoItem = (props: Props) => {
   }
 
   const firstButton = () => {
+    if (props.kanbanView) return null
+
     if (todoItem.completed) {
       if (todoItem.archived) {
         return <UnarchiveButton onClick={toggleArchived} />
@@ -196,15 +227,21 @@ const TodoItem = (props: Props) => {
   }, [])
 
   return (
-    <React.Fragment key={todoItem.id}>
+    <div
+      ref={drag}
+      key={todoItem.id}
+      className={isDragging ? classes.draggedTodo : ""}
+    >
       <ListItem className={props.isFirst ? classes.firstTodo : classes.todo}>
-        <Tooltip title="Set completed">
-          <Checkbox
-            tabIndex={-1}
-            checked={todoItem.completed}
-            onChange={toggleComplete}
-          />
-        </Tooltip>
+        {!props.kanbanView && (
+          <Tooltip title="Set completed">
+            <Checkbox
+              tabIndex={-1}
+              checked={todoItem.completed}
+              onChange={toggleComplete}
+            />
+          </Tooltip>
+        )}
 
         <Tooltip title="Prioritize">
           <IconButton
@@ -232,10 +269,21 @@ const TodoItem = (props: Props) => {
             />
           }
           secondary={
-            <DueDate
-              grey={todoItem.archived || todoItem.completed}
-              date={todoItem.dueDate()}
-            />
+            <div className={classes.bottomInfo}>
+              <div className={classes.dueDate}>
+                <DueDate
+                  grey={todoItem.archived || todoItem.completed}
+                  date={todoItem.dueDate()}
+                />
+              </div>
+              <span
+                className={
+                  props.kanbanView ? classes.kanbanStatus : classes.listStatus
+                }
+              >
+                {todoItem.status}
+              </span>
+            </div>
           }
         />
 
@@ -270,7 +318,7 @@ const TodoItem = (props: Props) => {
           </div>
         </ListItemSecondaryAction>
       </ListItem>
-    </React.Fragment>
+    </div>
   )
 }
 

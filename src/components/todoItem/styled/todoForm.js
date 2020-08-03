@@ -47,6 +47,7 @@ const useStyles = makeStyles({
 })
 
 const subjectRef = React.createRef()
+const statusRef = React.createRef()
 
 const Margin = props => {
   const classes = useStyles()
@@ -76,6 +77,11 @@ const TodoForm = (props: Props) => {
 
   const toggleCompleted = () => {
     todoItem.toggleCompleted()
+    setTodoItem(todoItem)
+  }
+
+  const onSetStatus = ev => {
+    todoItem.setStatus(ev.target.value)
     setTodoItem(todoItem)
   }
 
@@ -150,6 +156,16 @@ const TodoForm = (props: Props) => {
             label="Description"
             autoFocus
             inputRef={subjectRef}
+          />
+        </Margin>
+
+        <Margin>
+          <TextField
+            error={!isValid()}
+            className={classes.text}
+            label="Status"
+            value={todoItem.status}
+            onChange={onSetStatus}
           />
         </Margin>
 
