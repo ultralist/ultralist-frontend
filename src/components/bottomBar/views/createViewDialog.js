@@ -21,13 +21,12 @@ import FilterModel from "../../../shared/models/filter"
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
-
-import useUserStorage from "../../utils/useUserStorage"
+import UserContext from "../../utils/userContext"
 
 type Props = {
   filter: FilterModel,
+  todoListUUID: string,
   show: boolean,
-  user: UserModel,
   onClose: () => void
 }
 
@@ -44,15 +43,15 @@ const useStyles = makeStyles({
 const CreateView = (props: Props) => {
   const classes = useStyles()
   const [viewName, setViewName] = React.useState("")
-  const [, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const viewsBackend = new ViewsBackend(
-    props.user.token,
+    user.token,
     React.useContext(BackendContext)
   )
   const userBackend = new UserBackend(
-    props.user.token,
+    user.token,
     React.useContext(BackendContext)
   )
 
@@ -60,6 +59,7 @@ const CreateView = (props: Props) => {
 
   const onCreateView = () => {
     props.filter.name = viewName
+    props.filter.todoListUUID = props.todoListUUID
     viewsBackend.createView(props.filter).then(() => {
       props.enqueueSnackbar("View created!")
       setViewName("")

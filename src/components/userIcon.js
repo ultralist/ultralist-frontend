@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React from "react"
 
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
@@ -7,10 +7,10 @@ import IconButton from "@material-ui/core/IconButton"
 import PersonIcon from "@material-ui/icons/Person"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/styles"
-import { Redirect, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 
-import StorageContext from "../shared/storageContext"
-import UserStorage from "../shared/storage/userStorage"
+import UserContext from "./utils/userContext"
+import UserModel from "../shared/models/user"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -33,12 +33,10 @@ const useStyles = makeStyles(theme => {
 })
 
 const UserIcon = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const { user, setUser } = React.useContext(UserContext)
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-
-  const user = userStorage.loadUser()
   const classes = useStyles()
 
   const toggleOpen = event => {
@@ -46,13 +44,9 @@ const UserIcon = () => {
     setIsOpen(!isOpen)
   }
 
-  const onLogout = () => {
+  const onLogout = (setUserFn: (u: ?UserModel) => void) => {
     setIsOpen(!isOpen)
-    userStorage.logoutUser()
-  }
-
-  if (!userStorage.isUserLoggedIn()) {
-    return <Redirect to="/login" />
+    setUser(null)
   }
 
   return (

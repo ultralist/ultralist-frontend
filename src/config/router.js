@@ -11,23 +11,30 @@ import Auth from "../pages/auth"
 import CLIAuth from "../pages/cliAuth"
 import Profile from "../pages/profile"
 
+import UserModel from "../shared/models/user"
+
 const history = createBrowserHistory()
 
-const Routes = () => (
+type Props = {
+  user: ?UserModel
+}
+
+const Routes = (props: Props) => (
   <Router history={history}>
-    <React.Fragment>
-      <Route exact={true} path="/todolist" component={TodoList} />
-      <Route exact={true} path="/todolist/:id" component={TodoList} />
+    {!props.user && <Redirect to="/login" />}
 
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Login} />
-      <Route path="/logout" component={Logout} />
-      <Route path="/auth" component={Auth} />
-      <Route path="/cli_auth" component={CLIAuth} />
-      <Route path="/profile" component={Profile} />
+    <Route path="/login" component={Login} />
+    <Route path="/auth" component={Auth} />
+    <Route path="/signup" component={Login} />
+    <Route path="/cli_auth" component={CLIAuth} />
 
-      <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
-    </React.Fragment>
+    <Route exact={true} path="/todolist" component={TodoList} />
+    <Route exact={true} path="/todolist/:id" component={TodoList} />
+
+    <Route path="/logout" component={Logout} />
+    <Route path="/profile" component={Profile} />
+
+    <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
   </Router>
 )
 

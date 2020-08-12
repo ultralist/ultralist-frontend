@@ -19,7 +19,7 @@ import {
 import { Edit as EditIcon } from "@material-ui/icons"
 
 import StorageContext from "../../shared/storageContext"
-import useUserStorage from "../utils/useUserStorage"
+import UserContext from "../utils/userContext"
 
 import BackendContext from "../../shared/backendContext"
 import SlackUsersBackend from "../../shared/backend/slackUsersBackend"
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 
 const SlackUsers = props => {
   const classes = useStyles()
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const backend = new SlackUsersBackend(
     user.token,

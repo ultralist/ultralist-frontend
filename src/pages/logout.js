@@ -2,12 +2,11 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import StorageContext from "../shared/storageContext"
-import UserStorage from "../shared/storage/userStorage"
+import UserContext from "../components/utils/userContext"
 
 const Logout = () => {
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  userStorage.logoutUser()
+  const { setUser } = React.useContext(UserContext)
+  setUser(null)
   return <Redirect to="/login" />
 }
 

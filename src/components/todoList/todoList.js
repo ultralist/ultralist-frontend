@@ -182,7 +182,11 @@ const TodoList = (props: Props) => {
       {slackStorage.userAuth && <SlackAddUserDialog />}
 
       <AddTodo onAddTodoItem={onAddTodo} />
-      <BottomBar currentFilter={filterModel} onChangeFilter={onChangeFilter} />
+      <BottomBar
+        todoListUUID={props.todoList.uuid}
+        currentFilter={filterModel}
+        onChangeFilter={onChangeFilter}
+      />
     </React.Fragment>
   )
 }

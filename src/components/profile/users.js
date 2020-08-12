@@ -26,7 +26,7 @@ import UserBackend from "../../shared/backend/userBackend"
 
 import AlertDialog from "../alertDialog"
 
-import useUserStorage from "../utils/useUserStorage"
+import UserContext from "../utils/userContext"
 
 const useStyles = makeStyles({
   section: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles({
 const Users = props => {
   const classes = useStyles()
 
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
   const [accountUsers, setAccountUsers] = React.useState(user.account.users)
 
   const userBackend = new UserBackend(

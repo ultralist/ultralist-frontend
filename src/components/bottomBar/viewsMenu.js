@@ -2,15 +2,15 @@
 import React from "react"
 import { Button, Menu, MenuItem, Divider } from "@material-ui/core"
 
-import StorageContext from "../../shared/storageContext"
-import UserStorage from "../../shared/storage/userStorage"
-
 import FilterModel from "../../shared/models/filter"
 
 import CreateViewDialog from "./views/createViewDialog"
 import ManageViewsDialog from "./views/manageViewsDialog"
 
+import UserContext from "../utils/userContext"
+
 type Props = {
+  todoListUUID: string,
   currentFilter: FilterModel,
   onChangeFilter: (f: FilterModel) => void
 }
@@ -22,8 +22,7 @@ const ViewsMenu = (props: Props) => {
     false
   )
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const { user } = React.useContext(UserContext)
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -57,6 +56,10 @@ const ViewsMenu = (props: Props) => {
     setShowManageViewsDialog(false)
   }
 
+  const viewsForTodoList = user.views.filter(
+    v => v.todoListUUID === props.todoListUUID
+  )
+
   return (
     <React.Fragment>
       <Button color="inherit" onClick={handleClick}>
@@ -65,9 +68,9 @@ const ViewsMenu = (props: Props) => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={onShowCreateViewDialog}>Save current view</MenuItem>
         <MenuItem onClick={onShowManageViewsDIalog}>Manage views...</MenuItem>
-        {user.views.length > 0 && <Divider />}
-        {user.views.length > 0 &&
-          user.views.map((v, idx) => (
+        {viewsForTodoList.length > 0 && <Divider />}
+        {viewsForTodoList.length > 0 &&
+          viewsForTodoList.map((v, idx) => (
             <MenuItem key={idx} onClick={() => onChooseView(v)}>
               {v.name}
             </MenuItem>
@@ -75,13 +78,12 @@ const ViewsMenu = (props: Props) => {
       </Menu>
       <CreateViewDialog
         filter={props.currentFilter}
-        user={user}
+        todoListUUID={props.todoListUUID}
         show={showCreateViewDialog}
         onClose={onCloseCreateViewDialog}
       />
       <ManageViewsDialog
-        user={user}
-        views={user.views}
+        views={viewsForTodoList}
         show={showManageViewsDialog}
         onClose={onCloseManageViewsDialog}
       />
