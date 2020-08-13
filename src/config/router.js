@@ -19,23 +19,51 @@ type Props = {
   user: ?UserModel
 }
 
-const Routes = (props: Props) => (
-  <Router history={history}>
-    {!props.user && <Redirect to="/login" />}
+const Routes = (props: Props) => {
+  return (
+    <Router history={history}>
+      {/* ----------- Routes that do not require a user ---------- */}
 
-    <Route path="/login" component={Login} />
-    <Route path="/auth" component={Auth} />
-    <Route path="/signup" component={Login} />
-    <Route path="/cli_auth" component={CLIAuth} />
+      <Route path="/login" component={Login} />
+      <Route path="/auth" component={Auth} />
+      <Route path="/signup" component={Login} />
+      <Route path="/logout" component={Logout} />
+      <Route path="/cli_auth" component={CLIAuth} />
 
-    <Route exact={true} path="/todolist" component={TodoList} />
-    <Route exact={true} path="/todolist/:id" component={TodoList} />
+      {/* ----------- Routes that require a user ---------- */}
 
-    <Route path="/logout" component={Logout} />
-    <Route path="/profile" component={Profile} />
+      <Route
+        exact={true}
+        path="/todolist"
+        render={routeProps =>
+          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        exact={true}
+        path="/todolist/:id"
+        render={routeProps =>
+          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
 
-    <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
-  </Router>
-)
+      <Route
+        exact={true}
+        path="/profile"
+        render={routeProps =>
+          props.user ? <Profile {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
+
+      <Route
+        exact={true}
+        path="/"
+        render={() =>
+          props.user ? <Redirect to="/todolist" /> : <Redirect to="/login" />
+        }
+      />
+    </Router>
+  )
+}
 
 export default Routes
