@@ -19,8 +19,8 @@ import {
 
 import { makeStyles } from "@material-ui/styles"
 
+import UserContext from "../utils/userContext"
 import TimeZones from "./timeZones"
-import useUserStorage from "../utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
 
 const Profile = props => {
   const classes = useStyles()
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const backend = new UserBackend(user.token, React.useContext(BackendContext))
 

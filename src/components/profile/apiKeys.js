@@ -24,16 +24,13 @@ import {
 } from "@material-ui/icons"
 import { makeStyles } from "@material-ui/styles"
 
-import StorageContext from "../../shared/storageContext"
-import UserStorage from "../../shared/storage/userStorage"
-
 import BackendContext from "../../shared/backendContext"
+import UserContext from "../utils/userContext"
 import ApiKeysBackend from "../../shared/backend/apiKeysBackend"
 import ApiKeyModel from "../../shared/models/apiKey"
 import AlertDialog from "../alertDialog"
 
 import NewApiKey from "./newApiKey"
-import useUserStorage from "../utils/useUserStorage"
 
 const useStyles = makeStyles({
   section: {
@@ -58,7 +55,7 @@ const useStyles = makeStyles({
 const ApiKeys = props => {
   const classes = useStyles()
 
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const backend = new ApiKeysBackend(
     user.token,

@@ -29,7 +29,7 @@ import TodoListModel, {
   createTodoListFromBackend
 } from "../shared/models/todoList"
 
-import useUserStorage from "../components/utils/useUserStorage"
+import UserContext from "../components/utils/userContext"
 
 const eventCache = new EventCache()
 
@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const backend = new TodoListBackend(
     user ? user.token : "",

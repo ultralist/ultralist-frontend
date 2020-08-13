@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 
 import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
+import UserContext from "../utils/userContext"
 
 import AlertDialog from "../alertDialog"
 
@@ -12,7 +13,7 @@ import SlackBackend from "../../shared/backend/slackBackend"
 const CLIAuthCompleted = () => {
   const userStorage = new UserStorage(React.useContext(StorageContext))
   const backendContext = React.useContext(BackendContext)
-  const user = userStorage.loadUser()
+  const { user } = React.useContext(UserContext)
 
   const [
     showSlackAppInstalledDialog,

@@ -25,8 +25,7 @@ import {
 } from "@material-ui/icons"
 import { makeStyles } from "@material-ui/styles"
 
-import StorageContext from "../../shared/storageContext"
-import UserStorage from "../../shared/storage/userStorage"
+import UserContext from "../utils/userContext"
 
 import BackendContext from "../../shared/backendContext"
 import WebhooksBackend from "../../shared/backend/webhooksBackend"
@@ -59,8 +58,7 @@ const useStyles = makeStyles({
 const Webhooks = props => {
   const classes = useStyles()
 
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const { user } = React.useContext(UserContext)
 
   const backend = new WebhooksBackend(
     user.token,

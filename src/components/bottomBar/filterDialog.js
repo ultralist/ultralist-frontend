@@ -26,7 +26,6 @@ import FilterChips from "../todoList/filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import ModalStorage from "../../shared/storage/modalStorage"
-import UserStorage from "../../shared/storage/userStorage"
 
 type Props = {
   currentFilter: FilterModel,
@@ -63,9 +62,6 @@ const FilterDialog = (props: Props) => {
   const debouncedOnChangeFilter = React.useRef(
     debounce(props.onChangeFilter, 250)
   )
-
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
 
   const [currentFilterAttrs, setCurrentFilter] = useState(
     props.currentFilter.toJSON()

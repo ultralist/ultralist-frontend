@@ -3,14 +3,12 @@
 import React from "react"
 import ReactGA from "react-ga"
 
-import StorageContext from "../shared/storageContext"
-import UserStorage from "../shared/storage/userStorage"
+import UserContext from "./utils/userContext"
 
 ReactGA.initialize("UA-37191428-7", { debug: false })
 
 const Analytics = () => {
-  const userStorage = new UserStorage(React.useContext(StorageContext))
-  const user = userStorage.loadUser()
+  const { user } = React.useContext(UserContext)
 
   if (user) {
     ReactGA.set({

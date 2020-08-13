@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 })
 
 type Props = {
+  todoListUUID: string,
   currentFilter: FilterModel,
   onChangeFilter: (f: FilterModel) => void
 }
@@ -71,6 +72,7 @@ const BottomBar = (props: Props) => {
           <div className={classes.grow} />
 
           <ViewsMenu
+            todoListUUID={props.todoListUUID}
             currentFilter={props.currentFilter}
             onChangeFilter={props.onChangeFilter}
           />

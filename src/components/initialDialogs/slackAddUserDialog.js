@@ -26,7 +26,7 @@ import SlackUserModel from "../../shared/models/slackUser"
 
 import AlertDialog from "../alertDialog"
 
-import useUserStorage from "../../components/utils/useUserStorage"
+import UserContext from "../../components/utils/userContext"
 
 const useStyles = makeStyles({
   section: {
@@ -41,7 +41,7 @@ const SlackAddLoginDialog = () => {
   const storageContext = React.useContext(StorageContext)
   const slackStorage = new SlackStorage(storageContext)
 
-  const [user] = useUserStorage()
+  const { user } = React.useContext(UserContext)
 
   const backendContext = React.useContext(BackendContext)
   const slackUsersBackend = new SlackUsersBackend(user.token, backendContext)

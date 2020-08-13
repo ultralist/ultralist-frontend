@@ -11,24 +11,59 @@ import Auth from "../pages/auth"
 import CLIAuth from "../pages/cliAuth"
 import Profile from "../pages/profile"
 
+import UserModel from "../shared/models/user"
+
 const history = createBrowserHistory()
 
-const Routes = () => (
-  <Router history={history}>
-    <React.Fragment>
-      <Route exact={true} path="/todolist" component={TodoList} />
-      <Route exact={true} path="/todolist/:id" component={TodoList} />
+type Props = {
+  user: ?UserModel
+}
+
+const Routes = (props: Props) => {
+  return (
+    <Router history={history}>
+      {/* ----------- Routes that do not require a user ---------- */}
 
       <Route path="/login" component={Login} />
+      <Route path="/auth" component={Auth} />
       <Route path="/signup" component={Login} />
       <Route path="/logout" component={Logout} />
-      <Route path="/auth" component={Auth} />
       <Route path="/cli_auth" component={CLIAuth} />
-      <Route path="/profile" component={Profile} />
 
-      <Route exact={true} path="/" render={() => <Redirect to="/login" />} />
-    </React.Fragment>
-  </Router>
-)
+      {/* ----------- Routes that require a user ---------- */}
+
+      <Route
+        exact={true}
+        path="/todolist"
+        render={routeProps =>
+          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
+      <Route
+        exact={true}
+        path="/todolist/:id"
+        render={routeProps =>
+          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
+
+      <Route
+        exact={true}
+        path="/profile"
+        render={routeProps =>
+          props.user ? <Profile {...routeProps} /> : <Redirect to="/login" />
+        }
+      />
+
+      <Route
+        exact={true}
+        path="/"
+        render={() =>
+          props.user ? <Redirect to="/todolist" /> : <Redirect to="/login" />
+        }
+      />
+    </Router>
+  )
+}
 
 export default Routes

@@ -29,8 +29,7 @@ import { makeStyles } from "@material-ui/styles"
 
 import BackendContext from "../shared/backendContext"
 import AccountBackend from "../shared/backend/accountBackend"
-
-import useUserStorage from "../components/utils/useUserStorage"
+import UserContext from "../components/utils/userContext"
 
 const useStyles = makeStyles({
   section: {
@@ -55,7 +54,7 @@ const Plan = (props: Props) => {
   const stripe = useStripe()
   const elements = useElements()
 
-  const [user, setUser] = useUserStorage()
+  const { user, setUser } = React.useContext(UserContext)
 
   const accountBackend = new AccountBackend(
     user ? user.token : "",
