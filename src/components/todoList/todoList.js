@@ -26,6 +26,8 @@ import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
 import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
 
+import KanbanTodoList from "./kanbanTodoList"
+
 type Props = {
   todoList: TodoListModel,
   user: UserModel,
@@ -48,23 +50,12 @@ const useStyles = makeStyles({
     justifyContent: "center",
     flexWrap: "wrap"
   },
-  kanbanHolder: {
-    display: "flex",
-    overflowX: "auto",
-    flexDirection: "row",
-    height: "calc(100vh - 272px)"
-  },
-  kanbanColumn: {
-    width: 400,
-    minWidth: 400,
-    marginLeft: 10,
-    marginRight: 10
-  }
 })
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
   const storageContext = React.useContext(StorageContext)
+
   const filterStorage = new FilterStorage(storageContext)
   const userStorage = new UserStorage(storageContext)
   const slackStorage = new SlackStorage(storageContext)
@@ -132,29 +123,6 @@ const TodoList = (props: Props) => {
     )
   }
 
-  const KanbanView = () => {
-    const groups = filterModel.applyKanbanGrouping(filteredTodos)
-
-    return (
-      <div className={classes.kanbanHolder}>
-        {groups.map((g, idx) => (
-          <div key={idx} className={classes.kanbanColumn}>
-            <TodoGroup
-              key={g.uuid}
-              selectedTodoUUID={null}
-              onChange={onChangeTodo}
-              onDelete={onDeleteTodo}
-              onSubjectClick={onSubjectClick}
-              onSetTodoItemStatus={onSetTodoItemStatus}
-              group={g}
-              kanbanView={true}
-            />
-          </div>
-        ))}
-      </div>
-    )
-  }
-
   return (
     <React.Fragment>
       <div className={classes.mainContainer}>
@@ -170,7 +138,15 @@ const TodoList = (props: Props) => {
         </div>
 
         {filterModel.viewType === "list" && <GroupView />}
-        {filterModel.viewType === "kanban" && <KanbanView />}
+        {filterModel.viewType === "kanban" && (
+          <KanbanTodoList
+            groups={filterModel.applyKanbanGrouping(filteredTodos)}
+            onChangeTodo={onChangeTodo}
+            onDeleteTodo={onDeleteTodo}
+            onSubjectClick={onSubjectClick}
+            onSetTodoItemStatus={onSetTodoItemStatus}
+          />
+        )}
       </div>
 
       {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
