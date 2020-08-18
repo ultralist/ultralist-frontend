@@ -1,5 +1,8 @@
 // @flow
 import React from "react"
+import { IconButton, Tooltip } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
+
 import { useDrop } from "react-dnd"
 
 import List from "@material-ui/core/List"
@@ -13,11 +16,12 @@ import { makeStyles } from "@material-ui/styles"
 
 type Props = {
   group: TodoListGroup,
-  selectedTodoUUID: string,
+  selectedTodoUUID?: string,
   kanbanView: boolean,
   onChange: (todoItem: TodoItemModel) => void,
   onDelete: (todoItem: TodoItemModel) => void,
   onSubjectClick: (str: string) => void,
+  onShowAddTodoItemDialog?: (attrs: Object) => void,
   onSetTodoItemStatus: (uuid: string, status: string) => void
 }
 
@@ -45,12 +49,21 @@ const useStyles = makeStyles({
     minHeight: 150,
     flexGrow: 1,
     border: "2px solid transparent"
+  },
+  addTask: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   }
 })
 
 const TodoGroup = (props: Props) => {
   const classes = useStyles()
   const todos = props.group.sortedTodos()
+
+  const onShowAdd = () => {
+    props.onShowAddTodoItemDialog({ status: props.group.name })
+  }
 
   const handleDrop = item => {
     if (props.group.name === "none") {
@@ -92,6 +105,15 @@ const TodoGroup = (props: Props) => {
               />
             </div>
           ))}
+          <div className={classes.addTask}>
+            {props.kanbanView && (
+              <Tooltip title="Add a task to this column">
+                <IconButton onClick={onShowAdd}>
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </div>
         </div>
       </List>
     </div>

@@ -7,10 +7,12 @@ import { debounce } from "debounce"
 
 import TodoGroup from "./todoGroup"
 import TodoItemModel from "../../shared/models/todoItem"
+import TodoListGroupModel from "../../shared/models/todoListGroup"
 
 type Props = {
-  todos: TodoItemModel[],
+  groups: TodoListGroupModel[],
   onChangeTodo: (todoItem: TodoItemModel) => void,
+  onShowAddTodoItemDialog?: (attrs: Object) => void,
   onDeleteTodo: (todoItem: TodoItemModel) => void,
   onSubjectClick: (subject: string) => void,
   onSetTodoItemStatus: (uuid: string, status: string) => void
@@ -65,7 +67,7 @@ const KanbanTodoList = (props: Props) => {
         <div key={idx} className={classes.kanbanColumn}>
           <TodoGroup
             key={g.uuid}
-            selectedTodoUUID={null}
+            onShowAddTodoItemDialog={props.onShowAddTodoItemDialog}
             onChange={props.onChangeTodo}
             onDelete={props.onDeleteTodo}
             onSubjectClick={props.onSubjectClick}

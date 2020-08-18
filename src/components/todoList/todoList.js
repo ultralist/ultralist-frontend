@@ -1,7 +1,8 @@
 // @flow
 import React from "react"
 
-import { Container, Typography } from "@material-ui/core"
+import { Container, Fab, Tooltip, Typography } from "@material-ui/core"
+import AddIcon from "@material-ui/icons/Add"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -17,7 +18,7 @@ import FilterStorage from "../../shared/storage/filterStorage"
 import UserStorage from "../../shared/storage/userStorage"
 import SlackStorage from "../../shared/storage/slackStorage"
 
-import AddTodo from "./addTodo"
+import AddTodoDialog from "./addTodoDialog"
 import TodoGroup from "./todoGroup"
 import BottomBar from "../bottomBar"
 
@@ -50,10 +51,22 @@ const useStyles = makeStyles({
     justifyContent: "center",
     flexWrap: "wrap"
   },
+  fab: {
+    position: "fixed",
+    zIndex: 1101,
+    bottom: 30,
+    left: 0,
+    right: 0,
+    margin: "0 auto"
+  }
 })
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
+  const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
+    false
+  )
+  const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
   const filterStorage = new FilterStorage(storageContext)
@@ -103,6 +116,16 @@ const TodoList = (props: Props) => {
     props.onChangeTodoItem(todo)
   }
 
+  const onShowAddTodoItemDialog = (attrs: Object) => {
+    setNewTodoItemAttrs(attrs || {})
+    console.log("onShowAddTodoItemDialog with attrs ", attrs)
+    setShowAddTodoItemDialog(true)
+  }
+
+  const onCloseAddTodoItemDialog = () => {
+    setShowAddTodoItemDialog(false)
+  }
+
   const GroupView = () => {
     const groups = filterModel.applyGrouping(filteredTodos)
 
@@ -145,6 +168,7 @@ const TodoList = (props: Props) => {
             onDeleteTodo={onDeleteTodo}
             onSubjectClick={onSubjectClick}
             onSetTodoItemStatus={onSetTodoItemStatus}
+            onShowAddTodoItemDialog={onShowAddTodoItemDialog}
           />
         )}
       </div>
@@ -157,11 +181,21 @@ const TodoList = (props: Props) => {
       {userStorage.getSlackAppInstalled() && <SlackAppInstalledDialog />}
       {slackStorage.userAuth && <SlackAddUserDialog />}
 
-      <AddTodo onAddTodoItem={onAddTodo} />
+      <Fab onClick={onShowAddTodoItemDialog} className={classes.fab}>
+        <Tooltip disableFocusListener={true} title="Add a task">
+          <AddIcon />
+        </Tooltip>
+      </Fab>
       <BottomBar
         todoListUUID={props.todoList.uuid}
         currentFilter={filterModel}
         onChangeFilter={onChangeFilter}
+      />
+      <AddTodoDialog
+        show={showAddTodoItemDialog}
+        onClose={onCloseAddTodoItemDialog}
+        onAddTodoItem={onAddTodo}
+        todoItemAttrs={newTodoItemAttrs}
       />
     </React.Fragment>
   )
