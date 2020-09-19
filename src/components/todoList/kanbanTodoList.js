@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     display: "flex",
     overflowX: "auto",
     flexDirection: "row",
-    height: "calc(100vh - 272px)"
+    minHeight: "calc(100vh - 272px)"
   },
   kanbanColumn: {
     width: 400,
