@@ -1,10 +1,11 @@
 // @flow
 import React from "react"
 
-import { AppBar, Button, Toolbar } from "@material-ui/core"
+import { AppBar, Toolbar } from "@material-ui/core"
 
 import { makeStyles } from "@material-ui/styles"
 
+import FilterContext from "./utils/filterContext"
 import FilterModel from "../shared/models/filter"
 
 import GroupingMenu from "./bottomBar/groupingMenu"
@@ -30,17 +31,20 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  todoListUUID: string,
-  currentFilter: FilterModel,
-  onChangeFilter: (f: FilterModel) => void
+  todoListUUID: string
 }
 
 const BottomBar = (props: Props) => {
   const classes = useStyles()
+  const { filter, setFilter } = React.useContext(FilterContext)
 
   const onChangeFilterView = () => {
-    props.currentFilter.toggleViewType()
-    props.onChangeFilter(props.currentFilter)
+    filter.toggleViewType()
+    setFilter(filter)
+  }
+
+  const onChangeFilter = (f: FilterModel) => {
+    setFilter(f)
   }
 
   return (
@@ -48,24 +52,24 @@ const BottomBar = (props: Props) => {
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar className={classes.right}>
           <ViewSwitcher
-            checked={props.currentFilter.viewType === "kanban"}
+            checked={filter.viewType === "kanban"}
             onChange={onChangeFilterView}
           />
           <FilterDialog
-            currentFilter={props.currentFilter}
-            onChangeFilter={props.onChangeFilter}
+            currentFilter={filter}
+            onChangeFilter={onChangeFilter}
           />
-          {props.currentFilter.viewType !== "kanban" && (
+          {filter.viewType !== "kanban" && (
             <GroupingMenu
-              currentFilter={props.currentFilter}
-              onChangeFilter={props.onChangeFilter}
+              currentFilter={filter}
+              onChangeFilter={onChangeFilter}
             />
           )}
 
-          {props.currentFilter.viewType === "kanban" && (
+          {filter.viewType === "kanban" && (
             <ColumnsDialog
-              currentFilter={props.currentFilter}
-              onChangeFilter={props.onChangeFilter}
+              currentFilter={filter}
+              onChangeFilter={onChangeFilter}
             />
           )}
 
@@ -73,8 +77,8 @@ const BottomBar = (props: Props) => {
 
           <ViewsMenu
             todoListUUID={props.todoListUUID}
-            currentFilter={props.currentFilter}
-            onChangeFilter={props.onChangeFilter}
+            currentFilter={filter}
+            onChangeFilter={onChangeFilter}
           />
         </Toolbar>
       </AppBar>

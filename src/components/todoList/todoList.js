@@ -7,6 +7,8 @@ import AddIcon from "@material-ui/icons/Add"
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
+import FilterContext from "../utils/filterContext"
+
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
 import FilterModel from "../../shared/models/filter"
@@ -14,7 +16,6 @@ import UserModel from "../../shared/models/user"
 import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
-import FilterStorage from "../../shared/storage/filterStorage"
 import UserStorage from "../../shared/storage/userStorage"
 import SlackStorage from "../../shared/storage/slackStorage"
 
@@ -63,25 +64,19 @@ const useStyles = makeStyles({
 
 const TodoList = (props: Props) => {
   const classes = useStyles()
+
+  const { filter, setFilter } = React.useContext(FilterContext)
+
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
   )
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
-  const filterStorage = new FilterStorage(storageContext)
   const userStorage = new UserStorage(storageContext)
   const slackStorage = new SlackStorage(storageContext)
 
-  const [filterModelAttrs, setFilterModelAttrs] = React.useState(() => {
-    const filterFromStorage = filterStorage.loadFilter()
-    if (!filterFromStorage.isEmpty()) return filterFromStorage
-
-    return props.user.defaultFilter()
-  })
-
-  const filterModel = new FilterModel(filterModelAttrs)
-  const filteredTodos = filterModel.applyFilter(
+  const filteredTodos = filter.applyFilter(
     props.todoList.todos.map(t => new TodoItemModel(t))
   )
 
@@ -101,13 +96,8 @@ const TodoList = (props: Props) => {
   }
 
   const onSubjectClick = (subject: string) => {
-    filterModel.addSubjectContains(subject)
-    onChangeFilter(filterModel)
-  }
-
-  const onChangeFilter = (filter: FilterModel) => {
-    filterStorage.saveFilter(filter)
-    setFilterModelAttrs(filter.toJSON())
+    filter.addSubjectContains(subject)
+    setFilter(filter)
   }
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {
@@ -126,7 +116,7 @@ const TodoList = (props: Props) => {
   }
 
   const GroupView = () => {
-    const groups = filterModel.applyGrouping(filteredTodos)
+    const groups = filter.applyGrouping(filteredTodos)
 
     return (
       <Container maxWidth="md">
@@ -153,16 +143,13 @@ const TodoList = (props: Props) => {
         </Typography>
 
         <div className={classes.filterChips}>
-          <FilterChips
-            currentFilter={filterModel}
-            onChangeFilter={onChangeFilter}
-          />
+          <FilterChips />
         </div>
 
-        {filterModel.viewType === "list" && <GroupView />}
-        {filterModel.viewType === "kanban" && (
+        {filter.viewType === "list" && <GroupView />}
+        {filter.viewType === "kanban" && (
           <KanbanTodoList
-            groups={filterModel.applyKanbanGrouping(filteredTodos)}
+            groups={filter.applyKanbanGrouping(filteredTodos)}
             onChangeTodo={onChangeTodo}
             onDeleteTodo={onDeleteTodo}
             onSubjectClick={onSubjectClick}
@@ -185,11 +172,7 @@ const TodoList = (props: Props) => {
           <AddIcon />
         </Tooltip>
       </Fab>
-      <BottomBar
-        todoListUUID={props.todoList.uuid}
-        currentFilter={filterModel}
-        onChangeFilter={onChangeFilter}
-      />
+      <BottomBar todoListUUID={props.todoList.uuid} />
       <AddTodoDialog
         show={showAddTodoItemDialog}
         onClose={onCloseAddTodoItemDialog}
