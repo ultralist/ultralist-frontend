@@ -118,7 +118,6 @@ const TodoList = (props: Props) => {
 
   const onShowAddTodoItemDialog = (attrs: Object) => {
     setNewTodoItemAttrs(attrs || {})
-    console.log("onShowAddTodoItemDialog with attrs ", attrs)
     setShowAddTodoItemDialog(true)
   }
 
