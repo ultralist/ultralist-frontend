@@ -52,10 +52,6 @@ const useStyles = makeStyles({
 
 const ColumnsDialog = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState(false)
-  const [columns, setColumns] = React.useState(
-    props.currentFilter.kanbanColumns()
-  )
-
   const [newColumnName, setNewColumnName] = React.useState("")
 
   const classes = useStyles()
@@ -68,22 +64,26 @@ const ColumnsDialog = (props: Props) => {
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const newColumns = arrayMove(columns, oldIndex, newIndex)
-    setColumns(newColumns)
+    const newColumns = arrayMove(
+      props.currentFilter.kanbanColumns(),
+      oldIndex,
+      newIndex
+    )
     props.currentFilter.setKanbanColumns(newColumns)
     props.onChangeFilter(props.currentFilter)
   }
 
   const onDeleteColumn = name => {
-    const newColumns = columns.filter(n => n !== name)
-    setColumns(newColumns)
+    const newColumns = props.currentFilter
+      .kanbanColumns()
+      .filter(n => n !== name)
     props.currentFilter.setKanbanColumns(newColumns)
     props.onChangeFilter(props.currentFilter)
   }
 
   const onAddColumn = () => {
+    const columns = props.currentFilter.kanbanColumns()
     columns.push(newColumnName)
-    setColumns(columns)
     props.currentFilter.setKanbanColumns(columns)
     props.onChangeFilter(props.currentFilter)
     setNewColumnName("")
@@ -98,8 +98,6 @@ const ColumnsDialog = (props: Props) => {
       <DragHandleIcon />
     </ListItemIcon>
   ))
-
-  const nameRef = React.useRef()
 
   const SortableItem = SortableElement(({ text }) => (
     <ListItem style={{ zIndex: 1400 }}>
@@ -137,7 +135,7 @@ const ColumnsDialog = (props: Props) => {
           <SortableListContainer
             useDragHandle={true}
             onSortEnd={onSortEnd}
-            items={columns}
+            items={props.currentFilter.kanbanColumns()}
           />
 
           <Typography>Add a new status column</Typography>
