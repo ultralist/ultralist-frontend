@@ -23,6 +23,7 @@ import {
   createDeleteEvent
 } from "../shared/models/todoEvent"
 import TodoItemModel from "../shared/models/todoItem"
+import FilterModel from "../shared/models/filter"
 import { WebsocketProcessor } from "../config/websocket"
 
 import TodoListModel, {
@@ -30,6 +31,9 @@ import TodoListModel, {
 } from "../shared/models/todoList"
 
 import UserContext from "../components/utils/userContext"
+import FilterContext from "../components/utils/filterContext"
+
+import UserBackend from "../shared/backend/userBackend"
 
 const eventCache = new EventCache()
 
@@ -44,6 +48,12 @@ const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
   const { user, setUser } = React.useContext(UserContext)
+  const userBackend = new UserBackend(
+    user.token,
+    React.useContext(BackendContext)
+  )
+
+  const { setFilter } = React.useContext(FilterContext)
 
   const backend = new TodoListBackend(
     user ? user.token : "",
@@ -150,16 +160,31 @@ const TodoListApp = (props: Props) => {
 
   const onChangeTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
-    setTodoList(new TodoListModel(newList))
+
+    userBackend.getUser().then(userData => {
+      setUser(userData)
+      setTodoList(newList)
+
+      const views = user.views.filter(v => v.todoListUUID === newList.uuid)
+      const defaultView = views.find(v => v.isDefault)
+      setFilter(defaultView || new FilterModel({}))
+    })
   }
 
   const onCreateTodoList = (todoList: TodoListModel) => {
     backend.createTodoList(todoList.uuid, todoList.name).then(newList => {
       newList = createTodoListFromBackend(newList)
-      user.todoLists.push(newList)
-      setUser(user)
+
+      userBackend.getUser().then(userData => {
+        setUser(userData)
+        setTodoList(newList)
+
+        const views = user.views.filter(v => v.todoListUUID === newList.uuid)
+        const defaultView = views.find(v => v.isDefault)
+        setFilter(defaultView || new FilterModel({}))
+      })
+
       props.enqueueSnackbar("Todolist created.")
-      setTodoList(newList)
     })
   }
 
