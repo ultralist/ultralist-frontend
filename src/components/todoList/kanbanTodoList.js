@@ -19,9 +19,13 @@ type Props = {
 }
 
 const useStyles = makeStyles({
+  kanbanOuter: {
+    height: "calc(100vh - 272px)",
+    width: "100%",
+    overflowX: "auto"
+  },
   kanbanHolder: {
     display: "flex",
-    overflowX: "auto",
     flexDirection: "row",
     minHeight: "calc(100vh - 272px)"
   },
@@ -62,21 +66,23 @@ const KanbanTodoList = (props: Props) => {
   })
 
   return (
-    <div ref={kanbanHolderRef} className={classes.kanbanHolder}>
-      {props.groups.map((g, idx) => (
-        <div key={idx} className={classes.kanbanColumn}>
-          <TodoGroup
-            key={g.uuid}
-            onShowAddTodoItemDialog={props.onShowAddTodoItemDialog}
-            onChange={props.onChangeTodo}
-            onDelete={props.onDeleteTodo}
-            onSubjectClick={props.onSubjectClick}
-            onSetTodoItemStatus={props.onSetTodoItemStatus}
-            group={g}
-            kanbanView={true}
-          />
-        </div>
-      ))}
+    <div className={classes.kanbanOuter}>
+      <div ref={kanbanHolderRef} className={classes.kanbanHolder}>
+        {props.groups.map((g, idx) => (
+          <div key={idx} className={classes.kanbanColumn}>
+            <TodoGroup
+              key={g.uuid}
+              onShowAddTodoItemDialog={props.onShowAddTodoItemDialog}
+              onChange={props.onChangeTodo}
+              onDelete={props.onDeleteTodo}
+              onSubjectClick={props.onSubjectClick}
+              onSetTodoItemStatus={props.onSetTodoItemStatus}
+              group={g}
+              kanbanView={true}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
