@@ -5,7 +5,7 @@ import "typeface-oxanium"
 import "typeface-roboto"
 
 import Index from "./pages/index"
-import * as serviceWorker from "./config/serviceWorker"
+import * as serviceWorker from "../public/serviceWorker"
 
 ReactDOM.render(<Index />, document.getElementById("root"))
 
