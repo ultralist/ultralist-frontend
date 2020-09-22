@@ -29,6 +29,8 @@ import BackendContext from "../shared/backendContext"
 
 import ApiBackend from "../shared/backend/backends/apiBackend"
 
+import ServiceWorker from "../config/serviceWorker"
+
 import "./main.css"
 
 const theme = createMuiTheme({
@@ -94,6 +96,7 @@ const Index = () => {
                 >
                   <MuiThemeProvider theme={theme}>
                     <Router user={user} />
+                    <ServiceWorker />
                   </MuiThemeProvider>
                 </SnackbarProvider>
               </Elements>

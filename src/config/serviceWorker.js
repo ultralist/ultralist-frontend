@@ -8,6 +8,11 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
+import React from "react"
+
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core"
+import { withSnackbar } from "notistack"
+
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
     // [::1] is the IPv6 localhost address.
@@ -18,8 +23,33 @@ const isLocalhost = Boolean(
     )
 )
 
-export function register(config) {
-  console.log("SW register")
+const UpdatedAlert = () => {
+  return (
+    <Dialog open={true}>
+      <DialogTitle>Ultralist update</DialogTitle>
+      <DialogContent>
+        Ultralist has been updated! Please refresh the page to see the updates.
+        <Button onClick={window.location.reload()}>Reload page</Button>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+const ServiceWorker = props => {
+  React.useEffect(() => {
+    registerSW(() => {
+      props.enqueueSnackbar(
+        "A new version of Ultralist is available! Please refresh the page."
+      )
+    })
+  }, [])
+
+  return null
+}
+
+export default withSnackbar(ServiceWorker)
+
+const registerSW = updateCb => {
   if ("serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location)
@@ -31,12 +61,11 @@ export function register(config) {
     }
 
     window.addEventListener("load", () => {
-      console.log("SW eventListener load")
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
-        checkValidServiceWorker(swUrl, config)
+        checkValidServiceWorker(swUrl, updateCb)
 
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
@@ -48,13 +77,13 @@ export function register(config) {
         })
       } else {
         // Is not local host. Just register service worker
-        registerValidSW(swUrl, config)
+        registerValidSW(swUrl, updateCb)
       }
     })
   }
 }
 
-function registerValidSW(swUrl, config) {
+function registerValidSW(swUrl, updateCb) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
@@ -67,22 +96,12 @@ function registerValidSW(swUrl, config) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log("New content is available; please refresh.")
-
-              // Execute callback
-              if (config.onUpdate) {
-                config.onUpdate(registration)
-              }
+              updateCb()
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
               console.log("Content is cached for offline use.")
-
-              // Execute callback
-              if (config.onSuccess) {
-                config.onSuccess(registration)
-              }
             }
           }
         }
@@ -93,12 +112,11 @@ function registerValidSW(swUrl, config) {
     })
 }
 
-function checkValidServiceWorker(swUrl, config) {
+function checkValidServiceWorker(swUrl, updateCb) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl)
     .then(response => {
       // Ensure service worker exists, and that we really are getting a JS file.
-      console.log("checkValidServiceWorker", swUrl)
       if (
         response.status === 404 ||
         response.headers.get("content-type").indexOf("javascript") === -1
@@ -111,7 +129,7 @@ function checkValidServiceWorker(swUrl, config) {
         })
       } else {
         // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config)
+        registerValidSW(swUrl, updateCb)
       }
     })
     .catch(() => {
