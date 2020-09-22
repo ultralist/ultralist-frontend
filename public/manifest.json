@@ -4,15 +4,14 @@
   "name": "Ultralist",
   "icons": [
     {
-      "src": "favicon.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "./favicons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "purpose": "maskable any"
     },
     {
-      "src": "favicons/android-chrome-512x512.png",
+      "src": "./favicons/android-chrome-512x512.png",
       "sizes": "512x512",
-      "purpose": "maskable",
-      "type": "image/x-icon"
+      "purpose": "maskable any"
     }
   ],
   "start_url": ".",
