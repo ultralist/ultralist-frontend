@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
 import {
   Button,
@@ -35,8 +35,6 @@ import {
 
 import { makeStyles } from "@material-ui/styles"
 
-import { debounce } from "debounce"
-
 import arrayMove from "array-move"
 import {
   SortableContainer,
@@ -45,15 +43,10 @@ import {
 } from "react-sortable-hoc"
 
 import FilterModel from "../../shared/models/filter"
-//import FilterChips from "../todoList/filterChips"
+import FilterContext from "../utils/filterContext"
 
 import StorageContext from "../../shared/storageContext"
 import ModalStorage from "../../shared/storage/modalStorage"
-
-type Props = {
-  currentFilter: FilterModel,
-  onChangeFilter: (f: FilterModel) => void
-}
 
 const useStyles = makeStyles(theme => {
   return {
@@ -102,24 +95,13 @@ const useStyles = makeStyles(theme => {
   }
 })
 
-const FilterDialog = (props: Props) => {
+const FilterDialog = () => {
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
-  const debouncedOnChangeFilter = React.useRef(
-    debounce(props.onChangeFilter, 250)
-  )
+  const { filter, setFilter } = React.useContext(FilterContext)
 
-  const [currentFilterAttrs, setCurrentFilter] = useState(
-    props.currentFilter.toJSON()
-  )
   const [newColumnName, setNewColumnName] = React.useState("")
-
-  useEffect(() => {
-    setCurrentFilter(props.currentFilter.toJSON())
-  }, [props.currentFilter])
-
-  const currentFilter = new FilterModel(currentFilterAttrs)
 
   modalStorage.setModalIsOpen(isOpen, "filterDialog")
 
@@ -128,72 +110,67 @@ const FilterDialog = (props: Props) => {
   }
 
   const update = () => {
-    setCurrentFilter(currentFilter.toJSON())
-    debouncedOnChangeFilter.current(currentFilter)
+    setFilter(filter)
   }
 
   const onChangeCompleted = () => {
-    currentFilter.toggleCompleted()
+    filter.toggleCompleted()
     update()
   }
 
   const onToggleUseCompleted = () => {
-    currentFilter.toggleUseCompleted()
+    filter.toggleUseCompleted()
     update()
   }
 
   const onChangeIsPriority = () => {
-    currentFilter.toggleIsPriority()
+    filter.toggleIsPriority()
     update()
   }
 
   const onToggleUseIsPriority = () => {
-    currentFilter.toggleUseIsPriority()
+    filter.toggleUseIsPriority()
     update()
   }
 
   const onChangeArchived = () => {
-    currentFilter.toggleArchived()
+    filter.toggleArchived()
     update()
   }
 
   const onChangeDue = event => {
-    currentFilter.due = event.target.value
-    if (event.target.value === "none") currentFilter.due = null
+    filter.due = event.target.value
+    if (event.target.value === "none") filter.due = null
     update()
   }
 
   const onChangeGroup = event => {
-    currentFilter.group = event.target.value
-    if (event.target.value === "all") currentFilter.group = null
+    filter.group = event.target.value
+    if (event.target.value === "all") filter.group = null
     update()
   }
 
   const onToggleUseArchived = () => {
-    currentFilter.toggleUseArchived()
+    filter.toggleUseArchived()
     update()
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const newColumns = arrayMove(
-      currentFilter.kanbanColumns(),
-      oldIndex,
-      newIndex
-    )
-    currentFilter.setKanbanColumns(newColumns)
+    const newColumns = arrayMove(filter.kanbanColumns(), oldIndex, newIndex)
+    filter.setKanbanColumns(newColumns)
     update()
   }
 
   const onDeleteColumn = name => {
-    const newColumns = currentFilter.kanbanColumns().filter(n => n !== name)
-    currentFilter.setKanbanColumns(newColumns)
+    const newColumns = filter.kanbanColumns().filter(n => n !== name)
+    filter.setKanbanColumns(newColumns)
     update()
   }
 
   const onAddColumn = () => {
-    const columns = currentFilter.kanbanColumns()
+    const columns = filter.kanbanColumns()
     columns.push(newColumnName)
-    currentFilter.setKanbanColumns(columns)
+    filter.setKanbanColumns(columns)
     update()
     setNewColumnName("")
   }
@@ -248,54 +225,48 @@ const FilterDialog = (props: Props) => {
                   control={
                     <React.Fragment>
                       <Checkbox
-                        checked={currentFilter.completed !== null}
+                        checked={filter.completed !== null}
                         onChange={onToggleUseCompleted}
                       />
                       <Switch
-                        checked={currentFilter.completed}
+                        checked={filter.completed}
                         onChange={onChangeCompleted}
                       />
                     </React.Fragment>
                   }
-                  label={
-                    currentFilter.completed ? "Is completed" : "Not completed"
-                  }
+                  label={filter.completed ? "Is completed" : "Not completed"}
                 />
 
                 <FormControlLabel
                   control={
                     <React.Fragment>
                       <Checkbox
-                        checked={currentFilter.isPriority !== null}
+                        checked={filter.isPriority !== null}
                         onChange={onToggleUseIsPriority}
                       />
                       <Switch
-                        checked={currentFilter.isPriority}
+                        checked={filter.isPriority}
                         onChange={onChangeIsPriority}
                       />
                     </React.Fragment>
                   }
-                  label={
-                    currentFilter.isPriority ? "Is priority" : "Not priority"
-                  }
+                  label={filter.isPriority ? "Is priority" : "Not priority"}
                 />
 
                 <FormControlLabel
                   control={
                     <React.Fragment>
                       <Checkbox
-                        checked={currentFilter.archived !== null}
+                        checked={filter.archived !== null}
                         onChange={onToggleUseArchived}
                       />
                       <Switch
-                        checked={currentFilter.archived}
+                        checked={filter.archived}
                         onChange={onChangeArchived}
                       />
                     </React.Fragment>
                   }
-                  label={
-                    currentFilter.archived ? "Is archived" : "Not archived"
-                  }
+                  label={filter.archived ? "Is archived" : "Not archived"}
                 />
               </FormGroup>
               <FormHelperText>
@@ -307,10 +278,7 @@ const FilterDialog = (props: Props) => {
             <div className={classes.separator}>
               <FormControl component="fieldset" className={classes.fieldset}>
                 <InputLabel>Due</InputLabel>
-                <Select
-                  value={currentFilter.due || "none"}
-                  onChange={onChangeDue}
-                >
+                <Select value={filter.due || "none"} onChange={onChangeDue}>
                   <MenuItem value="none">No due filter</MenuItem>
                   <MenuItem value="nodue">No date set</MenuItem>
                   <Divider />
@@ -332,10 +300,7 @@ const FilterDialog = (props: Props) => {
 
               <FormControl component="fieldset" className={classes.fieldset}>
                 <InputLabel>Group</InputLabel>
-                <Select
-                  value={currentFilter.group || "all"}
-                  onChange={onChangeGroup}
-                >
+                <Select value={filter.group || "all"} onChange={onChangeGroup}>
                   <MenuItem value="all">No grouping</MenuItem>
                   <MenuItem value="context">By context</MenuItem>
                   <MenuItem value="project">By project</MenuItem>
@@ -348,7 +313,7 @@ const FilterDialog = (props: Props) => {
             <div
               className={classes.kanbanHolder}
               style={{
-                display: currentFilter.group === "kanban" ? "block" : "none"
+                display: filter.group === "kanban" ? "block" : "none"
               }}
             >
               <FormControl component="fieldset" className={classes.fieldset}>
@@ -357,7 +322,7 @@ const FilterDialog = (props: Props) => {
                   <SortableListContainer
                     useDragHandle={true}
                     onSortEnd={onSortEnd}
-                    items={currentFilter.kanbanColumns()}
+                    items={filter.kanbanColumns()}
                   />
                 </div>
                 <div className={classes.newColumnHolder}>

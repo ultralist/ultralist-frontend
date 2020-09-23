@@ -2,6 +2,10 @@
 import React from "react"
 import { makeStyles } from "@material-ui/styles"
 
+import Tooltip from "@material-ui/core/Tooltip"
+import IconButton from "@material-ui/core/IconButton"
+import AddIcon from "@material-ui/icons/Add"
+
 import Chip from "@material-ui/core/Chip"
 
 import FilterModel from "../../shared/models/filter"
@@ -18,6 +22,16 @@ const useStyles = makeStyles({
   }
 })
 
+const AddNew = () => {
+  return (
+    <Tooltip title="Add a filter">
+      <IconButton>
+        <AddIcon />
+      </IconButton>
+    </Tooltip>
+  )
+}
+
 const FilterChips = (props: Props) => {
   const classes = useStyles()
   const { filter, setFilter } = React.useContext(FilterContext)
@@ -27,7 +41,7 @@ const FilterChips = (props: Props) => {
     setFilter(filter)
   }
 
-  return filter
+  const filters = filter
     .toFilterStrings()
     .map(s => (
       <Chip
@@ -37,6 +51,12 @@ const FilterChips = (props: Props) => {
         onDelete={() => removeFilterString(s)}
       />
     ))
+  return (
+    <React.Fragment>
+      {filters}
+      <Chip className={classes.chip} label={<AddNew />} />
+    </React.Fragment>
+  )
 }
 
 export default FilterChips
