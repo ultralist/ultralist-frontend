@@ -85,7 +85,8 @@ const useStyles = makeStyles(theme => {
       marginBottom: 20
     },
     kanbanHolder: {
-      borderTop: "0.5px solid #ccc"
+      borderTop: "0.5px solid #ccc",
+      width: "50%"
     },
     kanbanColumns: {
       marginTop: 45,
@@ -326,10 +327,10 @@ const FilterDialog = () => {
                   />
                 </div>
                 <div className={classes.newColumnHolder}>
-                  <Typography>Add a new status column</Typography>
                   <TextField
                     value={newColumnName}
                     onChange={onChangeNewColumnName}
+                    helperText="Add a new status column"
                     label="Name"
                   />
                   <Button onClick={onAddColumn}>Add</Button>
