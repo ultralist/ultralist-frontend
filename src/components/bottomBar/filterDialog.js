@@ -24,8 +24,7 @@ import {
   Checkbox,
   Switch,
   TextField,
-  Tooltip,
-  Typography
+  Tooltip
 } from "@material-ui/core"
 
 import {
@@ -42,7 +41,6 @@ import {
   SortableHandle
 } from "react-sortable-hoc"
 
-import FilterModel from "../../shared/models/filter"
 import FilterContext from "../utils/filterContext"
 
 import StorageContext from "../../shared/storageContext"
@@ -52,14 +50,14 @@ const useStyles = makeStyles(theme => {
   return {
     searchBoxOuter: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
       flexWrap: "wrap",
       overflowY: "auto"
     },
     separator: {
       [theme.breakpoints.up("sm")]: {
-        borderLeft: "0.5px solid #ccc",
-        paddingLeft: 20
+        // borderLeft: "0.5px solid #ccc",
+        // paddingLeft: 20
       }
     },
     searchBox: {
@@ -85,13 +83,13 @@ const useStyles = makeStyles(theme => {
       marginBottom: 20
     },
     kanbanHolder: {
-      borderTop: "0.5px solid #ccc",
-      width: "50%"
+      // borderTop: "0.5px solid #ccc",
+      width: "100%"
     },
     kanbanColumns: {
-      marginTop: 45,
-      maxHeight: 200,
-      overflowY: "auto"
+      marginTop: 45
+      // maxHeight: 200,
+      // overflowY: "auto"
     }
   }
 })
@@ -147,6 +145,9 @@ const FilterDialog = () => {
 
   const onChangeGroup = event => {
     filter.group = event.target.value
+    event.target.value === "kanban"
+      ? (filter.viewType = "kanban")
+      : (filter.viewType = "list")
     if (event.target.value === "all") filter.group = null
     update()
   }
@@ -213,7 +214,7 @@ const FilterDialog = () => {
       <Button onClick={toggleOpen} color="inherit">
         Filter
       </Button>
-      <Dialog fullWidth maxWidth="lg" onClose={toggleOpen} open={isOpen}>
+      <Dialog fullWidth maxWidth="sm" onClose={toggleOpen} open={isOpen}>
         <DialogTitle>Manage view</DialogTitle>
         <DialogContent dividers>
           <DialogContentText>
@@ -306,7 +307,7 @@ const FilterDialog = () => {
                   <MenuItem value="context">By context</MenuItem>
                   <MenuItem value="project">By project</MenuItem>
                   <MenuItem value="status">By status</MenuItem>
-                  <MenuItem value="kanban">Kanban</MenuItem>
+                  <MenuItem value="kanban">Kanban status</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -318,7 +319,7 @@ const FilterDialog = () => {
               }}
             >
               <FormControl component="fieldset" className={classes.fieldset}>
-                <InputLabel>Kanban columns</InputLabel>
+                <InputLabel>Kanban status columns</InputLabel>
                 <div className={classes.kanbanColumns}>
                   <SortableListContainer
                     useDragHandle={true}
