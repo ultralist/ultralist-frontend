@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/styles"
 import FilterContext from "./utils/filterContext"
 import FilterModel from "../shared/models/filter"
 
-import FilterDialog from "./bottomBar/filterDialog"
 import ViewsMenu from "./bottomBar/viewsMenu"
 
 const useStyles = makeStyles({
@@ -43,8 +42,6 @@ const BottomBar = (props: Props) => {
     <div className={classes.root}>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar className={classes.right}>
-          <FilterDialog />
-
           <div className={classes.grow} />
 
           <ViewsMenu

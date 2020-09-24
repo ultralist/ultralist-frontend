@@ -11,7 +11,6 @@ import FilterContext from "../utils/filterContext"
 
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
-import FilterModel from "../../shared/models/filter"
 import UserModel from "../../shared/models/user"
 import FilterChips from "./filterChips"
 
@@ -23,6 +22,7 @@ import AddTodoDialog from "./addTodoDialog"
 import TodoGroup from "./todoGroup"
 import BottomBar from "../bottomBar"
 
+import FilterDialog from "./filterDialog"
 import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
@@ -70,6 +70,7 @@ const TodoList = (props: Props) => {
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
   )
+  const [showFilterDialog, setShowFilterDialog] = React.useState(false)
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
@@ -115,6 +116,10 @@ const TodoList = (props: Props) => {
     setShowAddTodoItemDialog(false)
   }
 
+  const onCloseFilterDialog = () => {
+    setShowFilterDialog(false)
+  }
+
   const GroupView = () => {
     const groups = filter.applyGrouping(filteredTodos)
 
@@ -143,7 +148,11 @@ const TodoList = (props: Props) => {
         </Typography>
 
         <div className={classes.filterChips}>
-          <FilterChips />
+          <FilterChips onOpenFilterDialog={() => setShowFilterDialog(true)} />
+          <FilterDialog
+            isOpen={showFilterDialog}
+            onClose={onCloseFilterDialog}
+          />
         </div>
 
         {filter.viewType === "list" && <GroupView />}

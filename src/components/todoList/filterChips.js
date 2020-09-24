@@ -12,8 +12,7 @@ import FilterModel from "../../shared/models/filter"
 import FilterContext from "../utils/filterContext"
 
 type Props = {
-  currentFilter: FilterModel,
-  onChangeFilter: (f: FilterModel) => void
+  onOpenFilterDialog: () => void
 }
 
 const useStyles = makeStyles({
@@ -54,7 +53,13 @@ const FilterChips = (props: Props) => {
   return (
     <React.Fragment>
       {filters}
-      <Chip className={classes.chip} label={<AddNew />} />
+      <Chip
+        className={classes.chip}
+        clickable
+        onClick={props.onOpenFilterDialog}
+        icon={<AddIcon />}
+        label="Add filter"
+      />
     </React.Fragment>
   )
 }
