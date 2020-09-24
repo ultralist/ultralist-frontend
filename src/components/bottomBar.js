@@ -8,11 +8,7 @@ import { makeStyles } from "@material-ui/styles"
 import FilterContext from "./utils/filterContext"
 import FilterModel from "../shared/models/filter"
 
-import GroupingMenu from "./bottomBar/groupingMenu"
-import FilterDialog from "./bottomBar/filterDialog"
-import ColumnsDialog from "./bottomBar/columnsDialog"
 import ViewsMenu from "./bottomBar/viewsMenu"
-import ViewSwitcher from "./bottomBar/views/viewSwitcher"
 
 const useStyles = makeStyles({
   root: {
@@ -38,11 +34,6 @@ const BottomBar = (props: Props) => {
   const classes = useStyles()
   const { filter, setFilter } = React.useContext(FilterContext)
 
-  const onChangeFilterView = () => {
-    filter.toggleViewType()
-    setFilter(filter)
-  }
-
   const onChangeFilter = (f: FilterModel) => {
     setFilter(f)
   }
@@ -51,28 +42,6 @@ const BottomBar = (props: Props) => {
     <div className={classes.root}>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar className={classes.right}>
-          <ViewSwitcher
-            checked={filter.viewType === "kanban"}
-            onChange={onChangeFilterView}
-          />
-          <FilterDialog
-            currentFilter={filter}
-            onChangeFilter={onChangeFilter}
-          />
-          {filter.viewType !== "kanban" && (
-            <GroupingMenu
-              currentFilter={filter}
-              onChangeFilter={onChangeFilter}
-            />
-          )}
-
-          {filter.viewType === "kanban" && (
-            <ColumnsDialog
-              currentFilter={filter}
-              onChangeFilter={onChangeFilter}
-            />
-          )}
-
           <div className={classes.grow} />
 
           <ViewsMenu
