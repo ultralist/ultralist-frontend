@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react"
+import React from "react"
 
 import {
   Button,
@@ -54,12 +54,6 @@ const useStyles = makeStyles(theme => {
       flexWrap: "wrap",
       overflowY: "auto"
     },
-    separator: {
-      [theme.breakpoints.up("sm")]: {
-        // borderLeft: "0.5px solid #ccc",
-        // paddingLeft: 20
-      }
-    },
     searchBox: {
       width: "50%",
       display: "block"
@@ -83,13 +77,10 @@ const useStyles = makeStyles(theme => {
       marginBottom: 20
     },
     kanbanHolder: {
-      // borderTop: "0.5px solid #ccc",
       width: "100%"
     },
     kanbanColumns: {
       marginTop: 45
-      // maxHeight: 200,
-      // overflowY: "auto"
     }
   }
 })
@@ -273,7 +264,7 @@ const FilterDialog = (props: Props) => {
             </FormHelperText>
           </FormControl>
 
-          <div className={classes.separator}>
+          <div>
             <FormControl component="fieldset" className={classes.fieldset}>
               <InputLabel>Due</InputLabel>
               <Select value={filter.due || "none"} onChange={onChangeDue}>
