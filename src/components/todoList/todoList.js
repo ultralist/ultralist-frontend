@@ -1,8 +1,18 @@
 // @flow
 import React from "react"
 
-import { Container, Fab, Tooltip, Typography } from "@material-ui/core"
+import {
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Container,
+  Fab,
+  Tooltip,
+  Typography
+} from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
+import SettingsIcon from "@material-ui/icons/Settings"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -45,10 +55,14 @@ const useStyles = makeStyles({
   },
   listName: {
     textAlign: "center",
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 20
   },
   filterChips: {
     display: "flex",
+    margin: 15,
+    border: "1px solid #ddd",
+    borderRadius: "3px",
     justifyContent: "center",
     flexWrap: "wrap"
   },
@@ -143,17 +157,29 @@ const TodoList = (props: Props) => {
   return (
     <React.Fragment>
       <div className={classes.mainContainer}>
-        <Typography component="h4" variant="h4" className={classes.listName}>
-          {props.todoList.name}
-        </Typography>
-
-        <div className={classes.filterChips}>
-          <FilterChips onOpenFilterDialog={() => setShowFilterDialog(true)} />
-          <FilterDialog
-            isOpen={showFilterDialog}
-            onClose={onCloseFilterDialog}
-          />
+        <div>
+          <Typography component="h4" variant="h4" className={classes.listName}>
+            {props.todoList.name}
+          </Typography>
+          <SettingsIcon />
         </div>
+
+        <Container maxWidth="md">
+          <Card variant="outlined">
+            <CardContent>
+              <Typography color="textSecondary" gutterBottom>
+                Current view: {filter.name}
+              </Typography>
+              <FilterChips
+                onOpenFilterDialog={() => setShowFilterDialog(true)}
+              />
+            </CardContent>
+            <CardActions>
+              <Button size="small">Load</Button>
+              <Button size="small">Save</Button>
+            </CardActions>
+          </Card>
+        </Container>
 
         {filter.viewType === "list" && <GroupView />}
         {filter.viewType === "kanban" && (
@@ -188,6 +214,7 @@ const TodoList = (props: Props) => {
         onAddTodoItem={onAddTodo}
         todoItemAttrs={newTodoItemAttrs}
       />
+      <FilterDialog isOpen={showFilterDialog} onClose={onCloseFilterDialog} />
     </React.Fragment>
   )
 }
