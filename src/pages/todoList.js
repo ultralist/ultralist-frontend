@@ -39,7 +39,7 @@ const eventCache = new EventCache()
 
 const useStyles = makeStyles({
   greyBackground: {
-    backgroundColor: grey[100],
+    backgroundColor: grey[50],
     height: "100vh"
   }
 })
