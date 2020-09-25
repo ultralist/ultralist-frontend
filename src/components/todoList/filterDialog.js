@@ -230,7 +230,7 @@ const FilterDialog = (props: Props) => {
       <DialogTitle>Manage view</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>
-          Filter your tasks and customize how you see your list.
+          Use views to filter your tasks and customize how you see your list.
         </DialogContentText>
         <div className={classes.searchBoxOuter}>
           <FormControl component="fieldset" className={classes.fieldset}>
