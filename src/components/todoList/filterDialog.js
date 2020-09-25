@@ -24,12 +24,14 @@ import {
   Checkbox,
   Switch,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from "@material-ui/core"
 
 import {
   DeleteOutlined as DeleteIcon,
-  DragHandle as DragHandleIcon
+  DragHandle as DragHandleIcon,
+  Help as HelpIcon
 } from "@material-ui/icons"
 
 import { makeStyles } from "@material-ui/styles"
@@ -72,15 +74,38 @@ const useStyles = makeStyles(theme => {
     },
     fieldset: {
       display: "block",
-      marginRight: 20,
-      marginTop: 20,
       marginBottom: 20
+    },
+    paddedFieldset: {
+      display: "block",
+      marginBottom: 20,
+      marginRight: 40
     },
     kanbanHolder: {
       width: "100%"
     },
     kanbanColumns: {
-      marginTop: 45
+      marginTop: 5
+    },
+    sortableListHolder: {
+      border: "1px solid #ccc",
+      maxHeight: 200,
+      overflow: "auto"
+    },
+    dueGroup: {
+      display: "flex",
+      flexDirection: "row"
+    },
+    newColumnHolder: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center"
+    },
+    kanbanInputLabel: {
+      color: "#666",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center"
     }
   }
 })
@@ -193,7 +218,7 @@ const FilterDialog = (props: Props) => {
   ))
 
   const SortableListContainer = SortableContainer(({ items }) => (
-    <List component="div">
+    <List className={classes.sortableListHolder}>
       {items.map((name, idx) => (
         <SortableItem key={name} index={idx} text={name} />
       ))}
@@ -264,8 +289,11 @@ const FilterDialog = (props: Props) => {
             </FormHelperText>
           </FormControl>
 
-          <div>
-            <FormControl component="fieldset" className={classes.fieldset}>
+          <div className={classes.dueGroup}>
+            <FormControl
+              component="fieldset"
+              className={classes.paddedFieldset}
+            >
               <InputLabel>Due</InputLabel>
               <Select value={filter.due || "none"} onChange={onChangeDue}>
                 <MenuItem value="none">No due filter</MenuItem>
@@ -287,13 +315,16 @@ const FilterDialog = (props: Props) => {
               </Select>
             </FormControl>
 
-            <FormControl component="fieldset" className={classes.fieldset}>
+            <FormControl
+              component="fieldset"
+              className={classes.paddedFieldset}
+            >
               <InputLabel>Group</InputLabel>
               <Select value={filter.group || "all"} onChange={onChangeGroup}>
                 <MenuItem value="all">No grouping</MenuItem>
-                <MenuItem value="context">By context</MenuItem>
-                <MenuItem value="project">By project</MenuItem>
-                <MenuItem value="status">By status</MenuItem>
+                <MenuItem value="context">Context</MenuItem>
+                <MenuItem value="project">Project</MenuItem>
+                <MenuItem value="status">Status</MenuItem>
                 <MenuItem value="kanban">Kanban status</MenuItem>
               </Select>
             </FormControl>
@@ -306,7 +337,15 @@ const FilterDialog = (props: Props) => {
             }}
           >
             <FormControl component="fieldset" className={classes.fieldset}>
-              <InputLabel>Kanban status columns</InputLabel>
+              <Typography
+                variant="subtitle"
+                className={classes.kanbanInputLabel}
+              >
+                Kanban status columns{" "}
+                <Tooltip title="The kanban view uses a task's status to determine what column it should be in.  Add kanban columns that match your workflow - for instance, 'none', 'inProgress', 'completed'.">
+                  <HelpIcon />
+                </Tooltip>
+              </Typography>
               <div className={classes.kanbanColumns}>
                 <SortableListContainer
                   useDragHandle={true}
