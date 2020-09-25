@@ -1,16 +1,7 @@
 // @flow
 import React from "react"
 
-import {
-  Button,
-  Card,
-  CardContent,
-  CardActions,
-  Container,
-  Fab,
-  Tooltip,
-  Typography
-} from "@material-ui/core"
+import { Container, Fab, Tooltip, Typography } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import SettingsIcon from "@material-ui/icons/Settings"
 
@@ -22,7 +13,6 @@ import FilterContext from "../utils/filterContext"
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
 import UserModel from "../../shared/models/user"
-import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
@@ -30,9 +20,9 @@ import SlackStorage from "../../shared/storage/slackStorage"
 
 import AddTodoDialog from "./addTodoDialog"
 import TodoGroup from "./todoGroup"
+import View from "./view"
 import BottomBar from "../bottomBar"
 
-import FilterDialog from "./filterDialog"
 import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
@@ -73,6 +63,9 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     margin: "0 auto"
+  },
+  settingsIcon: {
+    color: "#aaa"
   }
 })
 
@@ -84,7 +77,6 @@ const TodoList = (props: Props) => {
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
   )
-  const [showFilterDialog, setShowFilterDialog] = React.useState(false)
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
@@ -130,10 +122,6 @@ const TodoList = (props: Props) => {
     setShowAddTodoItemDialog(false)
   }
 
-  const onCloseFilterDialog = () => {
-    setShowFilterDialog(false)
-  }
-
   const GroupView = () => {
     const groups = filter.applyGrouping(filteredTodos)
 
@@ -159,27 +147,14 @@ const TodoList = (props: Props) => {
       <div className={classes.mainContainer}>
         <div>
           <Typography component="h4" variant="h4" className={classes.listName}>
-            {props.todoList.name}
+            {props.todoList.name}{" "}
+            <span className={classes.settingsIcon}>
+              <SettingsIcon />
+            </span>
           </Typography>
-          <SettingsIcon />
         </div>
 
-        <Container maxWidth="md">
-          <Card variant="outlined">
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Current view: {filter.name}
-              </Typography>
-              <FilterChips
-                onOpenFilterDialog={() => setShowFilterDialog(true)}
-              />
-            </CardContent>
-            <CardActions>
-              <Button size="small">Load</Button>
-              <Button size="small">Save</Button>
-            </CardActions>
-          </Card>
-        </Container>
+        <View />
 
         {filter.viewType === "list" && <GroupView />}
         {filter.viewType === "kanban" && (
@@ -214,7 +189,6 @@ const TodoList = (props: Props) => {
         onAddTodoItem={onAddTodo}
         todoItemAttrs={newTodoItemAttrs}
       />
-      <FilterDialog isOpen={showFilterDialog} onClose={onCloseFilterDialog} />
     </React.Fragment>
   )
 }
