@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 
 const StripePlan =
   process.env.NODE_ENV === "production"
-    ? "plan_HIRnWv1qQXJQw6"
+    ? "price_1HVZo5CBL4UBDB9z6BcCcPs1"
     : "plan_HGSBu1gixZg45K"
 
 const Plan = (props: Props) => {
@@ -159,7 +159,7 @@ const Plan = (props: Props) => {
   const TrialingText = () => (
     <React.Fragment>
       <Typography variant="body1">
-        Ultralist includes a 14-day free trial, and is $5/month. Cancel anytime.
+        Ultralist includes a 14-day free trial, and is $9/month. Cancel anytime.
       </Typography>
       <Button
         variant="contained"
