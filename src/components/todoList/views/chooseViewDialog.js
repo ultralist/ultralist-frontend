@@ -9,8 +9,8 @@ import {
   ListItemText
 } from "@material-ui/core"
 
-import UserContext from "../utils/userContext"
-import FilterContext from "../utils/filterContext"
+import UserContext from "../../utils/userContext"
+import FilterContext from "../../utils/filterContext"
 
 type Props = {
   isOpen: boolean,

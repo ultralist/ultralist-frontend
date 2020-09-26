@@ -71,7 +71,7 @@ const CreateView = (props: Props) => {
   return (
     <React.Fragment>
       <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.show}>
-        <DialogTitle>Create view</DialogTitle>
+        <DialogTitle>Save view</DialogTitle>
         <TextField
           label="Name"
           required
@@ -85,7 +85,7 @@ const CreateView = (props: Props) => {
 
         <DialogActions>
           <Button color="primary" onClick={onCreateView}>
-            Create
+            Save
           </Button>
         </DialogActions>
       </Dialog>

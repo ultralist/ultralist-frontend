@@ -43,10 +43,10 @@ import {
   SortableHandle
 } from "react-sortable-hoc"
 
-import FilterContext from "../utils/filterContext"
+import FilterContext from "../../utils/filterContext"
 
-import StorageContext from "../../shared/storageContext"
-import ModalStorage from "../../shared/storage/modalStorage"
+import StorageContext from "../../../shared/storageContext"
+import ModalStorage from "../../../shared/storage/modalStorage"
 
 const useStyles = makeStyles(theme => {
   return {

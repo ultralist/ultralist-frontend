@@ -12,14 +12,14 @@ import {
   Typography
 } from "@material-ui/core"
 
-import FilterContext from "../utils/filterContext"
-import UserContext from "../utils/userContext"
+import FilterContext from "../../utils/filterContext"
+import UserContext from "../../utils/userContext"
 
 import FilterChips from "./filterChips"
 import FilterDialog from "./filterDialog"
 import ChooseViewDialog from "./chooseViewDialog"
 
-import FilterModel from "../../shared/models/filter"
+import FilterModel from "../../../shared/models/filter"
 
 const UnsavedChangesSaveButton = () => (
   <Tooltip title="Save how the list is currently filtered.  You have unsaved changes to your filter.">

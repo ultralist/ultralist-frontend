@@ -8,8 +8,7 @@ import AddIcon from "@material-ui/icons/Add"
 
 import Chip from "@material-ui/core/Chip"
 
-import FilterModel from "../../shared/models/filter"
-import FilterContext from "../utils/filterContext"
+import FilterContext from "../../utils/filterContext"
 
 type Props = {
   onOpenFilterDialog: () => void

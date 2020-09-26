@@ -4,7 +4,6 @@ import { Button, Menu, MenuItem, Divider } from "@material-ui/core"
 
 import FilterModel from "../../shared/models/filter"
 
-import CreateViewDialog from "./views/createViewDialog"
 import ManageViewsDialog from "./views/manageViewsDialog"
 
 import UserContext from "../utils/userContext"
@@ -17,7 +16,6 @@ type Props = {
 
 const ViewsMenu = (props: Props) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [showCreateViewDialog, setShowCreateViewDialog] = React.useState(false)
   const [showManageViewsDialog, setShowManageViewsDialog] = React.useState(
     false
   )
@@ -38,18 +36,9 @@ const ViewsMenu = (props: Props) => {
     props.onChangeFilter(vm)
   }
 
-  const onShowCreateViewDialog = () => {
-    setShowCreateViewDialog(true)
-    handleClose()
-  }
-
   const onShowManageViewsDIalog = () => {
     setShowManageViewsDialog(true)
     handleClose()
-  }
-
-  const onCloseCreateViewDialog = () => {
-    setShowCreateViewDialog(false)
   }
 
   const onCloseManageViewsDialog = () => {
@@ -66,7 +55,6 @@ const ViewsMenu = (props: Props) => {
         Views
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={onShowCreateViewDialog}>Save current view</MenuItem>
         <MenuItem onClick={onShowManageViewsDIalog}>Manage views...</MenuItem>
         {viewsForTodoList.length > 0 && <Divider />}
         {viewsForTodoList.length > 0 &&
@@ -76,12 +64,6 @@ const ViewsMenu = (props: Props) => {
             </MenuItem>
           ))}
       </Menu>
-      <CreateViewDialog
-        filter={props.currentFilter}
-        todoListUUID={props.todoListUUID}
-        show={showCreateViewDialog}
-        onClose={onCloseCreateViewDialog}
-      />
       <ManageViewsDialog
         views={viewsForTodoList}
         show={showManageViewsDialog}

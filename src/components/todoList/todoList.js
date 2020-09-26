@@ -20,7 +20,7 @@ import SlackStorage from "../../shared/storage/slackStorage"
 
 import AddTodoDialog from "./addTodoDialog"
 import TodoGroup from "./todoGroup"
-import View from "./view"
+import View from "./views/view"
 import BottomBar from "../bottomBar"
 
 import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
