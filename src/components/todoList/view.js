@@ -17,6 +17,7 @@ import UserContext from "../utils/userContext"
 
 import FilterChips from "./filterChips"
 import FilterDialog from "./filterDialog"
+import ChooseViewDialog from "./chooseViewDialog"
 
 import FilterModel from "../../shared/models/filter"
 
@@ -38,12 +39,24 @@ const DisabledSaveButton = () => (
 const View = () => {
   const { filter, setFilter } = React.useContext(FilterContext)
   const { user } = React.useContext(UserContext)
+
   const [showFilterDialog, setShowFilterDialog] = React.useState(false)
+  const [showChooseViewDialog, setShowChooseViewDialog] = React.useState(false)
+
   const userFilter = new FilterModel(user.views.find(v => v.id === filter.id))
   const filterChanged = !userFilter.equals(filter)
 
   const onCloseFilterDialog = () => {
     setShowFilterDialog(false)
+  }
+
+  const onCloseChooseViewDialog = () => {
+    setShowChooseViewDialog(false)
+  }
+
+  const onChooseView = (viewID: string) => {
+    const view = user.views.find(v => v.id === viewID)
+    setFilter(view)
   }
 
   return (
@@ -60,7 +73,9 @@ const View = () => {
         </CardContent>
         <CardActions>
           <Tooltip title="Load a saved view">
-            <Button size="small">Load</Button>
+            <Button size="small" onClick={() => setShowChooseViewDialog(true)}>
+              Load
+            </Button>
           </Tooltip>
           {filterChanged ? (
             <UnsavedChangesSaveButton />
@@ -71,6 +86,11 @@ const View = () => {
       </Card>
 
       <FilterDialog isOpen={showFilterDialog} onClose={onCloseFilterDialog} />
+      <ChooseViewDialog
+        isOpen={showChooseViewDialog}
+        onChooseView={onChooseView}
+        onClose={onCloseChooseViewDialog}
+      />
     </Container>
   )
 }
