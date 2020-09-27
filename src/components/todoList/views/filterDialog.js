@@ -161,9 +161,6 @@ const FilterDialog = (props: Props) => {
 
   const onChangeGroup = event => {
     filter.group = event.target.value
-    event.target.value === "kanban"
-      ? (filter.viewType = "kanban")
-      : (filter.viewType = "list")
     if (event.target.value === "all") filter.group = null
     update()
   }

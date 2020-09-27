@@ -156,8 +156,8 @@ const TodoList = (props: Props) => {
 
         <View />
 
-        {filter.viewType === "list" && <GroupView />}
-        {filter.viewType === "kanban" && (
+        {filter.group !== "kanban" && <GroupView />}
+        {filter.group === "kanban" && (
           <KanbanTodoList
             groups={filter.applyKanbanGrouping(filteredTodos)}
             onChangeTodo={onChangeTodo}

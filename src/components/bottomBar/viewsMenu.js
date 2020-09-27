@@ -15,30 +15,14 @@ type Props = {
 }
 
 const ViewsMenu = (props: Props) => {
-  const [anchorEl, setAnchorEl] = React.useState(null)
   const [showManageViewsDialog, setShowManageViewsDialog] = React.useState(
     false
   )
 
   const { user } = React.useContext(UserContext)
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  const onChooseView = (view: FilterModel) => {
-    const vm = new FilterModel(view)
-    handleClose()
-    props.onChangeFilter(vm)
-  }
-
-  const onShowManageViewsDIalog = () => {
+  const onShowManageViewsDialog = () => {
     setShowManageViewsDialog(true)
-    handleClose()
   }
 
   const onCloseManageViewsDialog = () => {
@@ -51,19 +35,9 @@ const ViewsMenu = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Button color="inherit" onClick={handleClick}>
+      <Button color="inherit" onClick={() => onShowManageViewsDialog()}>
         Views
       </Button>
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-        <MenuItem onClick={onShowManageViewsDIalog}>Manage views...</MenuItem>
-        {viewsForTodoList.length > 0 && <Divider />}
-        {viewsForTodoList.length > 0 &&
-          viewsForTodoList.map((v, idx) => (
-            <MenuItem key={idx} onClick={() => onChooseView(v)}>
-              {v.name}
-            </MenuItem>
-          ))}
-      </Menu>
       <ManageViewsDialog
         views={viewsForTodoList}
         show={showManageViewsDialog}

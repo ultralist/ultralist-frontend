@@ -18,12 +18,13 @@ import UserContext from "../../utils/userContext"
 import FilterChips from "./filterChips"
 import FilterDialog from "./filterDialog"
 import ChooseViewDialog from "./chooseViewDialog"
+import SaveViewDialog from "./saveViewDialog"
 
 import FilterModel from "../../../shared/models/filter"
 
-const UnsavedChangesSaveButton = () => (
+const UnsavedChangesSaveButton = props => (
   <Tooltip title="Save how the list is currently filtered.  You have unsaved changes to your filter.">
-    <Button size="small">
+    <Button onClick={props.onClick} size="small">
       <Badge color="secondary" variant="dot">
         Save
       </Badge>
@@ -42,6 +43,7 @@ const View = () => {
 
   const [showFilterDialog, setShowFilterDialog] = React.useState(false)
   const [showChooseViewDialog, setShowChooseViewDialog] = React.useState(false)
+  const [showSaveViewDialog, setShowSaveViewDialog] = React.useState(false)
 
   const userFilter = new FilterModel(user.views.find(v => v.id === filter.id))
   const filterChanged = !userFilter.equals(filter)
@@ -52,6 +54,10 @@ const View = () => {
 
   const onCloseChooseViewDialog = () => {
     setShowChooseViewDialog(false)
+  }
+
+  const onCloseSaveViewDialog = () => {
+    setShowSaveViewDialog(false)
   }
 
   const onChooseView = (viewID: string) => {
@@ -78,7 +84,9 @@ const View = () => {
             </Button>
           </Tooltip>
           {filterChanged ? (
-            <UnsavedChangesSaveButton />
+            <UnsavedChangesSaveButton
+              onClick={() => setShowSaveViewDialog(true)}
+            />
           ) : (
             <DisabledSaveButton />
           )}
@@ -90,6 +98,10 @@ const View = () => {
         isOpen={showChooseViewDialog}
         onChooseView={onChooseView}
         onClose={onCloseChooseViewDialog}
+      />
+      <SaveViewDialog
+        isOpen={showSaveViewDialog}
+        onClose={onCloseSaveViewDialog}
       />
     </Container>
   )
