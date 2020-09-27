@@ -5,6 +5,8 @@ import { withSnackbar } from "notistack"
 import {
   Button,
   Dialog,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
   DialogActions,
   TextField
@@ -15,18 +17,16 @@ import { makeStyles } from "@material-ui/styles"
 import StorageContext from "../../../shared/storageContext"
 import ModalStorage from "../../../shared/storage/modalStorage"
 
-import UserModel from "../../../shared/models/user"
 import FilterModel from "../../../shared/models/filter"
 
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
 import UserContext from "../../utils/userContext"
+import FilterContext from "../../utils/filterContext"
 
 type Props = {
-  filter: FilterModel,
-  todoListUUID: string,
-  show: boolean,
+  isOpen: boolean,
   onClose: () => void
 }
 
@@ -35,15 +35,17 @@ const useStyles = makeStyles({
     color: "#fff !important" // TODO: make this use theme
   },
   margin: {
-    marginLeft: 20,
-    width: "90%"
+    width: "100%"
   }
 })
 
-const CreateView = (props: Props) => {
+const SaveView = (props: Props) => {
   const classes = useStyles()
-  const [viewName, setViewName] = React.useState("")
+
   const { user, setUser } = React.useContext(UserContext)
+  const { filter } = React.useContext(FilterContext)
+
+  const [viewName, setViewName] = React.useState(filter.name)
 
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const viewsBackend = new ViewsBackend(
@@ -57,40 +59,49 @@ const CreateView = (props: Props) => {
 
   modalStorage.setModalIsOpen(props.show, "createViewDialog")
 
-  const onCreateView = () => {
-    props.filter.name = viewName
-    props.filter.todoListUUID = props.todoListUUID
-    viewsBackend.createView(props.filter).then(() => {
-      props.enqueueSnackbar("View created!")
-      setViewName("")
-      userBackend.getUser().then(setUser)
-      props.onClose()
-    })
+  const onSaveView = () => {
+    if (filter.name === viewName) {
+      viewsBackend.updateView(filter).then(() => {
+        props.enqueueSnackbar("View updated!")
+        userBackend.getUser().then(setUser)
+        props.onClose()
+      })
+    } else {
+      filter.name = viewName
+      viewsBackend.createView(filter).then(() => {
+        props.enqueueSnackbar("View created!")
+        userBackend.getUser().then(setUser)
+        props.onClose()
+      })
+    }
   }
 
   return (
-    <React.Fragment>
-      <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.show}>
-        <DialogTitle>Create view</DialogTitle>
+    <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.isOpen}>
+      <DialogTitle>Save view</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          To overwrite the existing view, keep the same name.
+        </DialogContentText>
         <TextField
           label="Name"
           required
           margin="dense"
           autoFocus
-          value={viewName}
+          value={filter.name}
           onChange={ev => setViewName(ev.target.value)}
           className={classes.margin}
           autoComplete="off"
         />
+      </DialogContent>
 
-        <DialogActions>
-          <Button color="primary" onClick={onCreateView}>
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+      <DialogActions>
+        <Button color="primary" onClick={onSaveView}>
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-export default withSnackbar(CreateView)
+export default withSnackbar(SaveView)

@@ -3,6 +3,7 @@ import React from "react"
 
 import { Container, Fab, Tooltip, Typography } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
+import SettingsIcon from "@material-ui/icons/Settings"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -12,7 +13,6 @@ import FilterContext from "../utils/filterContext"
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
 import UserModel from "../../shared/models/user"
-import FilterChips from "./filterChips"
 
 import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
@@ -20,9 +20,9 @@ import SlackStorage from "../../shared/storage/slackStorage"
 
 import AddTodoDialog from "./addTodoDialog"
 import TodoGroup from "./todoGroup"
+import View from "./views/view"
 import BottomBar from "../bottomBar"
 
-import FilterDialog from "./filterDialog"
 import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
@@ -45,10 +45,14 @@ const useStyles = makeStyles({
   },
   listName: {
     textAlign: "center",
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 20
   },
   filterChips: {
     display: "flex",
+    margin: 15,
+    border: "1px solid #ddd",
+    borderRadius: "3px",
     justifyContent: "center",
     flexWrap: "wrap"
   },
@@ -59,6 +63,9 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     margin: "0 auto"
+  },
+  settingsIcon: {
+    color: "#aaa"
   }
 })
 
@@ -70,7 +77,6 @@ const TodoList = (props: Props) => {
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
   )
-  const [showFilterDialog, setShowFilterDialog] = React.useState(false)
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
@@ -116,10 +122,6 @@ const TodoList = (props: Props) => {
     setShowAddTodoItemDialog(false)
   }
 
-  const onCloseFilterDialog = () => {
-    setShowFilterDialog(false)
-  }
-
   const GroupView = () => {
     const groups = filter.applyGrouping(filteredTodos)
 
@@ -143,20 +145,19 @@ const TodoList = (props: Props) => {
   return (
     <React.Fragment>
       <div className={classes.mainContainer}>
-        <Typography component="h4" variant="h4" className={classes.listName}>
-          {props.todoList.name}
-        </Typography>
-
-        <div className={classes.filterChips}>
-          <FilterChips onOpenFilterDialog={() => setShowFilterDialog(true)} />
-          <FilterDialog
-            isOpen={showFilterDialog}
-            onClose={onCloseFilterDialog}
-          />
+        <div>
+          <Typography component="h4" variant="h4" className={classes.listName}>
+            {props.todoList.name}{" "}
+            <span className={classes.settingsIcon}>
+              <SettingsIcon />
+            </span>
+          </Typography>
         </div>
 
-        {filter.viewType === "list" && <GroupView />}
-        {filter.viewType === "kanban" && (
+        <View />
+
+        {filter.group !== "kanban" && <GroupView />}
+        {filter.group === "kanban" && (
           <KanbanTodoList
             groups={filter.applyKanbanGrouping(filteredTodos)}
             onChangeTodo={onChangeTodo}

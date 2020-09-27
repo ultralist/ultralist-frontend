@@ -43,10 +43,10 @@ import {
   SortableHandle
 } from "react-sortable-hoc"
 
-import FilterContext from "../utils/filterContext"
+import FilterContext from "../../utils/filterContext"
 
-import StorageContext from "../../shared/storageContext"
-import ModalStorage from "../../shared/storage/modalStorage"
+import StorageContext from "../../../shared/storageContext"
+import ModalStorage from "../../../shared/storage/modalStorage"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -161,9 +161,6 @@ const FilterDialog = (props: Props) => {
 
   const onChangeGroup = event => {
     filter.group = event.target.value
-    event.target.value === "kanban"
-      ? (filter.viewType = "kanban")
-      : (filter.viewType = "list")
     if (event.target.value === "all") filter.group = null
     update()
   }
