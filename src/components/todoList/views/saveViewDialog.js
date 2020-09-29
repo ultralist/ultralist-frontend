@@ -88,7 +88,7 @@ const SaveView = (props: Props) => {
           required
           margin="dense"
           autoFocus
-          value={filter.name}
+          value={viewName}
           onChange={ev => setViewName(ev.target.value)}
           className={classes.margin}
           autoComplete="off"
