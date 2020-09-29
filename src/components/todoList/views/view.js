@@ -37,7 +37,11 @@ const DisabledSaveButton = () => (
   </Button>
 )
 
-const View = () => {
+type Props = {
+  todoListUUID: string
+}
+
+const View = (props: Props) => {
   const { filter, setFilter } = React.useContext(FilterContext)
   const { user } = React.useContext(UserContext)
 
@@ -45,8 +49,9 @@ const View = () => {
   const [showChooseViewDialog, setShowChooseViewDialog] = React.useState(false)
   const [showSaveViewDialog, setShowSaveViewDialog] = React.useState(false)
 
-  const userFilter = new FilterModel(user.views.find(v => v.id === filter.id))
-  const filterChanged = !userFilter.equals(filter)
+  const userFilter = user.views.find(v => v.id === filter.id)
+  const filterChanged =
+    userFilter === undefined || !new FilterModel(userFilter).equals(filter)
 
   const onCloseFilterDialog = () => {
     setShowFilterDialog(false)
@@ -102,6 +107,7 @@ const View = () => {
       <SaveViewDialog
         isOpen={showSaveViewDialog}
         onClose={onCloseSaveViewDialog}
+        todoListUUID={props.todoListUUID}
       />
     </Container>
   )

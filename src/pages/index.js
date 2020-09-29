@@ -72,7 +72,7 @@ const Index = () => {
 
   const setFilterWithStorage = (f: ?FilterModel) => {
     if (!f) {
-      setFilter(null)
+      setFilter(new FilterModel({}))
       return
     }
     setFilter(new FilterModel(f))

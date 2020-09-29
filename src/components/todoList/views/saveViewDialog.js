@@ -17,8 +17,6 @@ import { makeStyles } from "@material-ui/styles"
 import StorageContext from "../../../shared/storageContext"
 import ModalStorage from "../../../shared/storage/modalStorage"
 
-import FilterModel from "../../../shared/models/filter"
-
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
@@ -27,6 +25,7 @@ import FilterContext from "../../utils/filterContext"
 
 type Props = {
   isOpen: boolean,
+  todoListUUID: string,
   onClose: () => void
 }
 
@@ -68,6 +67,7 @@ const SaveView = (props: Props) => {
       })
     } else {
       filter.name = viewName
+      filter.todoListUUID = props.todoListUUID
       viewsBackend.createView(filter).then(() => {
         props.enqueueSnackbar("View created!")
         userBackend.getUser().then(setUser)
