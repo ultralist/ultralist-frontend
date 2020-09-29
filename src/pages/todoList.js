@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { Redirect } from "react-router-dom"
 
 import { parseISO } from "date-fns"
@@ -32,6 +32,7 @@ import TodoListModel, {
 
 import UserContext from "../components/utils/userContext"
 import FilterContext from "../components/utils/filterContext"
+import TodoListContext from "../components/utils/todoListContext"
 
 import UserBackend from "../shared/backend/userBackend"
 
@@ -116,7 +117,7 @@ const TodoListApp = (props: Props) => {
     processSocketUpdate
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener("focus", onFocus)
     window.socket.registerProcessor(socketProcessor)
     fetchList(todoList)
@@ -126,13 +127,11 @@ const TodoListApp = (props: Props) => {
     }
   }, [])
 
-  const updateTodoList = () => {
+  const onUpdateTodoList = (t: TodoListModel) => {
     if (!navigator.onLine) return
 
-    backend.updateTodoList(todoList.uuid, eventCache).then(list => {
-      const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
-      user.todoLists.splice(idx, 1, list)
-      setUser(user)
+    backend.updateTodoList(t.uuid, eventCache).then(() => {
+      userBackend.getUser().then(setUser)
       eventCache.clear()
     })
   }
@@ -158,9 +157,20 @@ const TodoListApp = (props: Props) => {
     setTodoList(new TodoListModel(todoList))
   }
 
-  const onChangeTodoList = (newList: TodoListModel) => {
+  const onChooseTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
 
+    userBackend.getUser().then(userData => {
+      setUser(userData)
+      setTodoList(newList)
+
+      const views = user.views.filter(v => v.todoListUUID === newList.uuid)
+      const defaultView = views.find(v => v.isDefault)
+      setFilter(defaultView || new FilterModel({}))
+    })
+  }
+
+  const onChangeTodoList = (list: TodoListModel) => {
     userBackend.getUser().then(userData => {
       setUser(userData)
       setTodoList(newList)
@@ -199,18 +209,16 @@ const TodoListApp = (props: Props) => {
           <CreateTodoList onCreateTodoList={onCreateTodoList} />
           <TodoListChooser
             todoLists={user.todoLists}
-            onSelectTodoList={onChangeTodoList}
+            onSelectTodoList={onChooseTodoList}
           />
           <UserIcon />
         </TopBar>
 
-        <TodoList
-          user={user}
-          todoList={todoList}
-          onAddTodoItem={onAddTodoItem}
-          onChangeTodoItem={onChangeTodoItem}
-          onDeleteTodoItem={onDeleteTodoItem}
-        />
+        <TodoListContext.Provider
+          value={{ todoList, setTodoList: onChangeTodoList }}
+        >
+          <TodoList />
+        </TodoListContext.Provider>
       </div>
     </React.Fragment>
   )

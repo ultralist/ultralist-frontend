@@ -17,8 +17,6 @@ import { makeStyles } from "@material-ui/styles"
 import StorageContext from "../../../shared/storageContext"
 import ModalStorage from "../../../shared/storage/modalStorage"
 
-import FilterModel from "../../../shared/models/filter"
-
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"

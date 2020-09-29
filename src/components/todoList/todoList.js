@@ -1,7 +1,13 @@
 // @flow
 import React from "react"
 
-import { Container, Fab, Tooltip, Typography } from "@material-ui/core"
+import {
+  Container,
+  Fab,
+  IconButton,
+  Tooltip,
+  Typography
+} from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import SettingsIcon from "@material-ui/icons/Settings"
 
@@ -9,6 +15,7 @@ import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
 import FilterContext from "../utils/filterContext"
+import TodoListContext from "../utils/todoListContext"
 
 import TodoItemModel from "../../shared/models/todoItem"
 import TodoListModel from "../../shared/models/todoList"
@@ -28,15 +35,11 @@ import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
 import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
 
+import ManageTodolistDialog from "./manageTodolistDialog"
+
 import KanbanTodoList from "./kanbanTodoList"
 
-type Props = {
-  todoList: TodoListModel,
-  user: UserModel,
-  onAddTodoItem: (todoItem: TodoItemModel) => void,
-  onChangeTodoItem: (todoItem: TodoItemModel) => void,
-  onDeleteTodoItem: (todoItem: TodoItemModel) => void
-}
+type Props = {}
 
 const useStyles = makeStyles({
   mainContainer: {
@@ -69,14 +72,20 @@ const useStyles = makeStyles({
   }
 })
 
-const TodoList = (props: Props) => {
+const TodoList = () => {
   const classes = useStyles()
 
   const { filter, setFilter } = React.useContext(FilterContext)
+  const { todoList, setTodoList } = React.useContext(TodoListContext)
 
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
   )
+  const [
+    showManageTodoListDialog,
+    setShowManageTodoListDialog
+  ] = React.useState(false)
+
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
   const storageContext = React.useContext(StorageContext)
 
@@ -122,6 +131,10 @@ const TodoList = (props: Props) => {
     setShowAddTodoItemDialog(false)
   }
 
+  const onCloseManageTodoListDialog = () => {
+    setShowManageTodoListDialog(false)
+  }
+
   const GroupView = () => {
     const groups = filter.applyGrouping(filteredTodos)
 
@@ -149,7 +162,9 @@ const TodoList = (props: Props) => {
           <Typography component="h4" variant="h4" className={classes.listName}>
             {props.todoList.name}{" "}
             <span className={classes.settingsIcon}>
-              <SettingsIcon />
+              <IconButton onClick={() => setShowManageTodoListDialog(true)}>
+                <SettingsIcon />
+              </IconButton>
             </span>
           </Typography>
         </div>
@@ -188,6 +203,11 @@ const TodoList = (props: Props) => {
         onClose={onCloseAddTodoItemDialog}
         onAddTodoItem={onAddTodo}
         todoItemAttrs={newTodoItemAttrs}
+      />
+      <ManageTodolistDialog
+        todoList={props.todoList}
+        onClose={onCloseManageTodoListDialog}
+        isOpen={showManageTodoListDialog}
       />
     </React.Fragment>
   )
