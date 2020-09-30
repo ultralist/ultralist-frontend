@@ -25,6 +25,7 @@ import FilterContext from "../../utils/filterContext"
 
 type Props = {
   isOpen: boolean,
+  todoListUUID: string,
   onClose: () => void
 }
 
@@ -66,6 +67,7 @@ const SaveView = (props: Props) => {
       })
     } else {
       filter.name = viewName
+      filter.todoListUUID = props.todoListUUID
       viewsBackend.createView(filter).then(() => {
         props.enqueueSnackbar("View created!")
         userBackend.getUser().then(setUser)
@@ -86,7 +88,7 @@ const SaveView = (props: Props) => {
           required
           margin="dense"
           autoFocus
-          value={filter.name}
+          value={viewName}
           onChange={ev => setViewName(ev.target.value)}
           className={classes.margin}
           autoComplete="off"

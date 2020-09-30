@@ -74,11 +74,12 @@ const useStyles = makeStyles(theme => {
     },
     fieldset: {
       display: "block",
-      marginBottom: 20
+      marginTop: 15,
+      marginBottom: 15
     },
     paddedFieldset: {
       display: "block",
-      marginBottom: 20,
+      marginBottom: 15,
       marginRight: 40
     },
     kanbanHolder: {
@@ -97,15 +98,20 @@ const useStyles = makeStyles(theme => {
       flexDirection: "row"
     },
     newColumnHolder: {
+      marginTop: 15,
       display: "flex",
       flexDirection: "row",
       alignItems: "center"
     },
     kanbanInputLabel: {
+      marginRight: 7,
       color: "#666",
       display: "flex",
       flexDirection: "row",
       alignItems: "center"
+    },
+    helpIcon: {
+      fontSize: 16
     }
   }
 })
@@ -334,15 +340,18 @@ const FilterDialog = (props: Props) => {
             }}
           >
             <FormControl component="fieldset" className={classes.fieldset}>
-              <Typography
-                variant="subtitle"
-                className={classes.kanbanInputLabel}
-              >
-                Kanban status columns{" "}
+              <div className={classes.kanbanInputLabel}>
+                <Typography
+                  variant="subtitle"
+                  className={classes.kanbanInputLabel}
+                >
+                  Kanban status columns
+                </Typography>
                 <Tooltip title="The kanban view uses a task's status to determine what column it should be in.  Add kanban columns that match your workflow - for instance, 'none', 'inProgress', 'completed'.">
-                  <HelpIcon />
+                  <HelpIcon className={classes.helpIcon} />
                 </Tooltip>
-              </Typography>
+              </div>
+
               <div className={classes.kanbanColumns}>
                 <SortableListContainer
                   useDragHandle={true}

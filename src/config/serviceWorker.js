@@ -23,28 +23,33 @@ const isLocalhost = Boolean(
     )
 )
 
-const UpdatedAlert = () => {
+const UpdatedAlert = props => {
   return (
-    <Dialog open={true}>
+    <Dialog open={props.isOpen}>
       <DialogTitle>Ultralist update</DialogTitle>
       <DialogContent>
         Ultralist has been updated! Please refresh the page to see the updates.
-        <Button onClick={window.location.reload()}>Reload page</Button>
+        <Button onClick={props.onClick}>Reload page</Button>
       </DialogContent>
     </Dialog>
   )
 }
 
-const ServiceWorker = props => {
+const ServiceWorker = () => {
+  const [updatedAlertOpen, setUpdatedAlertOpen] = React.useState(false)
+
+  const onClick = () => {
+    window.location.reload()
+  }
+
   React.useEffect(() => {
-    registerSW(() => {
-      props.enqueueSnackbar(
-        "A new version of Ultralist is available! Please refresh the page."
-      )
+    registerSW(worker => {
+      worker.postMessage({ type: "SKIP_WAITING" })
+      setUpdatedAlertOpen(true)
     })
   }, [])
 
-  return null
+  return <UpdatedAlert onClick={onClick} isOpen={updatedAlertOpen} />
 }
 
 export default withSnackbar(ServiceWorker)
@@ -96,7 +101,7 @@ function registerValidSW(swUrl, updateCb) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              updateCb()
+              updateCb(installingWorker)
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a

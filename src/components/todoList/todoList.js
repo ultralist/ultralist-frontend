@@ -169,7 +169,7 @@ const TodoList = () => {
           </Typography>
         </div>
 
-        <View />
+        <View todoListUUID={props.todoList.uuid} />
 
         {filter.group !== "kanban" && <GroupView />}
         {filter.group === "kanban" && (
