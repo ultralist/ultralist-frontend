@@ -72,7 +72,7 @@ const useStyles = makeStyles({
   }
 })
 
-const TodoList = () => {
+const TodoList = (props: Props) => {
   const classes = useStyles()
 
   const { filter, setFilter } = React.useContext(FilterContext)
@@ -93,22 +93,27 @@ const TodoList = () => {
   const slackStorage = new SlackStorage(storageContext)
 
   const filteredTodos = filter.applyFilter(
-    props.todoList.todos.map(t => new TodoItemModel(t))
+    todoList.todos.map(t => new TodoItemModel(t))
   )
 
   const onAddTodo = (todo: TodoItemModel) => {
+    todoList.addTodo(todo)
+    setTodoList(todoList)
     props.enqueueSnackbar("Todo Added.")
-    props.onAddTodoItem(todo)
   }
 
   const onChangeTodo = (todo: TodoItemModel) => {
-    setTimeout(() => props.onChangeTodoItem(todo), 500)
+    setTimeout(() => {
+      todoList.updateTodo(todo)
+      setTodoList(todoList)
+    }, 500)
     props.enqueueSnackbar("Todo updated.")
   }
 
   const onDeleteTodo = (todo: TodoItemModel) => {
+    todoList.deleteTodo(todo)
+    setTodoList(todoList)
     props.enqueueSnackbar("Todo deleted.")
-    props.onDeleteTodoItem(todo)
   }
 
   const onSubjectClick = (subject: string) => {
@@ -117,9 +122,10 @@ const TodoList = () => {
   }
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {
-    const todo = props.todoList.todos.find(t => t.uuid === uuid)
+    const todo = todoList.todos.find(t => t.uuid === uuid)
     todo.setStatus(status)
-    props.onChangeTodoItem(todo)
+    todoList.updateTodo(todo)
+    setTodoList(todoList)
   }
 
   const onShowAddTodoItemDialog = (attrs: Object) => {
@@ -160,7 +166,7 @@ const TodoList = () => {
       <div className={classes.mainContainer}>
         <div>
           <Typography component="h4" variant="h4" className={classes.listName}>
-            {props.todoList.name}{" "}
+            {todoList.name}{" "}
             <span className={classes.settingsIcon}>
               <IconButton onClick={() => setShowManageTodoListDialog(true)}>
                 <SettingsIcon />
@@ -169,7 +175,7 @@ const TodoList = () => {
           </Typography>
         </div>
 
-        <View todoListUUID={props.todoList.uuid} />
+        <View todoListUUID={todoList.uuid} />
 
         {filter.group !== "kanban" && <GroupView />}
         {filter.group === "kanban" && (
@@ -197,7 +203,7 @@ const TodoList = () => {
           <AddIcon />
         </Tooltip>
       </Fab>
-      <BottomBar todoListUUID={props.todoList.uuid} />
+      <BottomBar todoListUUID={todoList.uuid} />
       <AddTodoDialog
         show={showAddTodoItemDialog}
         onClose={onCloseAddTodoItemDialog}
@@ -205,7 +211,7 @@ const TodoList = () => {
         todoItemAttrs={newTodoItemAttrs}
       />
       <ManageTodolistDialog
-        todoList={props.todoList}
+        todoList={todoList}
         onClose={onCloseManageTodoListDialog}
         isOpen={showManageTodoListDialog}
       />

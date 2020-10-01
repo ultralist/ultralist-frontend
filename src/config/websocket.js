@@ -21,6 +21,7 @@ export class WebsocketHandler {
   }
 
   registerSocket(user?: UserModel) {
+    console.log("registerSocket")
     if (this.socket && this.socket.readyState === this.socket.OPEN) return
 
     if (!user) return
