@@ -12,15 +12,12 @@ import {
   Typography
 } from "@material-ui/core"
 
-import FilterContext from "../../utils/filterContext"
-import UserContext from "../../utils/userContext"
+import TodoListContext from "../../utils/todoListContext"
 
 import FilterChips from "./filterChips"
 import FilterDialog from "./filterDialog"
 import ChooseViewDialog from "./chooseViewDialog"
 import SaveViewDialog from "./saveViewDialog"
-
-import FilterModel from "../../../shared/models/filter"
 
 const UnsavedChangesSaveButton = props => (
   <Tooltip title="Save how the list is currently filtered.  You have unsaved changes to your filter.">
@@ -42,16 +39,11 @@ type Props = {
 }
 
 const View = (props: Props) => {
-  const { filter, setFilter } = React.useContext(FilterContext)
-  const { user } = React.useContext(UserContext)
+  const { todoList, view, setView } = React.useContext(TodoListContext)
 
   const [showFilterDialog, setShowFilterDialog] = React.useState(false)
   const [showChooseViewDialog, setShowChooseViewDialog] = React.useState(false)
   const [showSaveViewDialog, setShowSaveViewDialog] = React.useState(false)
-
-  const userFilter = user.views.find(v => v.id === filter.id)
-  const filterChanged =
-    userFilter === undefined || !new FilterModel(userFilter).equals(filter)
 
   const onCloseFilterDialog = () => {
     setShowFilterDialog(false)
@@ -66,8 +58,8 @@ const View = (props: Props) => {
   }
 
   const onChooseView = (viewID: string) => {
-    const view = user.views.find(v => v.id === viewID)
-    setFilter(view)
+    const v = todoList.views.find(v => v.id === viewID)
+    setView(v)
   }
 
   return (
@@ -76,7 +68,7 @@ const View = (props: Props) => {
         <CardContent>
           <div>
             <Typography color="textSecondary" gutterBottom>
-              Current view: {filter.name}
+              Current view: {view.name}
             </Typography>
           </div>
 
@@ -88,7 +80,7 @@ const View = (props: Props) => {
               Load
             </Button>
           </Tooltip>
-          {filterChanged ? (
+          {todoList.viewChanged(view) ? (
             <UnsavedChangesSaveButton
               onClick={() => setShowSaveViewDialog(true)}
             />

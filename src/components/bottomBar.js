@@ -2,11 +2,7 @@
 import React from "react"
 
 import { AppBar, Toolbar } from "@material-ui/core"
-
 import { makeStyles } from "@material-ui/styles"
-
-import FilterContext from "./utils/filterContext"
-import FilterModel from "../shared/models/filter"
 
 import ViewsMenu from "./bottomBar/viewsMenu"
 
@@ -26,17 +22,10 @@ const useStyles = makeStyles({
   }
 })
 
-type Props = {
-  todoListUUID: string
-}
+type Props = {}
 
 const BottomBar = (props: Props) => {
   const classes = useStyles()
-  const { filter, setFilter } = React.useContext(FilterContext)
-
-  const onChangeFilter = (f: FilterModel) => {
-    setFilter(f)
-  }
 
   return (
     <div className={classes.root}>
@@ -44,11 +33,7 @@ const BottomBar = (props: Props) => {
         <Toolbar className={classes.right}>
           <div className={classes.grow} />
 
-          <ViewsMenu
-            todoListUUID={props.todoListUUID}
-            currentFilter={filter}
-            onChangeFilter={onChangeFilter}
-          />
+          <ViewsMenu />
         </Toolbar>
       </AppBar>
     </div>

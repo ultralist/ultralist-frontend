@@ -14,12 +14,9 @@ import SettingsIcon from "@material-ui/icons/Settings"
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
-import FilterContext from "../utils/filterContext"
 import TodoListContext from "../utils/todoListContext"
 
 import TodoItemModel from "../../shared/models/todoItem"
-import TodoListModel from "../../shared/models/todoList"
-import UserModel from "../../shared/models/user"
 
 import StorageContext from "../../shared/storageContext"
 import UserStorage from "../../shared/storage/userStorage"
@@ -75,8 +72,7 @@ const useStyles = makeStyles({
 const TodoList = (props: Props) => {
   const classes = useStyles()
 
-  const { filter, setFilter } = React.useContext(FilterContext)
-  const { todoList, setTodoList } = React.useContext(TodoListContext)
+  const { todoList, setTodoList, view } = React.useContext(TodoListContext)
 
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
@@ -92,7 +88,7 @@ const TodoList = (props: Props) => {
   const userStorage = new UserStorage(storageContext)
   const slackStorage = new SlackStorage(storageContext)
 
-  const filteredTodos = filter.applyFilter(
+  const filteredTodos = view.applyFilter(
     todoList.todos.map(t => new TodoItemModel(t))
   )
 
@@ -117,8 +113,8 @@ const TodoList = (props: Props) => {
   }
 
   const onSubjectClick = (subject: string) => {
-    filter.addSubjectContains(subject)
-    setFilter(filter)
+    view.addSubjectContains(subject)
+    setTodoList(todoList)
   }
 
   const onSetTodoItemStatus = (uuid: string, status: string) => {
@@ -142,7 +138,7 @@ const TodoList = (props: Props) => {
   }
 
   const GroupView = () => {
-    const groups = filter.applyGrouping(filteredTodos)
+    const groups = view.applyGrouping(filteredTodos)
 
     return (
       <Container maxWidth="md">
@@ -177,10 +173,10 @@ const TodoList = (props: Props) => {
 
         <View todoListUUID={todoList.uuid} />
 
-        {filter.group !== "kanban" && <GroupView />}
-        {filter.group === "kanban" && (
+        {view.group !== "kanban" && <GroupView />}
+        {view.group === "kanban" && (
           <KanbanTodoList
-            groups={filter.applyKanbanGrouping(filteredTodos)}
+            groups={view.applyKanbanGrouping(filteredTodos)}
             onChangeTodo={onChangeTodo}
             onDeleteTodo={onDeleteTodo}
             onSubjectClick={onSubjectClick}

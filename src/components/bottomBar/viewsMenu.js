@@ -6,7 +6,7 @@ import FilterModel from "../../shared/models/filter"
 
 import ManageViewsDialog from "./views/manageViewsDialog"
 
-import UserContext from "../utils/userContext"
+import TodoListContext from "../utils/todoListContext"
 
 type Props = {
   todoListUUID: string,
@@ -18,8 +18,7 @@ const ViewsMenu = (props: Props) => {
   const [showManageViewsDialog, setShowManageViewsDialog] = React.useState(
     false
   )
-
-  const { user } = React.useContext(UserContext)
+  const { todoList } = React.useContext(TodoListContext)
 
   const onShowManageViewsDialog = () => {
     setShowManageViewsDialog(true)
@@ -29,17 +28,13 @@ const ViewsMenu = (props: Props) => {
     setShowManageViewsDialog(false)
   }
 
-  const viewsForTodoList = user.views.filter(
-    v => v.todoListUUID === props.todoListUUID
-  )
-
   return (
     <React.Fragment>
       <Button color="inherit" onClick={() => onShowManageViewsDialog()}>
         Views
       </Button>
       <ManageViewsDialog
-        views={viewsForTodoList}
+        views={todoList.views}
         show={showManageViewsDialog}
         onClose={onCloseManageViewsDialog}
       />

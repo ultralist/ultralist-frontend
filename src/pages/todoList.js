@@ -18,14 +18,13 @@ import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
 import CreateTodoList from "../components/topBar/createTodoList"
-import FilterModel from "../shared/models/filter"
 import TodoEvent from "../shared/models/todoEvent"
 import { WebsocketProcessor } from "../config/websocket"
 
 import TodoListModel from "../shared/models/todoList"
+import FilterModel from "../shared/models/filter"
 
 import UserContext from "../components/utils/userContext"
-import FilterContext from "../components/utils/filterContext"
 import TodoListContext from "../components/utils/todoListContext"
 
 import UserBackend from "../shared/backend/userBackend"
@@ -52,8 +51,6 @@ const TodoListApp = (props: Props) => {
     React.useContext(BackendContext)
   )
 
-  const { setFilter } = React.useContext(FilterContext)
-
   const backend = new TodoListBackend(
     user ? user.token : "",
     React.useContext(BackendContext)
@@ -77,9 +74,11 @@ const TodoListApp = (props: Props) => {
     return tl
   })
 
-  // const views = user.views.filter(v => v.todoListUUID === todoList.uuid)
-  // const defaultView = views.find(v => v.isDefault)
-  // setFilter(defaultView || new FilterModel({}))
+  const [view, setView] = React.useState(todoList.defaultView())
+
+  const onSetView = (v: FilterModel) => {
+    setView(new FilterModel(v))
+  }
 
   const processSocketUpdate = data => {
     setTimeout(() => {
@@ -140,12 +139,16 @@ const TodoListApp = (props: Props) => {
   }, [])
 
   const onChangeTodoList = (t: TodoListModel) => {
-    setTodoList(new TodoListModel({ ...t, eventCache }))
+    t.eventCache = eventCache
+    setTodoList(t)
+    //setTodoList(new TodoListModel({ ...t, eventCache }))
     publishEvents()
   }
 
   const publishEvents = () => {
     if (!navigator.onLine) return
+    if (eventCache.cache.length === 0) return
+    return
 
     eventsBackend.publishEvents(eventCache).then(() => {
       userBackend.getUser().then(setUser)
@@ -156,6 +159,7 @@ const TodoListApp = (props: Props) => {
   const onChooseTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
     setTodoList(new TodoListModel({ ...newList, eventCache }))
+    setView(todoList.defaultView())
 
     if (!navigator.onLine) return
 
@@ -187,7 +191,12 @@ const TodoListApp = (props: Props) => {
         </TopBar>
 
         <TodoListContext.Provider
-          value={{ todoList, setTodoList: onChangeTodoList }}
+          value={{
+            todoList,
+            setTodoList: onChangeTodoList,
+            view,
+            setView: onSetView
+          }}
         >
           <TodoList />
         </TodoListContext.Provider>
