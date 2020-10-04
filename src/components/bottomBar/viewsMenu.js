@@ -1,12 +1,10 @@
 // @flow
 import React from "react"
-import { Button, Menu, MenuItem, Divider } from "@material-ui/core"
+import { Button } from "@material-ui/core"
 
 import FilterModel from "../../shared/models/filter"
 
 import ManageViewsDialog from "./views/manageViewsDialog"
-
-import TodoListContext from "../utils/todoListContext"
 
 type Props = {
   todoListUUID: string,
@@ -18,7 +16,6 @@ const ViewsMenu = (props: Props) => {
   const [showManageViewsDialog, setShowManageViewsDialog] = React.useState(
     false
   )
-  const { todoList } = React.useContext(TodoListContext)
 
   const onShowManageViewsDialog = () => {
     setShowManageViewsDialog(true)
@@ -34,7 +31,6 @@ const ViewsMenu = (props: Props) => {
         Views
       </Button>
       <ManageViewsDialog
-        views={todoList.views}
         show={showManageViewsDialog}
         onClose={onCloseManageViewsDialog}
       />

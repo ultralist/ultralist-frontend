@@ -41,7 +41,7 @@ type Props = {}
 const useStyles = makeStyles({
   mainContainer: {
     overflow: "auto",
-    maxHeight: "calc(100vh - 134px)"
+    maxHeight: "calc(100vh - 132px)"
   },
   listName: {
     textAlign: "center",

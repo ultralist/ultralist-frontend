@@ -21,14 +21,14 @@ type Props = {
 const useStyles = makeStyles({
   kanbanOuter: {
     marginTop: 20,
-    height: "calc(100vh - 384px)",
+    height: "calc(100vh - 388px)",
     width: "100%",
     overflowX: "auto"
   },
   kanbanHolder: {
     display: "flex",
     flexDirection: "row",
-    minHeight: "calc(100vh - 384px)"
+    minHeight: "calc(100vh - 388px)"
   },
   kanbanColumn: {
     width: 400,

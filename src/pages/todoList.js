@@ -158,8 +158,9 @@ const TodoListApp = (props: Props) => {
 
   const onChooseTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
-    setTodoList(new TodoListModel({ ...newList, eventCache }))
-    setView(todoList.defaultView())
+    const list = new TodoListModel({ ...newList, eventCache })
+    setTodoList(list)
+    onSetView(list.defaultView())
 
     if (!navigator.onLine) return
 
