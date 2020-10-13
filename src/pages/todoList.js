@@ -175,6 +175,7 @@ const TodoListApp = (props: Props) => {
 
     if (!navigator.onLine) return
 
+    // do I need this?
     //userBackend.getUser().then(setUser)
   }
 

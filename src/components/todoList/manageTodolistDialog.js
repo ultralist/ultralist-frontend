@@ -26,7 +26,6 @@ import TodoListBackend from "../../shared/backend/todoListBackend"
 import UserBackend from "../../shared/backend/userBackend"
 
 type Props = {
-  todoList: TodoListModel,
   isOpen: boolean,
   onClose: () => void
 }
@@ -43,11 +42,10 @@ const useStyles = makeStyles({
 const ManageTodolistDialog = (props: Props) => {
   const classes = useStyles()
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
+  const nameRef = React.useRef(null)
 
   const { user, setUser } = React.useContext(UserContext)
   const { todoList, setTodoList } = React.useContext(TodoListContext)
-
-  const [todoListName, setTodoListName] = React.useState(todoList.name)
 
   const todoListBackend = new TodoListBackend(
     user.token,
@@ -61,12 +59,13 @@ const ManageTodolistDialog = (props: Props) => {
   modalStorage.setModalIsOpen(props.isOpen, "ManageTodolistDialog")
 
   const onSaveTodolist = () => {
-    if (todoListName === props.todoList.name) {
+    if (nameRef.current.value === todoList.name) {
       props.onClose()
       return
     }
 
-    todoList.setName(todoListName)
+    todoList.setName(nameRef.current.value)
+    todoList.name = nameRef.current.value
     setTodoList(todoList)
     props.enqueueSnackbar("Todo list updated!")
     props.onClose()
@@ -79,11 +78,11 @@ const ManageTodolistDialog = (props: Props) => {
         <DialogContentText>Rename or delete this todolist.</DialogContentText>
         <TextField
           label="Name"
+          inputRef={nameRef}
           required
           margin="dense"
           autoFocus
-          value={todoListName}
-          onChange={ev => setTodoListName(ev.target.value)}
+          defaultValue={todoList.name}
           className={classes.textField}
           autoComplete="off"
         />
