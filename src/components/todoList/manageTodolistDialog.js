@@ -20,6 +20,7 @@ import StorageContext from "../../shared/storageContext"
 import ModalStorage from "../../shared/storage/modalStorage"
 
 import UserContext from "../utils/userContext"
+import TodoListContext from "../utils/todoListContext"
 import BackendContext from "../../shared/backendContext"
 import TodoListBackend from "../../shared/backend/todoListBackend"
 import UserBackend from "../../shared/backend/userBackend"
@@ -42,9 +43,11 @@ const useStyles = makeStyles({
 const ManageTodolistDialog = (props: Props) => {
   const classes = useStyles()
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
-  const [todoListName, setTodoListName] = React.useState(props.todoList.name)
 
   const { user, setUser } = React.useContext(UserContext)
+  const { todoList, setTodoList } = React.useContext(TodoListContext)
+
+  const [todoListName, setTodoListName] = React.useState(todoList.name)
 
   const todoListBackend = new TodoListBackend(
     user.token,
@@ -62,13 +65,11 @@ const ManageTodolistDialog = (props: Props) => {
       props.onClose()
       return
     }
-    todoListBackend
-      .updateTodoListName(props.todoList.uuid, todoListName)
-      .then(() => {
-        props.enqueueSnackbar("Todo list updated!")
-        userBackend.getUser().then(setUser)
-        props.onClose()
-      })
+
+    todoList.setName(todoListName)
+    setTodoList(todoList)
+    props.enqueueSnackbar("Todo list updated!")
+    props.onClose()
   }
 
   return (

@@ -17,7 +17,6 @@ import { WebsocketHandler } from "../config/websocket"
 import StorageContext from "../shared/storageContext"
 import BrowserStorage from "../shared/storage/browserStorage"
 import UserStorage from "../shared/storage/userStorage"
-import FilterStorage from "../shared/storage/filterStorage"
 
 import UserModel from "../shared/models/user"
 

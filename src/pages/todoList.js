@@ -2,7 +2,7 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
 
-import { parseISO } from "date-fns"
+import { parseISO, differenceInSeconds } from "date-fns"
 import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 import grey from "@material-ui/core/colors/grey"
@@ -28,8 +28,12 @@ import UserContext from "../components/utils/userContext"
 import TodoListContext from "../components/utils/todoListContext"
 
 import UserBackend from "../shared/backend/userBackend"
+import BrowserStorage from "../shared/storage/browserStorage"
+import UserStorage from "../shared/storage/userStorage"
 
+const storage = new BrowserStorage()
 const eventCache = new EventCache()
+const userStorage = new UserStorage(storage)
 
 const useStyles = makeStyles({
   greyBackground: {
@@ -81,26 +85,27 @@ const TodoListApp = (props: Props) => {
   }
 
   const processSocketUpdate = data => {
-    setTimeout(() => {
-      const updatedAt = parseISO(data.data.updated_at)
-      const updatedList = new TodoListModel(
-        user.todoLists.find(list => list.uuid === data.data.uuid)
-      )
-      if (updatedList && updatedAt > parseISO(updatedList.updatedAt)) {
-        fetchList(updatedList)
-      }
-    }, 500)
+    const updatedAt = parseISO(data.data.updated_at)
+    const updatedList = user.todoLists.find(
+      list => list.uuid === data.data.uuid
+    )
+
+    if (
+      updatedList &&
+      differenceInSeconds(updatedAt, parseISO(updatedList.updatedAt)) > 10
+    ) {
+      fetchList(updatedList.uuid)
+    }
   }
 
-  // there is some bug here where the wrong list might show up.
-  const fetchList = (updatedList: TodoListModel) => {
+  const fetchList = (updatedListUUID: string) => {
     if (!navigator.onLine) return
 
-    backend.fetchTodoList(updatedList.uuid).then(list => {
+    backend.fetchTodoList(updatedListUUID).then(list => {
       const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
       user.todoLists.splice(idx, 1, list)
       setUser(user)
-      if (list.uuid === todoList.uuid) {
+      if (list.uuid === props.match.params.id) {
         setTodoList(new TodoListModel({ ...list, eventCache: eventCache }))
         window.localStorage.setItem(
           "focusUpdate",
@@ -116,7 +121,7 @@ const TodoListApp = (props: Props) => {
     ).time
     const currentTime = new Date().getTime()
     if (currentTime - lastUpdateTime > 600000) {
-      fetchList(todoList)
+      fetchList(todoList.uuid)
     }
     window.socket.deregisterProcessor("todolist_update")
     window.socket.registerProcessor(socketProcessor)
@@ -128,10 +133,12 @@ const TodoListApp = (props: Props) => {
   )
 
   React.useEffect(() => {
+    if (!props.match.params.id) return
+
     window.addEventListener("focus", onFocus)
     window.socket.registerProcessor(socketProcessor)
     window.socket.registerSocket(user)
-    fetchList(todoList) // Fetch the list on page load / reload
+    fetchList(todoList.uuid) // Fetch the list on page load / reload
 
     return () => {
       window.removeEventListener("focus", onFocus)
@@ -140,18 +147,22 @@ const TodoListApp = (props: Props) => {
 
   const onChangeTodoList = (t: TodoListModel) => {
     t.eventCache = eventCache
+    t.updatedAt = new Date().toISOString()
+
+    //update user cache so processSocketUpdate has fresh data
+    const idx = user.todoLists.findIndex(l => l.uuid === t.uuid)
+    user.todoLists.splice(idx, 1, t)
+    setUser(user)
+
     setTodoList(t)
-    //setTodoList(new TodoListModel({ ...t, eventCache }))
     publishEvents()
   }
 
   const publishEvents = () => {
     if (!navigator.onLine) return
     if (eventCache.cache.length === 0) return
-    return
 
     eventsBackend.publishEvents(eventCache).then(() => {
-      userBackend.getUser().then(setUser)
       eventCache.clear()
     })
   }
@@ -164,7 +175,7 @@ const TodoListApp = (props: Props) => {
 
     if (!navigator.onLine) return
 
-    userBackend.getUser().then(setUser)
+    //userBackend.getUser().then(setUser)
   }
 
   const onCreateTodoList = (todoList: TodoListModel) => {
@@ -173,6 +184,11 @@ const TodoListApp = (props: Props) => {
     setTodoList(todoList)
     props.enqueueSnackbar("Todolist created.")
     publishEvents()
+  }
+
+  if (!props.match.params.id) {
+    props.history.push(`/todolist/${todoList.uuid}`)
+    return null
   }
 
   if (!user) {
