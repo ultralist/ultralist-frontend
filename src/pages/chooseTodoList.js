@@ -8,12 +8,18 @@ import {
   ListItemText,
   Typography
 } from "@material-ui/core"
+import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 import AddIcon from "@material-ui/icons/Add"
+
+import CreateTodoList from "../components/topBar/createTodoList"
 
 import grey from "@material-ui/core/colors/grey"
 
 import UserContext from "../components/utils/userContext"
+import EventCacheContext from "../components/utils/eventCacheContext"
+
+import TodoEvent from "../shared/models/todoEvent"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
@@ -43,13 +49,28 @@ const useStyles = makeStyles(theme => ({
 
 const ChooseTodoList = props => {
   const classes = useStyles()
-  const { user } = React.useContext(UserContext)
+  const { user, setUser } = React.useContext(UserContext)
+  const eventCache = React.useContext(EventCacheContext)
+  const [
+    isCreateTodoListDialogOpen,
+    setIsCreateTodoListDialogOpen
+  ] = React.useState(false)
+
+  const onCloseCreateTodoListDialog = () => {
+    setIsCreateTodoListDialogOpen(false)
+  }
 
   const onChooseTodoList = (todoListUUID: string) => {
     props.history.push(`/todolist/${todoListUUID}`)
   }
 
-  const onCreateTodoList = () => {}
+  const onCreateTodoList = (tl: TodoListModel) => {
+    user.todoLists.push(tl)
+    setUser(user)
+    props.enqueueSnackbar("Todolist created.")
+    eventCache.addItem(new TodoEvent("EventAdded", "TodoList", tl))
+    props.history.push(`/todolist/${tl.uuid}`)
+  }
 
   return (
     <React.Fragment>
@@ -68,7 +89,10 @@ const ChooseTodoList = props => {
           </Typography>
 
           <List className={classes.todoLists}>
-            <ListItem button onClick={onCreateTodoList}>
+            <ListItem
+              button
+              onClick={() => setIsCreateTodoListDialogOpen(true)}
+            >
               <ListItemIcon>
                 <AddIcon />
               </ListItemIcon>
@@ -89,8 +113,13 @@ const ChooseTodoList = props => {
           </List>
         </div>
       </div>
+      <CreateTodoList
+        onCreateTodoList={onCreateTodoList}
+        isOpen={isCreateTodoListDialogOpen}
+        onClose={onCloseCreateTodoListDialog}
+      />
     </React.Fragment>
   )
 }
 
-export default ChooseTodoList
+export default withSnackbar(ChooseTodoList)

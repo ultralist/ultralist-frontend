@@ -174,6 +174,7 @@ const TodoListApp = (props: Props) => {
     setUser(user)
     setTodoList(tl)
     onSetView(tl.defaultView())
+    props.history.push(`/todolist/${tl.uuid}`)
     props.enqueueSnackbar("Todolist created.")
     eventCache.addItem(new TodoEvent("EventAdded", "TodoList", tl))
   }
