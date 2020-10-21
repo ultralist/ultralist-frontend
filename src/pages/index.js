@@ -56,7 +56,7 @@ const userStorage = new UserStorage(storage)
 
 const Index = () => {
   const [user, setUser] = React.useState(userStorage.loadUser())
-  const eventCache = new EventCache(backend, user.token)
+  const eventCache = new EventCache(backend, user ? user.token : "")
 
   const setUserWithStorage = (u: ?UserModel) => {
     if (!u) {

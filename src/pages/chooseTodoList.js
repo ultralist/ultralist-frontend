@@ -17,7 +17,6 @@ import UserContext from "../components/utils/userContext"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
-import CreateTodoList from "../components/topBar/createTodoList"
 
 const useStyles = makeStyles(theme => ({
   chooseListArea: {

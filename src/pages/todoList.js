@@ -14,7 +14,7 @@ import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
-import CreateTodoList from "../components/topBar/createTodoList"
+import CreateTodoListIcon from "../components/topBar/createTodoListIcon"
 import TodoEvent from "../shared/models/todoEvent"
 import { WebsocketProcessor } from "../config/websocket"
 
@@ -150,28 +150,15 @@ const TodoListApp = (props: Props) => {
     setUser(user)
 
     setTodoList(t)
-    publishEvents()
   }
 
   const onDeleteTodoList = () => {
     const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
     user.todoLists.splice(idx, 1)
     setUser(user)
-    publishEvents()
+    eventCache.addItem(new TodoEvent("EventDeleted", "TodoList", todoList))
 
     props.history.push("/todolist")
-  }
-
-  const publishEvents = () => {
-    if (!navigator.onLine) return
-    if (eventCache.cache.length === 0) return
-
-    eventCache.publishEvents.then(() => {
-      eventCache.clear()
-
-      // do I need this?
-      //userBackend.getUser().then(setUser)
-    })
   }
 
   const onChooseTodoList = (newList: TodoListModel) => {
@@ -181,12 +168,14 @@ const TodoListApp = (props: Props) => {
     onSetView(list.defaultView())
   }
 
-  const onCreateTodoList = (todoList: TodoListModel) => {
+  const onCreateTodoList = (tl: TodoListModel) => {
     // add to the event cache, and publish event cache
-    eventCache.addItem(new TodoEvent("EventAdded", todoList, "TodoList"))
-    setTodoList(todoList)
+    user.todoLists.push(tl)
+    setUser(user)
+    setTodoList(tl)
+    onSetView(tl.defaultView())
     props.enqueueSnackbar("Todolist created.")
-    publishEvents()
+    eventCache.addItem(new TodoEvent("EventAdded", "TodoList", tl))
   }
 
   if (!props.match.params.id) {
@@ -207,7 +196,7 @@ const TodoListApp = (props: Props) => {
     <React.Fragment>
       <div className={classes.greyBackground}>
         <TopBar>
-          <CreateTodoList onCreateTodoList={onCreateTodoList} />
+          <CreateTodoListIcon onCreateTodoList={onCreateTodoList} />
           <TodoListChooser
             todoLists={user.todoLists}
             onSelectTodoList={onChooseTodoList}
