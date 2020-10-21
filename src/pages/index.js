@@ -17,13 +17,12 @@ import { WebsocketHandler } from "../config/websocket"
 import StorageContext from "../shared/storageContext"
 import BrowserStorage from "../shared/storage/browserStorage"
 import UserStorage from "../shared/storage/userStorage"
-import FilterStorage from "../shared/storage/filterStorage"
 
 import UserModel from "../shared/models/user"
-import FilterModel from "../shared/models/filter"
+import EventCache from "../shared/backend/eventCache"
 
 import UserContext from "../components/utils/userContext"
-import FilterContext from "../components/utils/filterContext"
+import EventCacheContext from "../components/utils/eventCacheContext"
 
 import BackendContext from "../shared/backendContext"
 
@@ -54,11 +53,10 @@ window.socket = new WebsocketHandler()
 const storage = new BrowserStorage()
 const backend = new ApiBackend()
 const userStorage = new UserStorage(storage)
-const filterStorage = new FilterStorage(storage)
 
 const Index = () => {
   const [user, setUser] = React.useState(userStorage.loadUser())
-  const [filter, setFilter] = React.useState(filterStorage.loadFilter())
+  const eventCache = new EventCache(backend, user ? user.token : "")
 
   const setUserWithStorage = (u: ?UserModel) => {
     if (!u) {
@@ -70,23 +68,12 @@ const Index = () => {
     userStorage.saveUser(u)
   }
 
-  const setFilterWithStorage = (f: ?FilterModel) => {
-    if (!f) {
-      setFilter(new FilterModel({}))
-      return
-    }
-    setFilter(new FilterModel(f))
-    filterStorage.saveFilter(f)
-  }
-
   return (
     <DndProvider backend={HTML5Backend}>
       <BackendContext.Provider value={backend}>
         <StorageContext.Provider value={storage}>
-          <UserContext.Provider value={{ user, setUser: setUserWithStorage }}>
-            <FilterContext.Provider
-              value={{ filter, setFilter: setFilterWithStorage }}
-            >
+          <EventCacheContext.Provider value={eventCache}>
+            <UserContext.Provider value={{ user, setUser: setUserWithStorage }}>
               <Elements stripe={stripePromise}>
                 <CssBaseline />
                 <SnackbarProvider
@@ -100,8 +87,8 @@ const Index = () => {
                   </MuiThemeProvider>
                 </SnackbarProvider>
               </Elements>
-            </FilterContext.Provider>
-          </UserContext.Provider>
+            </UserContext.Provider>
+          </EventCacheContext.Provider>
         </StorageContext.Provider>
       </BackendContext.Provider>
     </DndProvider>

@@ -20,8 +20,9 @@ import ModalStorage from "../../../shared/storage/modalStorage"
 import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
+
 import UserContext from "../../utils/userContext"
-import FilterContext from "../../utils/filterContext"
+import TodoListContext from "../../utils/todoListContext"
 
 type Props = {
   isOpen: boolean,
@@ -42,9 +43,9 @@ const SaveView = (props: Props) => {
   const classes = useStyles()
 
   const { user, setUser } = React.useContext(UserContext)
-  const { filter } = React.useContext(FilterContext)
+  const { todoList, setTodoList, view } = React.useContext(TodoListContext)
 
-  const [viewName, setViewName] = React.useState(filter.name)
+  const [viewName, setViewName] = React.useState(view.name)
 
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const viewsBackend = new ViewsBackend(
@@ -59,15 +60,17 @@ const SaveView = (props: Props) => {
   modalStorage.setModalIsOpen(props.show, "createViewDialog")
 
   const onSaveView = () => {
-    if (filter.name === viewName) {
-      viewsBackend.updateView(filter).then(() => {
+    if (view.name === viewName) {
+      viewsBackend.updateView(view).then(() => {
         props.enqueueSnackbar("View updated!")
         userBackend.getUser().then(setUser)
         props.onClose()
       })
     } else {
+      const filter = view
       filter.name = viewName
       filter.todoListUUID = props.todoListUUID
+      todoList.views.push(filter)
       viewsBackend.createView(filter).then(() => {
         props.enqueueSnackbar("View created!")
         userBackend.getUser().then(setUser)

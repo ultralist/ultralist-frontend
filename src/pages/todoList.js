@@ -1,8 +1,8 @@
 // @flow
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { Redirect } from "react-router-dom"
 
-import { parseISO } from "date-fns"
+import { parseISO, differenceInSeconds } from "date-fns"
 import { withSnackbar } from "notistack"
 import { makeStyles } from "@material-ui/styles"
 import grey from "@material-ui/core/colors/grey"
@@ -10,32 +10,22 @@ import grey from "@material-ui/core/colors/grey"
 import BackendContext from "../shared/backendContext"
 import TodoListBackend from "../shared/backend/todoListBackend"
 
-import EventCache from "../shared/backend/eventCache"
-
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 import TodoList from "../components/todoList/todoList"
 import TodoListChooser from "../components/topBar/todoListChooser"
-import CreateTodoList from "../components/topBar/createTodoList"
-import {
-  createAddEvent,
-  createUpdateEvent,
-  createDeleteEvent
-} from "../shared/models/todoEvent"
-import TodoItemModel from "../shared/models/todoItem"
-import FilterModel from "../shared/models/filter"
+import CreateTodoListIcon from "../components/topBar/createTodoListIcon"
+import TodoEvent from "../shared/models/todoEvent"
 import { WebsocketProcessor } from "../config/websocket"
 
-import TodoListModel, {
-  createTodoListFromBackend
-} from "../shared/models/todoList"
+import TodoListModel from "../shared/models/todoList"
+import FilterModel from "../shared/models/filter"
 
 import UserContext from "../components/utils/userContext"
-import FilterContext from "../components/utils/filterContext"
+import EventCacheContext from "../components/utils/eventCacheContext"
+import TodoListContext from "../components/utils/todoListContext"
 
 import UserBackend from "../shared/backend/userBackend"
-
-const eventCache = new EventCache()
 
 const useStyles = makeStyles({
   greyBackground: {
@@ -44,16 +34,20 @@ const useStyles = makeStyles({
   }
 })
 
+type Props = {
+  match: any
+}
+
 const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
   const { user, setUser } = React.useContext(UserContext)
+  const eventCache = React.useContext(EventCacheContext)
+
   const userBackend = new UserBackend(
     user.token,
     React.useContext(BackendContext)
   )
-
-  const { setFilter } = React.useContext(FilterContext)
 
   const backend = new TodoListBackend(
     user ? user.token : "",
@@ -61,36 +55,48 @@ const TodoListApp = (props: Props) => {
   )
 
   const [todoList, setTodoList] = React.useState(() => {
-    const byId = user.todoLists.find(
-      list => list.uuid === props.match.params.id
-    )
-    const todoListUUID = byId ? byId.uuid : user.todoLists[0].uuid
-    return new TodoListModel(user.todoLists.find(l => l.uuid === todoListUUID))
+    const list = user.todoLists.find(l => l.uuid === props.match.params.id)
+
+    if (!list) {
+      return null
+    }
+
+    const tl = new TodoListModel(list)
+    tl.eventCache = eventCache
+    return tl
   })
 
-  window.socket.registerSocket(user)
+  const [view, setView] = React.useState(
+    todoList ? todoList.defaultView() : null
+  )
 
-  const processSocketUpdate = data => {
-    setTimeout(() => {
-      const updatedAt = parseISO(data.data.updated_at)
-      const updatedList = new TodoListModel(
-        user.todoLists.find(list => list.uuid === data.data.uuid)
-      )
-      if (updatedList && updatedAt > parseISO(updatedList.updatedAt)) {
-        fetchList(updatedList)
-      }
-    }, 500)
+  const onSetView = (v: FilterModel) => {
+    setView(new FilterModel(v))
   }
 
-  const fetchList = (updatedList: TodoListModel) => {
+  const processSocketUpdate = data => {
+    const updatedAt = parseISO(data.data.updated_at)
+    const updatedList = user.todoLists.find(
+      list => list.uuid === data.data.uuid
+    )
+
+    if (
+      updatedList &&
+      differenceInSeconds(updatedAt, parseISO(updatedList.updatedAt)) > 10
+    ) {
+      fetchList(updatedList.uuid)
+    }
+  }
+
+  const fetchList = (updatedListUUID: string) => {
     if (!navigator.onLine) return
 
-    backend.fetchTodoList(updatedList.uuid).then(list => {
+    backend.fetchTodoList(updatedListUUID).then(list => {
       const idx = user.todoLists.findIndex(l => l.uuid === list.uuid)
       user.todoLists.splice(idx, 1, list)
       setUser(user)
-      if (list.uuid === todoList.uuid) {
-        setTodoList(new TodoListModel(list))
+      if (list.uuid === props.match.params.id) {
+        setTodoList(new TodoListModel({ ...list, eventCache: eventCache }))
         window.localStorage.setItem(
           "focusUpdate",
           JSON.stringify({ time: new Date().getTime() })
@@ -105,7 +111,7 @@ const TodoListApp = (props: Props) => {
     ).time
     const currentTime = new Date().getTime()
     if (currentTime - lastUpdateTime > 600000) {
-      fetchList(todoList)
+      fetchList(todoList.uuid)
     }
     window.socket.deregisterProcessor("todolist_update")
     window.socket.registerProcessor(socketProcessor)
@@ -116,101 +122,99 @@ const TodoListApp = (props: Props) => {
     processSocketUpdate
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
+    if (!props.match.params.id) return
+    if (!todoList) return
+
     window.addEventListener("focus", onFocus)
     window.socket.registerProcessor(socketProcessor)
-    fetchList(todoList)
+    window.socket.registerSocket(user)
+    fetchList(todoList.uuid) // Fetch the list on page load / reload
 
     return () => {
       window.removeEventListener("focus", onFocus)
     }
   }, [])
 
-  const updateTodoList = () => {
-    if (!navigator.onLine) return
+  const onChangeTodoList = (t: TodoListModel) => {
+    if (!t) {
+      onDeleteTodoList()
+      return
+    }
+    t.eventCache = eventCache
+    t.updatedAt = new Date().toISOString()
 
-    backend.updateTodoList(todoList.uuid, eventCache).then(list => {
-      const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
-      user.todoLists.splice(idx, 1, list)
-      setUser(user)
-      eventCache.clear()
-    })
+    //update user cache so processSocketUpdate has fresh data
+    const idx = user.todoLists.findIndex(l => l.uuid === t.uuid)
+    user.todoLists.splice(idx, 1, t)
+    setUser(user)
+
+    setTodoList(t)
   }
 
-  const onAddTodoItem = (todoItem: TodoItemModel) => {
-    todoList.addTodo(todoItem)
-    eventCache.addItem(createAddEvent(todoItem))
-    updateTodoList()
-    setTodoList(new TodoListModel(todoList))
+  const onDeleteTodoList = () => {
+    const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
+    user.todoLists.splice(idx, 1)
+    setUser(user)
+    eventCache.addItem(new TodoEvent("EventDeleted", "TodoList", todoList))
+
+    props.history.push("/todolist")
   }
 
-  const onChangeTodoItem = (todoItem: TodoItemModel) => {
-    todoList.updateTodo(todoItem)
-    setTodoList(new TodoListModel(todoList))
-    eventCache.addItem(createUpdateEvent(todoItem))
-    updateTodoList()
-  }
-
-  const onDeleteTodoItem = (todoItem: TodoItemModel) => {
-    eventCache.addItem(createDeleteEvent(todoItem))
-    todoList.deleteTodo(todoItem)
-    updateTodoList()
-    setTodoList(new TodoListModel(todoList))
-  }
-
-  const onChangeTodoList = (newList: TodoListModel) => {
+  const onChooseTodoList = (newList: TodoListModel) => {
     props.history.push(`/todolist/${newList.uuid}`)
-
-    userBackend.getUser().then(userData => {
-      setUser(userData)
-      setTodoList(newList)
-
-      const views = user.views.filter(v => v.todoListUUID === newList.uuid)
-      const defaultView = views.find(v => v.isDefault)
-      setFilter(defaultView || new FilterModel({}))
-    })
+    const list = new TodoListModel({ ...newList, eventCache })
+    setTodoList(list)
+    onSetView(list.defaultView())
   }
 
-  const onCreateTodoList = (todoList: TodoListModel) => {
-    backend.createTodoList(todoList.uuid, todoList.name).then(newList => {
-      newList = createTodoListFromBackend(newList)
+  const onCreateTodoList = (tl: TodoListModel) => {
+    // add to the event cache, and publish event cache
+    user.todoLists.push(tl)
+    setUser(user)
+    setTodoList(tl)
+    onSetView(tl.defaultView())
+    props.history.push(`/todolist/${tl.uuid}`)
+    props.enqueueSnackbar("Todolist created.")
+    eventCache.addItem(new TodoEvent("EventAdded", "TodoList", tl))
+  }
 
-      userBackend.getUser().then(userData => {
-        setUser(userData)
-        setTodoList(newList)
-
-        const views = user.views.filter(v => v.todoListUUID === newList.uuid)
-        const defaultView = views.find(v => v.isDefault)
-        setFilter(defaultView || new FilterModel({}))
-      })
-
-      props.enqueueSnackbar("Todolist created.")
-    })
+  if (!props.match.params.id) {
+    props.history.push(`/todolist/${todoList.uuid}`)
+    return null
   }
 
   if (!user) {
     return <Redirect to="/login" />
   }
 
+  if (!todoList) {
+    props.enqueueSnackbar("A todolist doesn't exist with this id!")
+    return <Redirect to="/todolist" />
+  }
+
   return (
     <React.Fragment>
       <div className={classes.greyBackground}>
         <TopBar>
-          <CreateTodoList onCreateTodoList={onCreateTodoList} />
+          <CreateTodoListIcon onCreateTodoList={onCreateTodoList} />
           <TodoListChooser
             todoLists={user.todoLists}
-            onSelectTodoList={onChangeTodoList}
+            onSelectTodoList={onChooseTodoList}
           />
           <UserIcon />
         </TopBar>
 
-        <TodoList
-          user={user}
-          todoList={todoList}
-          onAddTodoItem={onAddTodoItem}
-          onChangeTodoItem={onChangeTodoItem}
-          onDeleteTodoItem={onDeleteTodoItem}
-        />
+        <TodoListContext.Provider
+          value={{
+            todoList,
+            setTodoList: onChangeTodoList,
+            view,
+            setView: onSetView
+          }}
+        >
+          <TodoList />
+        </TodoListContext.Provider>
       </div>
     </React.Fragment>
   )

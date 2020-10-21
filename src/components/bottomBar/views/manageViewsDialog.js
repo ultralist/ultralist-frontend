@@ -33,14 +33,15 @@ import BackendContext from "../../../shared/backendContext"
 import ViewsBackend from "../../../shared/backend/viewsBackend"
 import UserBackend from "../../../shared/backend/userBackend"
 import UserContext from "../../utils/userContext"
+import TodoListContext from "../../utils/todoListContext"
 
 type Props = {
-  views: ViewModel[],
   show: boolean,
   onClose: () => void
 }
 
 const ManageViewsDialog = (props: Props) => {
+  const { todoList, setTodoList } = React.useContext(TodoListContext)
   const { user, setUser } = React.useContext(UserContext)
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const viewsBackend = new ViewsBackend(
@@ -49,9 +50,6 @@ const ManageViewsDialog = (props: Props) => {
   )
   const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
   const [viewToDelete, setViewToDelete] = React.useState(null)
-  const [views, setViews] = React.useState(
-    props.views.map(v => new FilterModel(v))
-  )
 
   const userBackend = new UserBackend(
     user.token,
@@ -69,23 +67,27 @@ const ManageViewsDialog = (props: Props) => {
     setShowDeleteAlert(false)
 
     viewsBackend.deleteView(viewToDelete).then(() => {
-      props.enqueueSnackbar("View deleted.")
-      setViews(views.filter(v => v.id !== viewToDelete.id))
+      const newViews = todoList.views.filter(v => v.id !== viewToDelete.id)
+      todoList.views = newViews
+      setTodoList(todoList)
       setViewToDelete(null)
       userBackend.getUser().then(setUser)
+      props.enqueueSnackbar("View deleted.")
     })
   }
 
   const onSetDefault = (view: FilterModel) => {
-    views.forEach(v => (v.isDefault = false))
-    const arrayView = views.find(v => v.id === view.id)
+    todoList.views.forEach(v => (v.isDefault = false))
+    const arrayView = todoList.views.find(v => v.id === view.id)
     arrayView.isDefault = true
-    setViews([...views])
+    setTodoList(todoList)
     viewsBackend.updateView(arrayView).then(() => {
       props.enqueueSnackbar("Default view updated.")
       userBackend.getUser().then(setUser)
     })
   }
+
+  const views = todoList.views.map(v => new FilterModel(v))
 
   return (
     <React.Fragment>
@@ -131,6 +133,7 @@ const ManageViewsDialog = (props: Props) => {
         show={showDeleteAlert}
         title="Delete this view?"
         content="Are you sure you wish to delete this view?"
+        showCancel
         onOK={onDeleteView}
         onClose={() => setShowDeleteAlert(false)}
       />

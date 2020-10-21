@@ -5,6 +5,7 @@ import { Router, Route, Redirect } from "react-router-dom"
 import { createBrowserHistory } from "history"
 
 import TodoList from "../pages/todoList"
+import ChooseTodoList from "../pages/chooseTodoList"
 import Login from "../pages/login"
 import Logout from "../pages/logout"
 import Auth from "../pages/auth"
@@ -36,7 +37,11 @@ const Routes = (props: Props) => {
         exact={true}
         path="/todolist"
         render={routeProps =>
-          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+          props.user ? (
+            <ChooseTodoList {...routeProps} />
+          ) : (
+            <Redirect to="/login" />
+          )
         }
       />
       <Route

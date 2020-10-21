@@ -43,10 +43,12 @@ import {
   SortableHandle
 } from "react-sortable-hoc"
 
-import FilterContext from "../../utils/filterContext"
+import TodoListContext from "../../utils/todoListContext"
 
 import StorageContext from "../../../shared/storageContext"
 import ModalStorage from "../../../shared/storage/modalStorage"
+
+import FilterModel from "../../../shared/models/filter"
 
 const useStyles = makeStyles(theme => {
   return {
@@ -124,74 +126,80 @@ type Props = {
 const FilterDialog = (props: Props) => {
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const classes = useStyles()
-  const { filter, setFilter } = React.useContext(FilterContext)
+  const { todoList, setTodoList, view, setView } = React.useContext(
+    TodoListContext
+  )
 
   const [newColumnName, setNewColumnName] = React.useState("")
 
   modalStorage.setModalIsOpen(props.isOpen, "filterDialog")
 
   const update = () => {
-    setFilter(filter)
+    setView(view)
   }
 
   const onChangeCompleted = () => {
-    filter.toggleCompleted()
+    view.toggleCompleted()
     update()
   }
 
   const onToggleUseCompleted = () => {
-    filter.toggleUseCompleted()
+    view.toggleUseCompleted()
     update()
   }
 
   const onChangeIsPriority = () => {
-    filter.toggleIsPriority()
+    view.toggleIsPriority()
     update()
   }
 
   const onToggleUseIsPriority = () => {
-    filter.toggleUseIsPriority()
+    view.toggleUseIsPriority()
     update()
   }
 
   const onChangeArchived = () => {
-    filter.toggleArchived()
+    view.toggleArchived()
     update()
   }
 
   const onChangeDue = event => {
-    filter.due = event.target.value
-    if (event.target.value === "none") filter.due = null
+    view.due = event.target.value
+    if (event.target.value === "none") view.due = null
     update()
   }
 
   const onChangeGroup = event => {
-    filter.group = event.target.value
-    if (event.target.value === "all") filter.group = null
+    view.group = event.target.value
+    if (event.target.value === "all") view.group = null
     update()
   }
 
   const onToggleUseArchived = () => {
-    filter.toggleUseArchived()
+    view.toggleUseArchived()
     update()
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const newColumns = arrayMove(filter.kanbanColumns(), oldIndex, newIndex)
-    filter.setKanbanColumns(newColumns)
+    const newColumns = arrayMove(
+      todoList.view.kanbanColumns(),
+      oldIndex,
+      newIndex
+    )
+    todoList.view.setKanbanColumns(newColumns)
     update()
   }
 
   const onDeleteColumn = name => {
-    const newColumns = filter.kanbanColumns().filter(n => n !== name)
-    filter.setKanbanColumns(newColumns)
+    const newColumns = view.kanbanColumns().filter(n => n !== name)
+    view.setKanbanColumns(newColumns)
     update()
   }
 
   const onAddColumn = () => {
-    const columns = filter.kanbanColumns()
+    const columns = view.kanbanColumns()
     columns.push(newColumnName)
-    filter.setKanbanColumns(columns)
+    view.setKanbanColumns(columns)
     update()
     setNewColumnName("")
   }
@@ -242,48 +250,48 @@ const FilterDialog = (props: Props) => {
                 control={
                   <React.Fragment>
                     <Checkbox
-                      checked={filter.completed !== null}
+                      checked={view.completed !== null}
                       onChange={onToggleUseCompleted}
                     />
                     <Switch
-                      checked={filter.completed}
+                      checked={view.completed}
                       onChange={onChangeCompleted}
                     />
                   </React.Fragment>
                 }
-                label={filter.completed ? "Is completed" : "Not completed"}
+                label={view.completed ? "Is completed" : "Not completed"}
               />
 
               <FormControlLabel
                 control={
                   <React.Fragment>
                     <Checkbox
-                      checked={filter.isPriority !== null}
+                      checked={view.isPriority !== null}
                       onChange={onToggleUseIsPriority}
                     />
                     <Switch
-                      checked={filter.isPriority}
+                      checked={view.isPriority}
                       onChange={onChangeIsPriority}
                     />
                   </React.Fragment>
                 }
-                label={filter.isPriority ? "Is priority" : "Not priority"}
+                label={view.isPriority ? "Is priority" : "Not priority"}
               />
 
               <FormControlLabel
                 control={
                   <React.Fragment>
                     <Checkbox
-                      checked={filter.archived !== null}
+                      checked={view.archived !== null}
                       onChange={onToggleUseArchived}
                     />
                     <Switch
-                      checked={filter.archived}
+                      checked={view.archived}
                       onChange={onChangeArchived}
                     />
                   </React.Fragment>
                 }
-                label={filter.archived ? "Is archived" : "Not archived"}
+                label={view.archived ? "Is archived" : "Not archived"}
               />
             </FormGroup>
             <FormHelperText>
@@ -298,7 +306,7 @@ const FilterDialog = (props: Props) => {
               className={classes.paddedFieldset}
             >
               <InputLabel>Due</InputLabel>
-              <Select value={filter.due || "none"} onChange={onChangeDue}>
+              <Select value={view.due || "none"} onChange={onChangeDue}>
                 <MenuItem value="none">No due filter</MenuItem>
                 <MenuItem value="nodue">No date set</MenuItem>
                 <Divider />
@@ -323,7 +331,7 @@ const FilterDialog = (props: Props) => {
               className={classes.paddedFieldset}
             >
               <InputLabel>Group</InputLabel>
-              <Select value={filter.group || "all"} onChange={onChangeGroup}>
+              <Select value={view.group || "all"} onChange={onChangeGroup}>
                 <MenuItem value="all">No grouping</MenuItem>
                 <MenuItem value="context">Context</MenuItem>
                 <MenuItem value="project">Project</MenuItem>
@@ -336,7 +344,7 @@ const FilterDialog = (props: Props) => {
           <div
             className={classes.kanbanHolder}
             style={{
-              display: filter.group === "kanban" ? "block" : "none"
+              display: view.group === "kanban" ? "block" : "none"
             }}
           >
             <FormControl component="fieldset" className={classes.fieldset}>
@@ -356,7 +364,7 @@ const FilterDialog = (props: Props) => {
                 <SortableListContainer
                   useDragHandle={true}
                   onSortEnd={onSortEnd}
-                  items={filter.kanbanColumns()}
+                  items={view.kanbanColumns()}
                 />
               </div>
               <div className={classes.newColumnHolder}>

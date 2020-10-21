@@ -46,3 +46,15 @@ It is based upon `create-react-app`.
 7. CLI redirects back to frontend (`todolist?cli_auth_completed=true`). 
 frontend displays message saying auth is complete.
 
+---
+
+* Mutation events for both todo items and todo lists occur as changes to a model
+* models are stored in context
+* speaking to backend occurs via event cache
+* event cache gets pushed when online
+* models are aware of event cache?
+
+**Event cache**
+
+**TodoList model**
+

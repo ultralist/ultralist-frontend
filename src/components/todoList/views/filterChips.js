@@ -1,14 +1,10 @@
 // @flow
 import React from "react"
 import { makeStyles } from "@material-ui/styles"
-
-import Tooltip from "@material-ui/core/Tooltip"
-import IconButton from "@material-ui/core/IconButton"
 import AddIcon from "@material-ui/icons/Add"
-
 import Chip from "@material-ui/core/Chip"
 
-import FilterContext from "../../utils/filterContext"
+import TodoListContext from "../../utils/todoListContext"
 
 type Props = {
   onOpenFilterDialog: () => void
@@ -20,26 +16,16 @@ const useStyles = makeStyles({
   }
 })
 
-const AddNew = () => {
-  return (
-    <Tooltip title="Add a filter">
-      <IconButton>
-        <AddIcon />
-      </IconButton>
-    </Tooltip>
-  )
-}
-
 const FilterChips = (props: Props) => {
   const classes = useStyles()
-  const { filter, setFilter } = React.useContext(FilterContext)
+  const { view, setView } = React.useContext(TodoListContext)
 
   const removeFilterString = s => {
-    filter.removeFilterString(s)
-    setFilter(filter)
+    view.removeFilterString(s)
+    setView(view)
   }
 
-  const filters = filter
+  const filters = view
     .toFilterStrings()
     .map(s => (
       <Chip
