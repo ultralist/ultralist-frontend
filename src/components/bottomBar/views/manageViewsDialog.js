@@ -133,6 +133,7 @@ const ManageViewsDialog = (props: Props) => {
         show={showDeleteAlert}
         title="Delete this view?"
         content="Are you sure you wish to delete this view?"
+        showCancel
         onOK={onDeleteView}
         onClose={() => setShowDeleteAlert(false)}
       />

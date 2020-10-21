@@ -19,8 +19,10 @@ import BrowserStorage from "../shared/storage/browserStorage"
 import UserStorage from "../shared/storage/userStorage"
 
 import UserModel from "../shared/models/user"
+import EventCache from "../shared/backend/eventCache"
 
 import UserContext from "../components/utils/userContext"
+import EventCacheContext from "../components/utils/eventCacheContext"
 
 import BackendContext from "../shared/backendContext"
 
@@ -54,6 +56,7 @@ const userStorage = new UserStorage(storage)
 
 const Index = () => {
   const [user, setUser] = React.useState(userStorage.loadUser())
+  const eventCache = new EventCache(backend, user.token)
 
   const setUserWithStorage = (u: ?UserModel) => {
     if (!u) {
@@ -69,21 +72,23 @@ const Index = () => {
     <DndProvider backend={HTML5Backend}>
       <BackendContext.Provider value={backend}>
         <StorageContext.Provider value={storage}>
-          <UserContext.Provider value={{ user, setUser: setUserWithStorage }}>
-            <Elements stripe={stripePromise}>
-              <CssBaseline />
-              <SnackbarProvider
-                maxSnack={1}
-                preventDuplicate
-                anchorOrigin={{ vertical: "top", horizontal: "left" }}
-              >
-                <MuiThemeProvider theme={theme}>
-                  <Router user={user} />
-                  <ServiceWorker />
-                </MuiThemeProvider>
-              </SnackbarProvider>
-            </Elements>
-          </UserContext.Provider>
+          <EventCacheContext.Provider value={eventCache}>
+            <UserContext.Provider value={{ user, setUser: setUserWithStorage }}>
+              <Elements stripe={stripePromise}>
+                <CssBaseline />
+                <SnackbarProvider
+                  maxSnack={1}
+                  preventDuplicate
+                  anchorOrigin={{ vertical: "top", horizontal: "left" }}
+                >
+                  <MuiThemeProvider theme={theme}>
+                    <Router user={user} />
+                    <ServiceWorker />
+                  </MuiThemeProvider>
+                </SnackbarProvider>
+              </Elements>
+            </UserContext.Provider>
+          </EventCacheContext.Provider>
         </StorageContext.Provider>
       </BackendContext.Provider>
     </DndProvider>

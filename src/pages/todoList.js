@@ -9,9 +9,6 @@ import grey from "@material-ui/core/colors/grey"
 
 import BackendContext from "../shared/backendContext"
 import TodoListBackend from "../shared/backend/todoListBackend"
-import EventsBackend from "../shared/backend/eventsBackend"
-
-import EventCache from "../shared/backend/eventCache"
 
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
@@ -25,15 +22,10 @@ import TodoListModel from "../shared/models/todoList"
 import FilterModel from "../shared/models/filter"
 
 import UserContext from "../components/utils/userContext"
+import EventCacheContext from "../components/utils/eventCacheContext"
 import TodoListContext from "../components/utils/todoListContext"
 
 import UserBackend from "../shared/backend/userBackend"
-import BrowserStorage from "../shared/storage/browserStorage"
-import UserStorage from "../shared/storage/userStorage"
-
-const storage = new BrowserStorage()
-const eventCache = new EventCache()
-const userStorage = new UserStorage(storage)
 
 const useStyles = makeStyles({
   greyBackground: {
@@ -50,6 +42,8 @@ const TodoListApp = (props: Props) => {
   const classes = useStyles()
 
   const { user, setUser } = React.useContext(UserContext)
+  const eventCache = React.useContext(EventCacheContext)
+
   const userBackend = new UserBackend(
     user.token,
     React.useContext(BackendContext)
@@ -60,25 +54,21 @@ const TodoListApp = (props: Props) => {
     React.useContext(BackendContext)
   )
 
-  const eventsBackend = new EventsBackend(
-    user ? user.token : "",
-    React.useContext(BackendContext)
-  )
-
   const [todoList, setTodoList] = React.useState(() => {
-    const byId = user.todoLists.find(
-      list => list.uuid === props.match.params.id
-    )
-    const todoListUUID = byId ? byId.uuid : user.todoLists[0].uuid
-    const tl = new TodoListModel(
-      user.todoLists.find(l => l.uuid === todoListUUID)
-    )
-    tl.eventCache = eventCache
+    const list = user.todoLists.find(l => l.uuid === props.match.params.id)
 
+    if (!list) {
+      return null
+    }
+
+    const tl = new TodoListModel(list)
+    tl.eventCache = eventCache
     return tl
   })
 
-  const [view, setView] = React.useState(todoList.defaultView())
+  const [view, setView] = React.useState(
+    todoList ? todoList.defaultView() : null
+  )
 
   const onSetView = (v: FilterModel) => {
     setView(new FilterModel(v))
@@ -134,6 +124,7 @@ const TodoListApp = (props: Props) => {
 
   React.useEffect(() => {
     if (!props.match.params.id) return
+    if (!todoList) return
 
     window.addEventListener("focus", onFocus)
     window.socket.registerProcessor(socketProcessor)
@@ -146,6 +137,10 @@ const TodoListApp = (props: Props) => {
   }, [])
 
   const onChangeTodoList = (t: TodoListModel) => {
+    if (!t) {
+      onDeleteTodoList()
+      return
+    }
     t.eventCache = eventCache
     t.updatedAt = new Date().toISOString()
 
@@ -158,12 +153,24 @@ const TodoListApp = (props: Props) => {
     publishEvents()
   }
 
+  const onDeleteTodoList = () => {
+    const idx = user.todoLists.findIndex(l => l.uuid === todoList.uuid)
+    user.todoLists.splice(idx, 1)
+    setUser(user)
+    publishEvents()
+
+    props.history.push("/todolist")
+  }
+
   const publishEvents = () => {
     if (!navigator.onLine) return
     if (eventCache.cache.length === 0) return
 
-    eventsBackend.publishEvents(eventCache).then(() => {
+    eventCache.publishEvents.then(() => {
       eventCache.clear()
+
+      // do I need this?
+      //userBackend.getUser().then(setUser)
     })
   }
 
@@ -172,11 +179,6 @@ const TodoListApp = (props: Props) => {
     const list = new TodoListModel({ ...newList, eventCache })
     setTodoList(list)
     onSetView(list.defaultView())
-
-    if (!navigator.onLine) return
-
-    // do I need this?
-    //userBackend.getUser().then(setUser)
   }
 
   const onCreateTodoList = (todoList: TodoListModel) => {
@@ -194,6 +196,11 @@ const TodoListApp = (props: Props) => {
 
   if (!user) {
     return <Redirect to="/login" />
+  }
+
+  if (!todoList) {
+    props.enqueueSnackbar("A todolist doesn't exist with this id!")
+    return <Redirect to="/todolist" />
   }
 
   return (

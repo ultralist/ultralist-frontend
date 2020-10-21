@@ -25,6 +25,8 @@ import BackendContext from "../../shared/backendContext"
 import TodoListBackend from "../../shared/backend/todoListBackend"
 import UserBackend from "../../shared/backend/userBackend"
 
+import AlertDialog from "../alertDialog"
+
 type Props = {
   isOpen: boolean,
   onClose: () => void
@@ -46,6 +48,8 @@ const ManageTodolistDialog = (props: Props) => {
 
   const { user, setUser } = React.useContext(UserContext)
   const { todoList, setTodoList } = React.useContext(TodoListContext)
+
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState(false)
 
   const todoListBackend = new TodoListBackend(
     user.token,
@@ -71,37 +75,62 @@ const ManageTodolistDialog = (props: Props) => {
     props.onClose()
   }
 
-  return (
-    <Dialog fullWidth maxWidth="sm" onClose={props.onClose} open={props.isOpen}>
-      <DialogTitle>Manage todolist</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Rename or delete this todolist.</DialogContentText>
-        <TextField
-          label="Name"
-          inputRef={nameRef}
-          required
-          margin="dense"
-          autoFocus
-          defaultValue={todoList.name}
-          className={classes.textField}
-          autoComplete="off"
-        />
-        <div className={classes.marginTop}>
-          <Button variant="contained" color="secondary">
-            Delete this todolist
-          </Button>
-        </div>
-      </DialogContent>
+  const onDeleteTodoList = () => {
+    setTodoList(null)
+    props.enqueueSnackbar("Todo list deleted!")
+    props.onClose()
+  }
 
-      <DialogActions>
-        <Button color="primary" onClick={props.onClose}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={onSaveTodolist}>
-          Save
-        </Button>
-      </DialogActions>
-    </Dialog>
+  return (
+    <React.Fragment>
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        onClose={props.onClose}
+        open={props.isOpen}
+      >
+        <DialogTitle>Manage todolist</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Rename or delete this todolist.</DialogContentText>
+          <TextField
+            label="Name"
+            inputRef={nameRef}
+            required
+            margin="dense"
+            autoFocus
+            defaultValue={todoList.name}
+            className={classes.textField}
+            autoComplete="off"
+          />
+          <div className={classes.marginTop}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setShowDeleteAlert(true)}
+            >
+              Delete this todolist
+            </Button>
+          </div>
+        </DialogContent>
+
+        <DialogActions>
+          <Button color="primary" onClick={props.onClose}>
+            Cancel
+          </Button>
+          <Button color="primary" onClick={onSaveTodolist}>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <AlertDialog
+        show={showDeleteAlert}
+        title="Delete this todo list?"
+        content="Are you sure you wish to delete this todo list?"
+        showCancel
+        onOK={onDeleteTodoList}
+        onClose={() => setShowDeleteAlert(false)}
+      />
+    </React.Fragment>
   )
 }
 
