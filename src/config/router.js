@@ -6,8 +6,6 @@ import { createBrowserHistory } from "history"
 
 import TodoList from "../pages/todoList"
 import ChooseTodoList from "../pages/chooseTodoList"
-import Login from "../pages/login"
-import Logout from "../pages/logout"
 import Auth from "../pages/auth"
 import CLIAuth from "../pages/cliAuth"
 import Profile from "../pages/profile"
@@ -20,15 +18,17 @@ type Props = {
   user: ?UserModel
 }
 
+const loginUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://auth.ultralist.io/login?client_id=1onftv8i4uk040emelpqujietu&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://api.ultralist.io/login"
+    : "https://ultralist.auth.us-east-2.amazoncognito.com/login?client_id=31dio9qb08vfrt93k0avh5midq&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:3000/login"
+
 const Routes = (props: Props) => {
   return (
     <Router history={history}>
       {/* ----------- Routes that do not require a user ---------- */}
 
-      <Route path="/login" component={Login} />
       <Route path="/auth" component={Auth} />
-      <Route path="/signup" component={Login} />
-      <Route path="/logout" component={Logout} />
       <Route path="/cli_auth" component={CLIAuth} />
 
       {/* ----------- Routes that require a user ---------- */}
@@ -40,7 +40,7 @@ const Routes = (props: Props) => {
           props.user ? (
             <ChooseTodoList {...routeProps} />
           ) : (
-            <Redirect to="/login" />
+            (window.location.href = loginUrl)
           )
         }
       />
@@ -48,7 +48,11 @@ const Routes = (props: Props) => {
         exact={true}
         path="/todolist/:id"
         render={routeProps =>
-          props.user ? <TodoList {...routeProps} /> : <Redirect to="/login" />
+          props.user ? (
+            <TodoList {...routeProps} />
+          ) : (
+            (window.location.href = loginUrl)
+          )
         }
       />
 
@@ -56,7 +60,11 @@ const Routes = (props: Props) => {
         exact={true}
         path="/profile"
         render={routeProps =>
-          props.user ? <Profile {...routeProps} /> : <Redirect to="/login" />
+          props.user ? (
+            <Profile {...routeProps} />
+          ) : (
+            (window.location.href = loginUrl)
+          )
         }
       />
 
@@ -64,7 +72,11 @@ const Routes = (props: Props) => {
         exact={true}
         path="/"
         render={() =>
-          props.user ? <Redirect to="/todolist" /> : <Redirect to="/login" />
+          props.user ? (
+            <Redirect to="/todolist" />
+          ) : (
+            (window.location.href = loginUrl)
+          )
         }
       />
     </Router>
