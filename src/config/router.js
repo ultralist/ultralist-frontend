@@ -21,7 +21,7 @@ type Props = {
 const loginUrl =
   process.env.NODE_ENV === "production"
     ? "https://auth.ultralist.io/login?client_id=1onftv8i4uk040emelpqujietu&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://api.ultralist.io/login"
-    : "https://ultralist.auth.us-east-2.amazoncognito.com/login?client_id=31dio9qb08vfrt93k0avh5midq&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:3000/login"
+    : "https://auth-dev.ultralist.io/login?client_id=34ctg4o0afurkoc02snn7e9gmu&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:3000/login"
 
 const Routes = (props: Props) => {
   return (
