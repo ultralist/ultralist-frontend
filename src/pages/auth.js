@@ -17,6 +17,7 @@ const Auth = props => {
   const userBackend = new UserBackend(token, React.useContext(BackendContext))
 
   const userStorage = new UserStorage(React.useContext(StorageContext))
+  userStorage.setCLIAuth(utils.getUrlParam("cli_auth") === "true")
 
   React.useEffect(() => {
     userBackend.getUser().then(userData => {

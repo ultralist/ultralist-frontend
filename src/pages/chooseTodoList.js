@@ -24,6 +24,9 @@ import TodoEvent from "../shared/models/todoEvent"
 import TopBar from "../components/topBar"
 import UserIcon from "../components/userIcon"
 
+import utils from "../utils"
+import CLIAuthCompletedDialog from "../components/initialDialogs/CLIAuthCompletedDialog"
+
 const useStyles = makeStyles(theme => ({
   chooseListArea: {
     display: "flex",
@@ -118,6 +121,9 @@ const ChooseTodoList = props => {
         isOpen={isCreateTodoListDialogOpen}
         onClose={onCloseCreateTodoListDialog}
       />
+      {utils.getUrlParam("cli_auth_completed") === "true" && (
+        <CLIAuthCompletedDialog />
+      )}
     </React.Fragment>
   )
 }
