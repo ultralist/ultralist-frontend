@@ -2,15 +2,18 @@
 import React from "react"
 
 import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
   Badge,
   Button,
-  Card,
-  CardContent,
-  CardActions,
   Container,
   Tooltip,
   Typography
 } from "@material-ui/core"
+
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 
 import TodoListContext from "../../utils/todoListContext"
 
@@ -64,17 +67,20 @@ const View = (props: Props) => {
 
   return (
     <Container maxWidth="md">
-      <Card variant="outlined">
-        <CardContent>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div>
             <Typography color="textSecondary" gutterBottom>
               Current view: {view.name}
             </Typography>
           </div>
+        </AccordionSummary>
 
+        <AccordionDetails>
           <FilterChips onOpenFilterDialog={() => setShowFilterDialog(true)} />
-        </CardContent>
-        <CardActions>
+        </AccordionDetails>
+
+        <AccordionActions>
           <Tooltip title="Load a saved view">
             <Button size="small" onClick={() => setShowChooseViewDialog(true)}>
               Load
@@ -87,8 +93,8 @@ const View = (props: Props) => {
           ) : (
             <DisabledSaveButton />
           )}
-        </CardActions>
-      </Card>
+        </AccordionActions>
+      </Accordion>
 
       <FilterDialog isOpen={showFilterDialog} onClose={onCloseFilterDialog} />
       <ChooseViewDialog
