@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "io.ultralist.app.twa",
+                   "sha256_cert_fingerprints": ["97:47:4C:3A:77:41:59:69:64:21:02:0B:D7:74:64:B3:19:BB:87:61:24:A3:0A:2B:CB:BD:64:AE:FE:FF:37:8B"] }
+    }]
