@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
 
 import TodoListContext from "../utils/todoListContext"
+import UserContext from "../utils/userContext"
 
 import TodoItemModel from "../../shared/models/todoItem"
 
@@ -27,7 +28,6 @@ import TodoGroup from "./todoGroup"
 import View from "./views/view"
 import BottomBar from "../bottomBar"
 
-import CLIAuthCompletedDialog from "../initialDialogs/CLIAuthCompletedDialog"
 import WelcomeDialog from "../initialDialogs/welcomeDialog"
 import SlackAppInstalledDialog from "../initialDialogs/slackAppInstalledDialog"
 import SlackAddUserDialog from "../initialDialogs/slackAddUserDialog"
@@ -73,6 +73,7 @@ const TodoList = (props: Props) => {
   const classes = useStyles()
 
   const { todoList, setTodoList, view } = React.useContext(TodoListContext)
+  const { user } = React.useContext(UserContext)
 
   const [showAddTodoItemDialog, setShowAddTodoItemDialog] = React.useState(
     false
@@ -185,10 +186,6 @@ const TodoList = (props: Props) => {
           />
         )}
       </div>
-
-      {userStorage.getCLIAuthCompleted() && !userStorage.getSignup() && (
-        <CLIAuthCompletedDialog />
-      )}
 
       {userStorage.getSignup() && <WelcomeDialog />}
       {userStorage.getSlackAppInstalled() && <SlackAppInstalledDialog />}
