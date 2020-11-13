@@ -150,6 +150,10 @@ const TodoListApp = (props: Props) => {
     setUser(user)
 
     setTodoList(t)
+
+    // this is only needed in case an event recurs and a new task was generated on backend.
+    // otherwise this is not needed at all!
+    setTimeout(() => fetchList(t.uuid), 1000)
   }
 
   const onDeleteTodoList = () => {

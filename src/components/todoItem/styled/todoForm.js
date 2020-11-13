@@ -1,16 +1,24 @@
 // @flow
 import React, { useState, useEffect } from "react"
 import Button from "@material-ui/core/Button"
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Switch,
+  TextField
+} from "@material-ui/core"
+
 import { DatePicker, MuiPickersUtilsProvider } from "material-ui-pickers"
 import DateFnsUtils from "@date-io/date-fns"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Switch from "@material-ui/core/Switch"
-import TextField from "@material-ui/core/TextField"
+
 import { makeStyles } from "@material-ui/styles"
-import Dialog from "@material-ui/core/Dialog"
-import DialogTitle from "@material-ui/core/DialogTitle"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogActions from "@material-ui/core/DialogActions"
 
 import KeyboardIcon from "@material-ui/icons/Keyboard"
 import LeftArrowIcon from "@material-ui/icons/ArrowLeft"
@@ -82,6 +90,11 @@ const TodoForm = (props: Props) => {
 
   const onSetStatus = ev => {
     todoItem.setStatus(ev.target.value)
+    setTodoItem(todoItem)
+  }
+
+  const onChangeRecur = ev => {
+    todoItem.recur = ev.target.value === "none" ? null : ev.target.value
     setTodoItem(todoItem)
   }
 
@@ -168,6 +181,18 @@ const TodoForm = (props: Props) => {
             onChange={onSetStatus}
           />
         </Margin>
+
+        <FormControl>
+          <InputLabel>Recur</InputLabel>
+          <Select value={todoItem.recur || "none"} onChange={onChangeRecur}>
+            <MenuItem value="none">Does not recur</MenuItem>
+            <MenuItem value="daily">Daily</MenuItem>
+            <MenuItem value="weekdays">Weedays</MenuItem>
+            <MenuItem value="weekly">Weekly</MenuItem>
+            <MenuItem value="monthly">Monthly</MenuItem>
+            <MenuItem value="yearly">Yearly</MenuItem>
+          </Select>
+        </FormControl>
 
         <Margin>
           <DatePicker

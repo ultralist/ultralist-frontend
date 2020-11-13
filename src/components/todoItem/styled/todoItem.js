@@ -15,6 +15,7 @@ import {
 
 import StarBorder from "@material-ui/icons/StarBorder"
 import Star from "@material-ui/icons/Star"
+import LoopIcon from "@material-ui/icons/Loop"
 import NotesIcon from "@material-ui/icons/Notes"
 import ArchiveIcon from "@material-ui/icons/Archive"
 import UnarchiveIcon from "@material-ui/icons/Unarchive"
@@ -98,6 +99,7 @@ const useStyles = makeStyles(theme =>
       flexDirection: "row"
     },
     dueDate: {
+      display: "flex",
       flexGrow: 1
     },
     kanbanStatus: {
@@ -107,6 +109,12 @@ const useStyles = makeStyles(theme =>
     listStatus: {
       paddingRight: 70,
       color: green[600]
+    },
+    recurIcon: {
+      fontSize: 18
+    },
+    recur: {
+      display: "flex"
     }
   })
 )
@@ -271,6 +279,7 @@ const TodoItem = (props: Props) => {
           secondary={
             <div className={classes.bottomInfo}>
               <div className={classes.dueDate}>
+                {todoItem.recur && <LoopIcon className={classes.recurIcon} />}
                 <DueDate
                   grey={todoItem.archived || todoItem.completed}
                   date={todoItem.dueDate()}
