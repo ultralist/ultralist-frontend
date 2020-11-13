@@ -71,14 +71,7 @@ const TodoListApp = (props: Props) => {
   )
 
   const onSetView = (v: FilterModel) => {
-    if (v.id === view.id) {
-      // the user is changing the exsiting view
-      // it's an ephemeral change.  don't save this into localstorage.
-      setView(new FilterModel(v))
-    } else {
-      // the user is changing to a different view
-      setView(new FilterModel(todoList.views.find(tv => tv.id === v.id)))
-    }
+    setView(new FilterModel(v))
   }
 
   const processSocketUpdate = data => {
