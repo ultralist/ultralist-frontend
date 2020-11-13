@@ -5,11 +5,13 @@ import {
   Container,
   Fab,
   IconButton,
+  Popover,
   Tooltip,
   Typography
 } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import SettingsIcon from "@material-ui/icons/Settings"
+import FilterListIcon from "@material-ui/icons/FilterList"
 
 import { makeStyles } from "@material-ui/styles"
 import { withSnackbar } from "notistack"
@@ -84,10 +86,19 @@ const TodoList = (props: Props) => {
   ] = React.useState(false)
 
   const [newTodoItemAttrs, setNewTodoItemAttrs] = React.useState({})
-  const storageContext = React.useContext(StorageContext)
 
+  const [viewPopoverOpen, setViewPopoverOpen] = React.useState(false)
+  const [viewPopoverAnchorEl, setViewPopoverAnchorEl] = React.useState(null)
+  const anchorRef = React.useRef(null)
+
+  const storageContext = React.useContext(StorageContext)
   const userStorage = new UserStorage(storageContext)
   const slackStorage = new SlackStorage(storageContext)
+
+  const onOpenViewPopover = () => {
+    setViewPopoverAnchorEl(anchorRef.current)
+    setViewPopoverOpen(true)
+  }
 
   const filteredTodos = view.applyFilter(
     todoList.todos.map(t => new TodoItemModel(t))
@@ -168,11 +179,22 @@ const TodoList = (props: Props) => {
               <IconButton onClick={() => setShowManageTodoListDialog(true)}>
                 <SettingsIcon />
               </IconButton>
+              <IconButton onClick={onOpenViewPopover} ref={anchorRef}>
+                <FilterListIcon />
+              </IconButton>
             </span>
           </Typography>
         </div>
 
-        <View todoListUUID={todoList.uuid} />
+        <Popover
+          anchorEl={viewPopoverAnchorEl}
+          open={viewPopoverOpen}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          onClose={() => setViewPopoverOpen(false)}
+        >
+          <View todoListUUID={todoList.uuid} />
+        </Popover>
 
         {view.group !== "kanban" && <GroupView />}
         {view.group === "kanban" && (
