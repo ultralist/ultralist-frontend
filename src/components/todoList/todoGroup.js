@@ -101,8 +101,8 @@ const TodoGroup = (props: Props) => {
         }
       >
         <div className={isOver ? classes.dropBorder : classes.normalBorder}>
-          {todos.map(todo => (
-            <div key={todo.uuid} className={classes.cursor}>
+          {todos.map((todo, idx) => (
+            <div key={idx} className={classes.cursor}>
               <TodoItem
                 isFirst={todo.uuid == todos[0].uuid}
                 isSelected={todo.uuid === props.selectedTodoUUID}
