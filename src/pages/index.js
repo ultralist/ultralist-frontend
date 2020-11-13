@@ -59,7 +59,6 @@ const Index = () => {
   const eventCache = new EventCache(backend, user ? user.token : "")
 
   const setUserWithStorage = (u: ?UserModel) => {
-    console.log("setUserWithStorage", u)
     if (!u) {
       userStorage.logoutUser()
       setUser(null)
