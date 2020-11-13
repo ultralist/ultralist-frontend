@@ -39,6 +39,10 @@ const useStyles = makeStyles({
     flexGrow: 0,
     paddingLeft: 0
   },
+  kanbanSubheader: {
+    textAlign: "center",
+    flexGrow: 0
+  },
   dropBorder: {
     border: "2px dashed #ccc",
     minHeight: 150,
@@ -86,7 +90,12 @@ const TodoGroup = (props: Props) => {
       <List
         className={classes.list}
         subheader={
-          <ListSubheader className={classes.subheader} component="div">
+          <ListSubheader
+            className={
+              props.kanbanView ? classes.kanbanSubheader : classes.subheader
+            }
+            component="div"
+          >
             {props.group.name}
           </ListSubheader>
         }
