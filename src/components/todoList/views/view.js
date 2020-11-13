@@ -2,18 +2,16 @@
 import React from "react"
 
 import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
+  Card,
+  CardActions,
+  CardContent,
   Badge,
   Button,
-  Container,
   Tooltip,
   Typography
 } from "@material-ui/core"
 
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import { makeStyles } from "@material-ui/styles"
 
 import TodoListContext from "../../utils/todoListContext"
 
@@ -37,11 +35,19 @@ const DisabledSaveButton = () => (
   </Button>
 )
 
+const useStyles = makeStyles({
+  card: {
+    minWidth: 500
+  }
+})
+
 type Props = {
   todoListUUID: string
 }
 
 const View = (props: Props) => {
+  const classes = useStyles()
+
   const { todoList, view, setView } = React.useContext(TodoListContext)
 
   const [showFilterDialog, setShowFilterDialog] = React.useState(false)
@@ -66,21 +72,19 @@ const View = (props: Props) => {
   }
 
   return (
-    <Container maxWidth="md">
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+    <React.Fragment>
+      <Card className={classes.card}>
+        <CardContent>
           <div>
             <Typography color="textSecondary" gutterBottom>
               Current view: {view.name}
             </Typography>
           </div>
-        </AccordionSummary>
 
-        <AccordionDetails>
           <FilterChips onOpenFilterDialog={() => setShowFilterDialog(true)} />
-        </AccordionDetails>
+        </CardContent>
 
-        <AccordionActions>
+        <CardActions>
           <Tooltip title="Load a saved view">
             <Button size="small" onClick={() => setShowChooseViewDialog(true)}>
               Load
@@ -93,8 +97,8 @@ const View = (props: Props) => {
           ) : (
             <DisabledSaveButton />
           )}
-        </AccordionActions>
-      </Accordion>
+        </CardActions>
+      </Card>
 
       <FilterDialog isOpen={showFilterDialog} onClose={onCloseFilterDialog} />
       <ChooseViewDialog
@@ -107,7 +111,7 @@ const View = (props: Props) => {
         onClose={onCloseSaveViewDialog}
         todoListUUID={props.todoListUUID}
       />
-    </Container>
+    </React.Fragment>
   )
 }
 

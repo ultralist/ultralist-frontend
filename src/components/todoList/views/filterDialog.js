@@ -126,9 +126,7 @@ type Props = {
 const FilterDialog = (props: Props) => {
   const modalStorage = new ModalStorage(React.useContext(StorageContext))
   const classes = useStyles()
-  const { todoList, setTodoList, view, setView } = React.useContext(
-    TodoListContext
-  )
+  const { view, setView } = React.useContext(TodoListContext)
 
   const [newColumnName, setNewColumnName] = React.useState("")
 
@@ -181,12 +179,8 @@ const FilterDialog = (props: Props) => {
   }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    const newColumns = arrayMove(
-      todoList.view.kanbanColumns(),
-      oldIndex,
-      newIndex
-    )
-    todoList.view.setKanbanColumns(newColumns)
+    const newColumns = arrayMove(view.kanbanColumns(), oldIndex, newIndex)
+    view.setKanbanColumns(newColumns)
     update()
   }
 
